@@ -5,7 +5,7 @@ import {
     Dialog,
     DialogTrigger,
     DialogContent,
-    DialogTitle
+    DialogTitle, DialogFooter
 } from '@/src/components/ui/dialog'
 import {Button} from '@/src/components/ui/button'
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/src/components/ui/form'
@@ -18,17 +18,19 @@ import {useForm} from 'react-hook-form'
 import {walletTypes} from '@/src/lib/wallet-types'
 import IconPicker, {IconName} from '@/src/components/icon-picker'
 import {ChevronsUpDown, icons, Loader2Icon, type LucideIcon, Check} from 'lucide-react'
-import {createWallet} from '@/src/app/(dashboard)/wallets/actions'
-import {FC, use, useState} from 'react'
+import {createWallet, updateWallet} from '@/src/app/(dashboard)/wallets/actions'
+import {FC, use, useEffect} from 'react'
 import {ICurrencies} from '@/src/lib/types/currencies'
 import {Popover, PopoverContent, PopoverTrigger} from './ui/popover'
 import {cn} from '@/src/lib/utils'
+import {useWallets} from '@/src/lib/stores/wallets-store'
+import {DialogClose} from '@radix-ui/react-dialog'
 
 const formSchema = z.object({
     name: z.string().min(2).max(20),
     balance: z.string(),
-    icon: z.string(),
-    type: z.string(),
+    icon: z.string().min(2),
+    type: z.string().min(2),
     currency: z.string().min(3),
 })
 
@@ -37,31 +39,42 @@ interface Props {
 }
 
 const WalletModal: FC<Props> = ({currencies}) => {
+    const open = useWallets(state => state.openModal)
+    const setOpen = useWallets(state => state.setOpenModal)
+    const wallets = useWallets(state => state.wallet)
     const allCurrencies = use(currencies)
-
-    const [open, setOpen] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-            type: "",
-            icon: "AlarmClock",
+        defaultValues: wallets ?? {
+            name: '',
+            type: '',
+            icon: 'CreditCard',
             currency: 'EUR',
             balance: ''
-        },
+        }
     })
+
+    useEffect(() => {
+        if (open) form.reset(wallets)
+    }, [open, wallets, form])
 
     const Icon = icons[form.watch().icon as IconName] as LucideIcon
 
     const onSubmit = form.handleSubmit(async (values) => {
         const data = new FormData()
+
+        if (wallets) data.append('id', wallets?.id)
         data.append('name', values.name)
         data.append('icon', values.icon)
         data.append('balance', values.balance)
         data.append('type', values.type)
         data.append('currency', values.currency)
-        await createWallet(data)
+
+        wallets
+            ? await updateWallet(data)
+            : await createWallet(data)
+
         setOpen(false)
     })
 
@@ -72,7 +85,7 @@ const WalletModal: FC<Props> = ({currencies}) => {
             </DialogTrigger>
             <DialogContent className={'max-w-[340px]'} aria-describedby={undefined}>
                 <DialogHeader>
-                    <DialogTitle>Add new wallet</DialogTitle>
+                    <DialogTitle>{wallets ? 'Update' : 'Add'} wallet</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form
@@ -89,7 +102,6 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                     name="name"
                                     render={({field}) => (
                                         <FormItem>
-                                            {/*<FormLabel>Name</FormLabel>*/}
                                             <FormControl>
                                                 <Input placeholder="Name" {...field} name={'name'}/>
                                             </FormControl>
@@ -102,7 +114,6 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                     name="type"
                                     render={({field}) => (
                                         <FormItem>
-                                            {/*<FormLabel>Type</FormLabel>*/}
                                             <FormControl>
                                                 <Select {...field} onValueChange={value => field.onChange(value)} name={'type'}>
                                                     <SelectTrigger className="w-full">
@@ -215,7 +226,10 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                 </FormItem>
                             )}
                         />
-                        <div className={'w-full flex justify-end'}>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="outline">Cancel</Button>
+                            </DialogClose>
                             <Button
                                 type={'submit'}
                                 disabled={form.formState.isSubmitting}
@@ -224,12 +238,12 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                     ? (
                                         <>
                                             <Loader2Icon className="animate-spin"/>
-                                            Please wait
+                                            Submitting...
                                         </>
                                     ) : 'Submit'
                                 }
                             </Button>
-                        </div>
+                        </DialogFooter>
                     </form>
                 </Form>
             </DialogContent>

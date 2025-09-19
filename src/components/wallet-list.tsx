@@ -1,9 +1,10 @@
 import {FC} from 'react'
 import {Card, CardDescription, CardHeader, CardTitle} from '@/src/components/ui/card'
 import LucideIcon, {IconName} from '@/src/components/lucide-icon'
-import {ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger} from '@/src/components/ui/context-menu'
-import {deleteWallet, getWallets} from '@/src/app/(dashboard)/wallets/actions'
+import {ContextMenu, ContextMenuContent, ContextMenuTrigger} from '@/src/components/ui/context-menu'
+import {getWallets} from '@/src/app/(dashboard)/wallets/actions'
 import {getCurrencySymbol} from '@/src/lib/get-currency-symol'
+import WalletListActions from '@/src/components/wallet-list-actions'
 
 const WalletList: FC = async () => {
     const data = await getWallets()
@@ -22,14 +23,7 @@ const WalletList: FC = async () => {
                         </Card>
                     </ContextMenuTrigger>
                     <ContextMenuContent>
-                        <form action={async () => {
-                            'use server'
-                            await deleteWallet(item.id)
-                        }}>
-                            <ContextMenuItem asChild>
-                                <button type="submit" className="w-full">Delete</button>
-                            </ContextMenuItem>
-                        </form>
+                        <WalletListActions wallet={{...item, balance: String(item.balance)}}/>
                     </ContextMenuContent>
                 </ContextMenu>
             ))}
