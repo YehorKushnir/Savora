@@ -1,14 +1,41 @@
-import {auth} from '@/auth'
-import UserLogoMenu from '@/src/components/user-logo-menu'
+'use client'
 
-const UserLogo = async () => {
-    const session = await auth()
+import {
+    DropdownMenu,
+    DropdownMenuContent, DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from '@/src/components/ui/dropdown-menu'
+import {Button} from '@/src/components/ui/button'
+import {Avatar, AvatarFallback, AvatarImage} from '@/src/components/ui/avatar'
+import {signOut, useSession} from 'next-auth/react'
+import {Skeleton} from '@/src/components/ui/skeleton'
 
-    if (!session?.user) return null
+const UserLogo = () => {
+    const session = useSession()
+
+    if (session.status === 'loading') return <Skeleton className="h-8 w-8 rounded-full"/>
+
+    if (!session.data) return null
 
     return (
         <div className="flex gap-2">
-            <UserLogoMenu session={session} />
+            <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="default" className="w-8 h-8 p-0 rounded-full">
+                        <Avatar>
+                            <AvatarImage src={session.data.user?.image || ''}/>
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator/>
+                    <DropdownMenuItem onClick={() => signOut()}>Log out</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
     )
 }

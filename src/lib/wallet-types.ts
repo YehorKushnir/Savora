@@ -1,0 +1,1 @@
+export const walletTypes = ['Cash', 'Bank', 'Card', 'Deposit', 'Investment']

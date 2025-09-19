@@ -1,8 +1,7 @@
-import {GalleryVerticalEnd} from "lucide-react"
-
 import {cn} from "@/src/lib/utils"
 import {Button} from "@/src/components/ui/button"
 import {signIn} from '@/auth'
+import Image from 'next/image'
 
 export function LoginForm(
     {
@@ -19,11 +18,11 @@ export function LoginForm(
                             className="flex flex-col items-center gap-2 font-medium"
                         >
                             <div className="flex size-8 items-center justify-center rounded-md">
-                                <GalleryVerticalEnd className="size-6"/>
+                                <Image width={32} height={32} src={'/light.svg'} alt={'logo'}/>
                             </div>
-                            <span className="sr-only">Acme Inc.</span>
+                            <span className="sr-only">Savora</span>
                         </a>
-                        <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+                        <h1 className="text-xl font-bold">Welcome to Savora</h1>
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <form

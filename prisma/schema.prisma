@@ -82,6 +82,9 @@ model Wallet {
   id          String        @id @default(cuid())
   name        String
   icon        String
+  balance     Decimal
+  type        String
+  currency    String
   transctions Transaction[]
 
   createdAt DateTime @default(now())
@@ -99,13 +102,13 @@ model Category {
 }
 
 model Transaction {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   description String
   category    String
   type        String
   from        String
   to          String
-  amount      Int
+  amount      Decimal
   tag         String
 
   createdAt  DateTime  @default(now())

@@ -32,7 +32,7 @@ export default function RootLayout(
         <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-        <div className="max-w-[1200] my-0 mx-auto flex flex-col gap-5">
+        <div className="max-w-[1200] my-0 mx-auto flex flex-col gap-5 px-3">
             {children}
         </div>
         </body>
