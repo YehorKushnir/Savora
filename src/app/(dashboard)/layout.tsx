@@ -1,5 +1,4 @@
 import Header from '@/src/components/header'
-export const experimental_ppr = true
 
 export default function RootLayout(
     {

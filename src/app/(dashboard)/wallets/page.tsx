@@ -5,7 +5,7 @@ import {Skeleton} from '@/src/components/ui/skeleton'
 import {getCurrencies} from '@/src/app/(dashboard)/actions'
 import WalletDeleteModal from '@/src/components/wallet-delete-modal'
 
-export default async function Accounts() {
+export default async function Wallets() {
     const currencies = getCurrencies()
 
     return (

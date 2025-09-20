@@ -1,7 +1,10 @@
 export default function Transactions() {
+
     return (
-        <>
-            Transactions
-        </>
+        <div className={'w-full flex'}>
+            <div className={'w-full flex flex-col items-center'}>
+                Transactions
+            </div>
+        </div>
     )
 }

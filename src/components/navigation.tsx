@@ -26,6 +26,11 @@ export function Navigation() {
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                     <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                        <Link href="/categories">Categories</Link>
+                    </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
                         <Link href="/transactions">Transactions</Link>
                     </NavigationMenuLink>
                 </NavigationMenuItem>

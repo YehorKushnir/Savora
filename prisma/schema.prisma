@@ -92,13 +92,26 @@ model Wallet {
 }
 
 model Category {
-  id          String        @id @default(cuid())
-  name        String
-  icon        String
-  transctions Transaction[]
+  id            String        @id @default(cuid())
+  name          String
+  icon          String
+  type          String
+  transctions   Transaction[]
+  subcategories Subcategory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Subcategory {
+  id          String        @id @default(cuid())
+  name        String
+  transctions Transaction[]
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
 }
 
 model Transaction {
@@ -111,10 +124,12 @@ model Transaction {
   amount      Decimal
   tag         String
 
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  Wallet     Wallet?   @relation(fields: [walletId], references: [id])
-  walletId   String?
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  Wallet        Wallet?      @relation(fields: [walletId], references: [id])
+  walletId      String?
+  Category      Category?    @relation(fields: [categoryId], references: [id])
+  categoryId    String?
+  Subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id])
+  subcategoryId String?
 }
