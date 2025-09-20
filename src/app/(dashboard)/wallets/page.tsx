@@ -10,7 +10,7 @@ export default async function Accounts() {
 
     return (
         <div className={'w-full flex'}>
-            <div className={'min-w-60 flex flex-col items-center gap-2'}>
+            <div className={'min-w-60 flex flex-col items-center gap-3'}>
                 <WalletModal currencies={currencies}/>
                 <WalletDeleteModal/>
                 <Suspense fallback={<Skeleton className={'w-full h-15 rounded-md'}/>}>
