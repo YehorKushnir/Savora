@@ -29,7 +29,6 @@ import {use, useEffect, useState} from "react"
 import LucideIcon, {IconName} from "@/src/components/lucide-icon"
 import {CategoryWithSubs} from "@/src/app/(dashboard)/categories/actions"
 import {useCategories} from "@/src/lib/stores/categories-store"
-import { TabsList, Tabs, TabsTrigger } from "@/src/components/ui/tabs"
 
 type RowNode = {
     id: string
@@ -144,9 +143,8 @@ interface Props {
 export default function CategoryTable(props: Props) {
     const data = use(props.categories)
     const [rows, setRows] = useState([...data])
-    const setOpenModal = useCategories((state) => state.setOpenModal)
+    const type = useCategories((state) => state.type)
     const [expanded, setExpanded] = useState<ExpandedState>({})
-    const [type, setType] = useState('all')
 
     const table = useReactTable({
         data: rows as RowNode[],
@@ -160,80 +158,62 @@ export default function CategoryTable(props: Props) {
 
     useEffect(() => {
         setRows(() => type === 'all' ? data : data.filter((item) => item.type === type))
-    }, [data])
-
-    const handleChangeType = (type: string) => {
-        setType(type)
-        setRows(() => type === 'all' ? data : data.filter((item) => item.type === type))
-    }
+    }, [data, type])
 
     return (
-        <div className="w-full flex flex-col gap-4">
-            <div className={'w-full flex justify-between'}>
-                <Tabs value={type} onValueChange={handleChangeType}>
-                    <TabsList>
-                        <TabsTrigger value="all">All</TabsTrigger>
-                        <TabsTrigger value="income">Incomes</TabsTrigger>
-                        <TabsTrigger value="expense">Expenses</TabsTrigger>
-                    </TabsList>
-                </Tabs>
-                <Button onClick={() => setOpenModal(true)}>
-                    Add category
-                </Button>
-            </div>
-            <div className="max-h-[500px] relative overflow-auto rounded-md border">
-                <Table className="border-collapse">
-                    <TableHeader>
-                        {table.getHeaderGroups().map((hg) => (
-                            <TableRow key={hg.id} className={'sticky top-0 hover:bg-background bg-background z-10 after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-border'}>
-                                {hg.headers.map((header) => (
-                                    <TableHead key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </TableHead>
+        <div className="max-h-[500px] relative overflow-auto rounded-md border">
+            <Table className="border-collapse">
+                <TableHeader>
+                    {table.getHeaderGroups().map((hg) => (
+                        <TableRow key={hg.id}
+                                  className={'sticky top-0 hover:bg-background bg-background z-10 after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-border'}>
+                            {hg.headers.map((header) => (
+                                <TableHead key={header.id}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                </TableHead>
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableHeader>
+                <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                            <TableRow key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell
+                                        key={cell.id}
+                                        className={
+                                            cell.column.id === "actions" ||
+                                            cell.column.id === "expander"
+                                                ? "w-12"
+                                                : ""
+                                        }
+                                    >
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
+                                        )}
+                                    </TableCell>
                                 ))}
                             </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell
-                                            key={cell.id}
-                                            className={
-                                                cell.column.id === "actions" ||
-                                                cell.column.id === "expander"
-                                                    ? "w-12"
-                                                    : ""
-                                            }
-                                        >
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell
+                                colSpan={columns.length}
+                                className="h-24 text-center"
+                            >
+                                No results.
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
         </div>
     )
 }
