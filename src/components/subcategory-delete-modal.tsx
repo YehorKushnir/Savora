@@ -15,7 +15,7 @@ import {Loader2Icon} from 'lucide-react'
 import {useCategories} from '@/src/lib/stores/categories-store'
 import {deleteSubcategory} from '@/src/app/(dashboard)/categories/actions'
 
-const CategoryDeleteModal = () => {
+const SubcategoryDeleteModal = () => {
     const open = useCategories(state => state.openSubcategoryDeleteModal)
     const setOpen = useCategories(state => state.setOpenSubcategoryDeleteModal)
     const subcategory = useCategories(state => state.subcategory)
@@ -60,4 +60,4 @@ const CategoryDeleteModal = () => {
     )
 }
 
-export default CategoryDeleteModal
+export default SubcategoryDeleteModal

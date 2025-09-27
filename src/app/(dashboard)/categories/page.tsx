@@ -6,6 +6,7 @@ import SubcategoryModal from '@/src/components/subcategory-modal'
 import {Suspense} from 'react'
 import {Skeleton} from '@/src/components/ui/skeleton'
 import CategoryOptions from '@/src/components/category-options'
+import SubcategoryDeleteModal from '@/src/components/subcategory-delete-modal'
 
 export default function Transactions() {
     const categories = getCategories()
@@ -16,7 +17,7 @@ export default function Transactions() {
                 <CategoryModal/>
                 <CategoryDeleteModal/>
                 <SubcategoryModal/>
-                <CategoryDeleteModal/>
+                <SubcategoryDeleteModal/>
                 <div className="w-full flex flex-col gap-4">
                     <CategoryOptions/>
                     <Suspense fallback={<Skeleton className={'w-full h-[500px]'}/>}>
