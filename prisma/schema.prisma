@@ -79,13 +79,14 @@ model Authenticator {
 }
 
 model Wallet {
-  id          String        @id @default(cuid())
-  name        String
-  icon        String
-  balance     Decimal
-  type        String
-  currency    String
-  transctions Transaction[]
+  id       String        @id @default(cuid())
+  name     String
+  icon     String
+  balance  Decimal
+  type     String
+  currency String
+  outgoing Transaction[] @relation("TransactionSource")
+  incoming Transaction[] @relation("TransactionTarget")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -108,28 +109,33 @@ model Subcategory {
   name        String
   transctions Transaction[]
 
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
 }
 
 model Transaction {
-  id          String  @id @default(cuid())
-  description String
-  category    String
-  type        String
-  from        String
-  to          String
-  amount      Decimal
-  tag         String
+  id            String  @id @default(cuid())
+  description   String
+  type          String
+  amount        Decimal
+  tag           String?
+  balanceBefore Decimal
+  balanceAfter  Decimal
 
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  Wallet        Wallet?      @relation(fields: [walletId], references: [id])
-  walletId      String?
-  Category      Category?    @relation(fields: [categoryId], references: [id])
-  categoryId    String?
-  Subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id])
-  subcategoryId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sourceWalletId String?
+  sourceWallet   Wallet?      @relation("TransactionSource", fields: [sourceWalletId], references: [id])
+  targetWalletId String?
+  targetWallet   Wallet?      @relation("TransactionTarget", fields: [targetWalletId], references: [id])
+  Category       Category?    @relation(fields: [categoryId], references: [id])
+  categoryId     String?
+  Subcategory    Subcategory? @relation(fields: [subcategoryId], references: [id])
+  subcategoryId  String?
+
+  @@index([sourceWalletId, createdAt])
+  @@index([targetWalletId, createdAt])
 }
