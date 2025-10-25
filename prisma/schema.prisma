@@ -9,15 +9,19 @@ generator client {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String        @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   settings      UserSettings?
-  // Optional for WebAuthn support
+  vaults        Vault[]
+  transactions  Transaction[]
+  tags          Tag[]
+  auditLogs     AuditLog[]
+
   Authenticator Authenticator[]
 
   createdAt DateTime @default(now())
@@ -86,88 +90,104 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
-enum AccountType {
-  ASSET
-  INCOME
-  EXPENSEE
-  QUITY
+// ENUMS
+
+enum VaultType {
+  asset
+  liability
+  income
+  expense
+  equity
 }
-enum TransactionStatus {
-  pending
-  posted
-  void
+
+enum EntryType {
+  debit
+  credit
 }
-enum TransactionKind {
-  generic
+
+enum TransactionType {
+  expense
+  income
   transfer
+  adjustment
 }
 
-model LedgerAccount {
-  id       String      @id @default(cuid())
-  userId   String
-  name     String
-  type     AccountType
-  currency String?
-  icon     String?
-  color    String?
-  archived Boolean     @default(false)
-  sort     Int         @default(0)
+// MODELS
 
-  parentId String?
-  parent   LedgerAccount?  @relation("LedgerAccountHierarchy", fields: [parentId], references: [id])
-  children LedgerAccount[] @relation("LedgerAccountHierarchy")
-
-  balance Decimal @default(0) @db.Decimal(18, 2)
-
-  entries Entry[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, type, archived])
-  @@index([parentId, sort])
-  @@unique([userId, name, type, parentId])
+model Vault {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  name      String
+  type      VaultType
+  balance   Decimal   @default(0) @db.Decimal(18, 2)
+  currency  String    @default("EUR")
+  entries   Entry[]
+  archived  Boolean   @default(false)
+  createdAt DateTime  @default(now())
 }
 
 model Transaction {
-  id        String            @id @default(cuid())
-  userId    String
-  kind      TransactionKind   @default(generic)
-  status    TransactionStatus @default(posted)
-  note      String?
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-
-  sourceAccountId String?
-  sourceAccount   LedgerAccount? @relation("TxSource", fields: [sourceAccountId], references: [id], onDelete: SetNull)
-  targetAccountId String?
-  targetAccount   LedgerAccount? @relation("TxTarget", fields: [targetAccountId], references: [id], onDelete: SetNull)
-
-  fxRate         Decimal? @db.Decimal(20, 10)
-  idempotencyKey String?  @unique
-
-  entries Entry[]
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, createdAt, id])
-  @@index([sourceAccountId, createdAt, id])
-  @@index([targetAccountId, createdAt, id])
+  id           String          @id @default(cuid())
+  userId       String
+  user         User            @relation(fields: [userId], references: [id])
+  type         TransactionType
+  description  String?
+  executedAt   DateTime        @default(now())
+  entries      Entry[]
+  tags         Tag[]           @relation("TransactionTags")
+  exchangeRate Decimal?
+  baseAmount   Decimal?
+  createdAt    DateTime        @default(now())
 }
 
 model Entry {
-  id            String  @id @default(cuid())
+  id            String      @id @default(cuid())
   transactionId String
-  accountId     String
-  amount        Decimal @db.Decimal(18, 2)
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  vaultId       String
+  vault         Vault       @relation(fields: [vaultId], references: [id])
+  type          EntryType
+  amount        Decimal     @db.Decimal(18, 2)
+  balanceBefore Decimal     @db.Decimal(18, 2)
+  balanceAfter  Decimal     @db.Decimal(18, 2)
+  createdAt     DateTime    @default(now())
+}
 
+// TAGGING & ANALYTICS
+
+model Tag {
+  id           String        @id @default(cuid())
+  name         String
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[] @relation("TransactionTags")
+  createdAt    DateTime      @default(now())
+}
+
+// SYSTEM / LOGGING
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  metadata  Json
   createdAt DateTime @default(now())
+}
 
-  transaction Transaction   @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-  account     LedgerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+// CURRENCY & HISTORY
 
-  @@index([accountId, createdAt, id])
-  @@index([transactionId])
+model Currency {
+  code       String   @id
+  symbol     String
+  rateToBase Decimal  @db.Decimal(18, 6)
+  updatedAt  DateTime @default(now())
+}
+
+model CurrencyHistory {
+  id         String   @id @default(cuid())
+  code       String
+  rateToBase Decimal  @db.Decimal(18, 6)
+  date       DateTime
 }
