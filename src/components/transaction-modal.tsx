@@ -13,22 +13,23 @@ import {z} from "zod"
 import {zodResolver} from '@hookform/resolvers/zod'
 import {useForm} from 'react-hook-form'
 import {Loader2Icon} from 'lucide-react'
-import {use, useEffect, useMemo} from 'react'
+import {use, useEffect} from 'react'
 import {Tabs, TabsList, TabsTrigger} from './ui/tabs'
 import {useTransactions} from '@/src/lib/stores/transactions-store'
 import {CategoryWithSubs} from '@/src/app/(dashboard)/categories/actions'
 import {Wallet} from '@prisma/client'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/src/components/ui/select'
 import LucideIcon, {IconName} from '@/src/components/lucide-icon'
+import {incomeOrExpenseDto, transferDto} from '@/src/lib/dto/transaction-dto'
+import {createTransaction, updateTransaction} from '@/src/app/(dashboard)/transactions/actions'
 
 
 export const transactionSchema = z.object({
     id: z.string().optional(),
     type: z.enum(["income", "expense", "transfer"]),
-    description: z.string().max(50),
+    description: z.string().max(50).optional(),
     amount: z.string().min(1),
     toReceive: z.string().optional(),
-    commission: z.string().optional(),
 
     tag: z.string().optional(),
     categoryId: z.string().optional(),
@@ -110,7 +111,6 @@ export default function TransactionModal(props: Props) {
             type: 'expense',
             amount: '',
             toReceive: '',
-            commission: '',
             tag: '',
             description: '',
             categoryId: '',
@@ -125,19 +125,16 @@ export default function TransactionModal(props: Props) {
     }, [open, transaction, form])
 
     const onSubmit = form.handleSubmit(async (values) => {
-        console.log(values)
-        // transaction?.id
-        //     ? await updateTransaction(transaction.id, values)
-        //     : await createTransaction(values)
-        //
-        // setOpen(false)
-    })
+        const dataToSend = values.type === 'transfer'
+            ? transferDto(values)
+            : incomeOrExpenseDto(values)
 
-    const isSameCurrencies = useMemo(() => {
-        const source = wallets.find(wallet => wallet.id === form.watch().sourceWalletId)?.currency
-        const target = wallets.find(wallet => wallet.id === form.watch().targetWalletId)?.currency
-        return source === target || (source === undefined || target === undefined)
-    }, [form.watch().sourceWalletId, form.watch().targetWalletId])
+        transaction?.id
+            ? await updateTransaction(transaction.id, dataToSend)
+            : await createTransaction(dataToSend)
+
+        setOpen(false)
+    })
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -300,42 +297,23 @@ export default function TransactionModal(props: Props) {
                             )}
                         />
                         {form.watch().type === 'transfer' && (
-                            isSameCurrencies ? (
-                                <FormField
-                                    control={form.control}
-                                    name="commission"
-                                    render={({field}) => (
-                                        <FormItem className={'w-full flex items-center gap-2 mb-4'}>
-                                            <FormLabel className={'min-w-20'}>Commission</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    {...field}
-                                                    placeholder="Commission"
-                                                    name={'commission'}
-                                                />
-                                            </FormControl>
-                                        </FormItem>
-                                    )}
-                                />
-                            ) : (
-                                <FormField
-                                    control={form.control}
-                                    name="toReceive"
-                                    render={({field}) => (
-                                        <FormItem className={'w-full flex items-center gap-2 mb-4'}>
-                                            <FormLabel className={'min-w-20'}>To receive</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    {...field}
-                                                    placeholder="To receive"
-                                                    type={'number'}
-                                                    name={'toReceive'}
-                                                />
-                                            </FormControl>
-                                        </FormItem>
-                                    )}
-                                />
-                            )
+                            <FormField
+                                control={form.control}
+                                name="toReceive"
+                                render={({field}) => (
+                                    <FormItem className={'w-full flex items-center gap-2 mb-4'}>
+                                        <FormLabel className={'min-w-20'}>To receive</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                placeholder="To receive"
+                                                type={'number'}
+                                                name={'toReceive'}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
                         )}
                         <FormField
                             control={form.control}

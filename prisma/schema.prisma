@@ -16,11 +16,20 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  settings      UserSettings?
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserSettings {
+  userId         String @id
+  locale         String @default("en")
+  currency       String @default("EUR")
+  firstDayOfWeek Int    @default(1)
+  user           User   @relation(fields: [userId], references: [id])
 }
 
 model Account {
@@ -62,7 +71,6 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-// Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @unique
   userId               String
@@ -78,64 +86,88 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
-model Wallet {
-  id       String        @id @default(cuid())
+enum AccountType {
+  ASSET
+  INCOME
+  EXPENSEE
+  QUITY
+}
+enum TransactionStatus {
+  pending
+  posted
+  void
+}
+enum TransactionKind {
+  generic
+  transfer
+}
+
+model LedgerAccount {
+  id       String      @id @default(cuid())
+  userId   String
   name     String
-  icon     String
-  balance  Decimal
-  type     String
-  currency String
-  outgoing Transaction[] @relation("TransactionSource")
-  incoming Transaction[] @relation("TransactionTarget")
+  type     AccountType
+  currency String?
+  icon     String?
+  color    String?
+  archived Boolean     @default(false)
+  sort     Int         @default(0)
+
+  parentId String?
+  parent   LedgerAccount?  @relation("LedgerAccountHierarchy", fields: [parentId], references: [id])
+  children LedgerAccount[] @relation("LedgerAccountHierarchy")
+
+  balance Decimal @default(0) @db.Decimal(18, 2)
+
+  entries Entry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
 
-model Category {
-  id            String        @id @default(cuid())
-  name          String
-  icon          String
-  type          String
-  transctions   Transaction[]
-  subcategories Subcategory[]
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Subcategory {
-  id          String        @id @default(cuid())
-  name        String
-  transctions Transaction[]
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  Category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String
+  @@index([userId, type, archived])
+  @@index([parentId, sort])
+  @@unique([userId, name, type, parentId])
 }
 
 model Transaction {
+  id        String            @id @default(cuid())
+  userId    String
+  kind      TransactionKind   @default(generic)
+  status    TransactionStatus @default(posted)
+  note      String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  sourceAccountId String?
+  sourceAccount   LedgerAccount? @relation("TxSource", fields: [sourceAccountId], references: [id], onDelete: SetNull)
+  targetAccountId String?
+  targetAccount   LedgerAccount? @relation("TxTarget", fields: [targetAccountId], references: [id], onDelete: SetNull)
+
+  fxRate         Decimal? @db.Decimal(20, 10)
+  idempotencyKey String?  @unique
+
+  entries Entry[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt, id])
+  @@index([sourceAccountId, createdAt, id])
+  @@index([targetAccountId, createdAt, id])
+}
+
+model Entry {
   id            String  @id @default(cuid())
-  description   String
-  type          String
-  amount        Decimal
-  tag           String?
-  balanceBefore Decimal
-  balanceAfter  Decimal
+  transactionId String
+  accountId     String
+  amount        Decimal @db.Decimal(18, 2)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  sourceWalletId String?
-  sourceWallet   Wallet?      @relation("TransactionSource", fields: [sourceWalletId], references: [id])
-  targetWalletId String?
-  targetWallet   Wallet?      @relation("TransactionTarget", fields: [targetWalletId], references: [id])
-  Category       Category?    @relation(fields: [categoryId], references: [id])
-  categoryId     String?
-  Subcategory    Subcategory? @relation(fields: [subcategoryId], references: [id])
-  subcategoryId  String?
+  transaction Transaction   @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  account     LedgerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  @@index([sourceWalletId, createdAt])
-  @@index([targetWalletId, createdAt])
+  @@index([accountId, createdAt, id])
+  @@index([transactionId])
 }
