@@ -11,6 +11,7 @@ import {Button} from '@/src/components/ui/button'
 import {Avatar, AvatarFallback, AvatarImage} from '@/src/components/ui/avatar'
 import {signOut, useSession} from 'next-auth/react'
 import {Skeleton} from '@/src/components/ui/skeleton'
+import Link from "next/link";
 
 const UserLogo = () => {
     const session = useSession()
@@ -33,6 +34,9 @@ const UserLogo = () => {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator/>
+                    <DropdownMenuItem>
+                        <Link href="/settings">Settings</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => signOut()}>Log out</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

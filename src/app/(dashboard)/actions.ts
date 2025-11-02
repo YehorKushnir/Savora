@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {ICurrencies} from '@/src/lib/types/currencies'
+import {ITransactions} from "@/src/lib/types/transactions";
 
 export async function getCurrencies() {
     const res = await axios.get<{
@@ -13,4 +14,11 @@ export async function getCurrenciesRatesByEUR() {
         currencies: ICurrencies
     }>(`http://localhost:3000/exchangeRatesByEUR.json`)
     return res.data.currencies
+}
+
+export async function getTransactions() {
+    const res = await axios.get<{
+        transactions: ITransactions
+    }>(`http://localhost:3000/mock/transactions.json`)
+    return res.data.transactions
 }
