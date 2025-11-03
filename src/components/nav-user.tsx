@@ -28,8 +28,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/src/components/ui/sidebar"
-import UserLogo from "@/src/components/user-logo";
 import {SessionProvider} from "next-auth/react";
+import UserAvatar from '@/src/components/user-avatar'
 
 export function NavUser({user}: {
     user: {
@@ -50,7 +50,7 @@ export function NavUser({user}: {
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <SessionProvider>
-                                <UserLogo/>
+                                <UserAvatar/>
                             </SessionProvider>
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="truncate font-medium">{user.name}</span>
