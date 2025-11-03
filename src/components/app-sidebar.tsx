@@ -1,20 +1,6 @@
 "use client"
 
 import * as React from "react"
-import {
-    IconCamera, IconCategory,
-    IconDashboard,
-    IconDatabase,
-    IconFileAi,
-    IconFileDescription,
-    IconFileWord,
-    IconGraph,
-    IconHelp,
-    IconReport,
-    IconSearch,
-    IconSettings,
-    IconWallet,
-} from "@tabler/icons-react"
 
 import { NavDocuments } from "@/src/components/nav-documents"
 import { NavMain } from "@/src/components/nav-main"
@@ -30,6 +16,17 @@ import {
     SidebarMenuItem,
 } from "@/src/components/ui/sidebar"
 import Image from "next/image";
+import {SessionProvider} from "next-auth/react";
+import {
+    ChartNoAxesColumn,
+    Gauge,
+    LayoutDashboard,
+    List,
+    MessageCircleQuestionMark, Search,
+    Settings,
+    Wallet
+} from "lucide-react";
+import Link from "next/link";
 
 const data = {
     user: {
@@ -41,44 +38,44 @@ const data = {
         {
             title: "Dashboard",
             url: "/dashboard",
-            icon: IconDashboard,
+            icon: Gauge,
         },
         {
             title: "Wallets",
             url: "/wallets",
-            icon: IconWallet,
+            icon: Wallet,
         },
         {
             title: "Categories",
             url: "/categories",
-            icon: IconCategory,
+            icon: LayoutDashboard,
         },
         {
             title: "Transactions",
             url: "/transactions",
-            icon: IconDatabase,
+            icon: List,
         },
         {
             title: "Statistics",
             url: "/statistics",
-            icon: IconGraph,
+            icon: ChartNoAxesColumn,
         },
     ],
     navSecondary: [
         {
             title: "Settings",
             url: "/settings",
-            icon: IconSettings,
+            icon: Settings,
         },
         {
             title: "Get Help",
             url: "#",
-            icon: IconHelp,
+            icon: MessageCircleQuestionMark,
         },
         {
             title: "Search",
             url: "#",
-            icon: IconSearch,
+            icon: Search,
         },
     ],
 }
@@ -86,17 +83,17 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="offcanvas" {...props} className="pr-0">
-            <SidebarHeader>
+            <SidebarHeader className="">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             asChild
                             className="data-[slot=sidebar-menu-button]:!p-1.5"
                         >
-                            <a href="#">
+                            <Link href="#" className="flex gap-4">
                                 <Image width={28} height={28} src={'/light.svg'} alt={'logo'}/>
                                 <span className="text-base font-semibold">Savora</span>
-                            </a>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
@@ -107,7 +104,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={data.user} />
+                <SessionProvider>
+                    <NavUser user={data.user} />
+                </SessionProvider>
             </SidebarFooter>
         </Sidebar>
     )

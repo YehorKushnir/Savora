@@ -1,12 +1,8 @@
 "use client"
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/src/components/ui/tabs"
-import {Switch} from "@/src/components/ui/switch";
-import {useNavbar} from "@/src/lib/stores/navbare-store";
 
 export default function Settings() {
-    const {navbarState, toggleNavbar} = useNavbar();
-
     return (
         <div className="w-full">
             <Tabs defaultValue="profile">
@@ -22,10 +18,6 @@ export default function Settings() {
                             <div className="flex gap-4 flex-col">
                                 <h1 className="text-lg font-semibold">Profile Settings</h1>
                                 <div className="flex gap-3 items-center space-x-2">
-                                    <Switch checked={navbarState} onCheckedChange={toggleNavbar} id="airplane-mode" className="scale-125" />
-                                    <label htmlFor="airplane-mode" className="text-md font-medium leading-none">
-                                        Navbare Mode
-                                    </label>
                                 </div>
                             </div>
                         </TabsContent>

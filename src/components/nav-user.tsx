@@ -29,7 +29,8 @@ import {
     useSidebar,
 } from "@/src/components/ui/sidebar"
 import UserLogo from "@/src/components/user-logo";
-import {SessionProvider} from "next-auth/react";
+import {useSession} from "next-auth/react";
+import {Skeleton} from "@/src/components/ui/skeleton";
 
 export function NavUser({user}: {
     user: {
@@ -39,6 +40,11 @@ export function NavUser({user}: {
     }
 }) {
     const { isMobile } = useSidebar()
+    const session = useSession()
+
+    if (session.status === 'loading') return <Skeleton className="h-8 w-8 rounded-full"/>
+
+    if (!session.data) return null
 
     return (
         <SidebarMenu>
@@ -47,16 +53,16 @@ export function NavUser({user}: {
                     <DropdownMenuTrigger asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground gap-3"
                         >
-                            <SessionProvider>
-                                <UserLogo/>
-                            </SessionProvider>
+                            <UserLogo/>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-medium">{user.name}</span>
+                                <span className="truncate font-medium">
+                                    {session.data.user?.name}
+                                </span>
                                 <span className="text-muted-foreground truncate text-xs">
-                  {user.email}
-                </span>
+                                    {session.data.user?.email}
+                                </span>
                             </div>
                             <IconDotsVertical className="ml-auto size-4" />
                         </SidebarMenuButton>
