@@ -91,36 +91,6 @@
       ]
     },
     {
-      "id": "tx_fee_1",
-      "userId": "user_seed_1",
-      "type": "fee",
-      "description": "Комиссия банка",
-      "executedAt": "2025-10-10T10:00:00Z",
-      "exchangeRate": 1,
-      "baseAmount": 2.5,
-      "currency": "EUR",
-      "tags": ["bank", "fee"],
-      "entries": [
-        { "type": "credit", "amount": 2.5, "vaultId": "seed_vault_card", "balanceBefore": 2675.0, "balanceAfter": 2672.5 },
-        { "type": "debit", "amount": 2.5, "vaultId": "seed_vault_fees", "balanceBefore": 0.0, "balanceAfter": 2.5 }
-      ]
-    },
-    {
-      "id": "tx_refund_1",
-      "userId": "user_seed_1",
-      "type": "refund",
-      "description": "Возврат товара",
-      "executedAt": "2025-10-12T11:30:00Z",
-      "exchangeRate": 1,
-      "baseAmount": 25.0,
-      "currency": "EUR",
-      "tags": ["refund"],
-      "entries": [
-        { "type": "debit", "amount": 25.0, "vaultId": "seed_vault_card", "balanceBefore": 2672.5, "balanceAfter": 2697.5 },
-        { "type": "credit", "amount": 25.0, "vaultId": "seed_vault_expenseMisc", "balanceBefore": 0.0, "balanceAfter": -25.0 }
-      ]
-    },
-    {
       "id": "tx_transfer_2",
       "userId": "user_seed_1",
       "type": "transfer",
