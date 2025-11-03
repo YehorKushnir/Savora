@@ -1,25 +1,15 @@
 "use client"
 
-import * as React from "react"
 import {
-    IconCamera, IconCategory,
+    IconCategory,
     IconDashboard,
     IconDatabase,
-    IconFileAi,
-    IconFileDescription,
-    IconFileWord,
     IconGraph,
-    IconHelp,
-    IconReport,
-    IconSearch,
-    IconSettings,
     IconWallet,
 } from "@tabler/icons-react"
 
-import { NavDocuments } from "@/src/components/nav-documents"
-import { NavMain } from "@/src/components/nav-main"
-import { NavSecondary } from "@/src/components/nav-secondary"
-import { NavUser } from "@/src/components/nav-user"
+import {NavMain} from "@/src/components/nav-main"
+import {NavUser} from "@/src/components/nav-user"
 import {
     Sidebar,
     SidebarContent,
@@ -32,58 +22,36 @@ import {
 import Image from "next/image";
 
 const data = {
-    user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
-    },
     navMain: [
         {
             title: "Dashboard",
             url: "/dashboard",
-            icon: IconDashboard,
+            icon: IconDashboard
         },
         {
             title: "Wallets",
             url: "/wallets",
-            icon: IconWallet,
+            icon: IconWallet
         },
         {
             title: "Categories",
             url: "/categories",
-            icon: IconCategory,
+            icon: IconCategory
         },
         {
             title: "Transactions",
             url: "/transactions",
-            icon: IconDatabase,
+            icon: IconDatabase
         },
         {
             title: "Statistics",
             url: "/statistics",
-            icon: IconGraph,
-        },
-    ],
-    navSecondary: [
-        {
-            title: "Settings",
-            url: "/settings",
-            icon: IconSettings,
-        },
-        {
-            title: "Get Help",
-            url: "#",
-            icon: IconHelp,
-        },
-        {
-            title: "Search",
-            url: "#",
-            icon: IconSearch,
-        },
-    ],
+            icon: IconGraph
+        }
+    ]
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="offcanvas" {...props} className="pr-0">
             <SidebarHeader>
@@ -102,12 +70,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={data.navMain} />
-                {/*<NavDocuments items={data.documents} />*/}
-                <NavSecondary items={data.navSecondary} className="mt-auto" />
+                <NavMain items={data.navMain}/>
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={data.user} />
+                <NavUser/>
             </SidebarFooter>
         </Sidebar>
     )

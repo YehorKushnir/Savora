@@ -28,17 +28,25 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/src/components/ui/sidebar"
-import {SessionProvider} from "next-auth/react";
+import {SessionProvider, useSession} from "next-auth/react";
 import UserAvatar from '@/src/components/user-avatar'
+import {Skeleton} from '@/src/components/ui/skeleton'
 
-export function NavUser({user}: {
-    user: {
-        name: string
-        email: string
-        avatar: string
-    }
-}) {
-    const { isMobile } = useSidebar()
+export function NavUser() {
+    const {isMobile} = useSidebar()
+    const session = useSession()
+
+    if (session.status === 'loading') return (
+        <div className="p-2 h-12 w-full flex items-center gap-2">
+            <Skeleton className="h-8 min-w-8 rounded-full"/>
+            <div className="w-full flex flex-col gap-1">
+                <Skeleton className="h-3 w-full"/>
+                <Skeleton className="h-2 w-full"/>
+            </div>
+        </div>
+    )
+
+    if (!session.data?.user?.image) return null
 
     return (
         <SidebarMenu>
@@ -50,15 +58,15 @@ export function NavUser({user}: {
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                         >
                             <SessionProvider>
-                                <UserAvatar/>
+                                <UserAvatar image={session.data.user.image}/>
                             </SessionProvider>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-medium">{user.name}</span>
+                                <span className="truncate font-medium">{session.data?.user.name}</span>
                                 <span className="text-muted-foreground truncate text-xs">
-                  {user.email}
-                </span>
+                                  {session.data?.user.email}
+                                </span>
                             </div>
-                            <IconDotsVertical className="ml-auto size-4" />
+                            <IconDotsVertical className="ml-auto size-4"/>
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -70,35 +78,35 @@ export function NavUser({user}: {
                         <DropdownMenuLabel className="p-0 font-normal">
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                 <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarImage src={user.avatar} alt={user.name} />
+                                    <AvatarImage src={session.data?.user.image}/>
                                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">{user.name}</span>
+                                    <span className="truncate font-medium">{session.data?.user.name}</span>
                                     <span className="text-muted-foreground truncate text-xs">
-                    {user.email}
-                  </span>
+                                        {session.data?.user.email}
+                                      </span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator/>
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
-                                <IconUserCircle />
+                                <IconUserCircle/>
                                 Account
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                                <IconCreditCard />
+                                <IconCreditCard/>
                                 Billing
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                                <IconNotification />
+                                <IconNotification/>
                                 Notifications
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator/>
                         <DropdownMenuItem>
-                            <IconLogout />
+                            <IconLogout/>
                             Log out
                         </DropdownMenuItem>
                     </DropdownMenuContent>

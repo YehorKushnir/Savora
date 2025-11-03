@@ -1,17 +1,15 @@
 'use client'
 
 import {Avatar, AvatarFallback, AvatarImage} from '@/src/components/ui/avatar'
-import {useSession} from 'next-auth/react'
-import {Skeleton} from '@/src/components/ui/skeleton'
 
-export default function UserAvatar() {
-    const session = useSession()
+interface Props {
+    image: string
+}
 
-    if (session.status === 'loading') return <Skeleton className="h-8 w-8 rounded-full"/>
-
+export default function UserAvatar({image}: Props) {
     return (
         <Avatar>
-            <AvatarImage src={session.data?.user?.image || ''}/>
+            <AvatarImage src={image ?? ''}/>
             <AvatarFallback>CN</AvatarFallback>
         </Avatar>
     )
