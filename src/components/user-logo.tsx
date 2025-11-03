@@ -7,29 +7,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/src/components/ui/dropdown-menu'
-import {Button} from '@/src/components/ui/button'
-import {Avatar, AvatarFallback, AvatarImage} from '@/src/components/ui/avatar'
-import {signOut, useSession} from 'next-auth/react'
-import {Skeleton} from '@/src/components/ui/skeleton'
+import {signOut} from 'next-auth/react'
 import Link from "next/link";
+import UserAvatar from '@/src/components/user-avatar'
 
 const UserLogo = () => {
-    const session = useSession()
-
-    if (session.status === 'loading') return <Skeleton className="h-8 w-8 rounded-full"/>
-
-    if (!session.data) return null
-
     return (
         <div className="flex gap-2">
             <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="default" className="w-8 h-8 p-0 rounded-full">
-                        <Avatar>
-                            <AvatarImage src={session.data.user?.image || ''}/>
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                    </Button>
+                <DropdownMenuTrigger >
+                    <UserAvatar/>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
