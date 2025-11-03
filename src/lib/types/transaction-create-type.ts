@@ -4,5 +4,6 @@ export interface TransactionCreateType {
     sourceVaultId: string
     targetVaultId: string
     description: string
+    executedAt: Date
     tagIds: string[]
 }

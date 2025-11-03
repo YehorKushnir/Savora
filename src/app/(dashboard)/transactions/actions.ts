@@ -14,9 +14,9 @@ export const getTransactions = async () => {
 
     return prisma.transaction.findMany({
         where: {
-            userId,
+            userId
         },
-        orderBy: {createdAt: 'desc'},
+        orderBy: {executedAt: 'desc'}
     })
 }
 
@@ -33,12 +33,12 @@ export const getTransactionsByVault = async (vaultId: string) => {
         include: {
             entries: {
                 include: {
-                    vault: true,
-                },
+                    vault: true
+                }
             },
-            tags: true,
+            tags: true
         },
-        orderBy: {createdAt: 'desc'},
+        orderBy: {executedAt: 'desc'}
     })
 }
 
@@ -58,6 +58,7 @@ export const createTransaction = async (payload: TransactionCreateType, tx?: Pri
                 userId,
                 type: payload.type,
                 description: payload.description || null,
+                executedAt: payload.executedAt,
                 tags: payload.tagIds?.length
                     ? {connect: payload.tagIds.map((id) => ({id}))}
                     : undefined,
@@ -98,6 +99,7 @@ export const updateTransaction = async (id: string, payload: TransactionCreateTy
             data: {
                 type: payload.type,
                 description: payload.description || null,
+                executedAt: payload.executedAt,
                 tags: payload.tagIds?.length
                     ? {set: payload.tagIds.map((tagId) => ({id: tagId}))}
                     : {set: []},
