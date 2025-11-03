@@ -16,7 +16,7 @@ export default async function Wallets() {
     })); // затычка гпт сказал
 
     return (
-        <div className={'w-full flex gap-6'}>
+        <div className={'w-full flex gap-5'}>
             <div className={'min-w-60 flex flex-col items-center gap-3'}>
                 <WalletModal currencies={currencies}/>
                 <WalletDeleteModal/>
