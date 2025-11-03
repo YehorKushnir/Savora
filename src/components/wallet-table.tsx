@@ -294,12 +294,12 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
 
     return (
         <div className="w-full">
-            <div className="flex items-center justify-between pb-3">
+            <div className="flex items-center gap-4 justify-between pb-4">
                 <WalletSearch
                     value={searchValue}
                     onChangeAction={setSearchValue}
                 />
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
                     <WalletOptions />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
