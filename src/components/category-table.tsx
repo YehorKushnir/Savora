@@ -2,13 +2,11 @@
 
 import {
     ColumnDef,
-    ExpandedState,
     flexRender,
     getCoreRowModel,
-    getExpandedRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import {ChevronDown, ChevronRight, MoreHorizontal} from "lucide-react"
+import {MoreHorizontal} from "lucide-react"
 
 import {Button} from "@/src/components/ui/button"
 import {
@@ -27,38 +25,10 @@ import {
 } from "@/src/components/ui/table"
 import {use, useEffect, useState} from "react"
 import LucideIcon, {IconName} from "@/src/components/lucide-icon"
-import {CategoryWithSubs} from "@/src/app/(dashboard)/categories/actions"
 import {useCategories} from "@/src/lib/stores/categories-store"
+import {ClientVault} from '@/src/app/(dashboard)/categories/actions'
 
-type RowNode = {
-    id: string
-    name: string
-    createdAt: Date
-    updatedAt: Date
-    icon: string
-    type: string
-    categoryId: string
-    subcategories: RowNode[]
-}
-
-export const columns: ColumnDef<RowNode>[] = [
-    {
-        id: "expander",
-        header: "",
-        cell: ({row}) =>
-            row.getCanExpand() ? (
-                <Button
-                    variant="ghost"
-                    className="h-8 w-8 p-0"
-                    onClick={row.getToggleExpandedHandler()}
-                >
-                    {row.getIsExpanded() ? <ChevronDown/> : <ChevronRight/>}
-                </Button>
-            ) : null,
-        enableSorting: false,
-        enableHiding: false,
-        size: 48,
-    },
+export const columns: ColumnDef<ClientVault>[] = [
     {
         accessorKey: "name",
         header: "Name",
@@ -78,8 +48,6 @@ export const columns: ColumnDef<RowNode>[] = [
         cell: ({row}) => {
             const setOpenModal = useCategories((state) => state.setOpenModal)
             const setOpenDeleteModal = useCategories((state) => state.setOpenDeleteModal)
-            const setOpenSubcategoryModal = useCategories((state) => state.setOpenSubcategoryModal)
-            const setOpenSubcategoryDeleteModal = useCategories((state) => state.setOpenSubcategoryDeleteModal)
 
             return (
                 <DropdownMenu>
@@ -89,46 +57,17 @@ export const columns: ColumnDef<RowNode>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        {row.depth === 0 ? (
-                            <>
-                                <DropdownMenuItem
-                                    onClick={() => {
-                                        if (row.original.icon) {
-                                            setOpenModal(true, row.original)
-                                        }
-                                    }}
-                                >
-                                    Edit category
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={() => setOpenSubcategoryModal(true, row.original.id)}
-                                >
-                                    Add subcategory
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className="text-destructive"
-                                    onClick={() => setOpenDeleteModal(true, row.original)}
-                                >
-                                    Delete
-                                </DropdownMenuItem>
-                            </>
-                        ) : (
-                            <>
-                                <DropdownMenuItem
-                                    onClick={() => setOpenSubcategoryModal(true, row.original.id, row.original)}
-                                >
-                                    Edit subcategory
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className="text-destructive"
-                                    onClick={() =>
-                                        setOpenSubcategoryDeleteModal(true, row.original)
-                                    }
-                                >
-                                    Delete
-                                </DropdownMenuItem>
-                            </>
-                        )}
+                        <DropdownMenuItem
+                            onClick={() => setOpenModal(true, row.original)}
+                        >
+                            Edit category
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            className="text-destructive"
+                            onClick={() => setOpenDeleteModal(true, row.original)}
+                        >
+                            Delete
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
@@ -137,23 +76,18 @@ export const columns: ColumnDef<RowNode>[] = [
 ]
 
 interface Props {
-    categories: Promise<CategoryWithSubs[]>
+    categories: Promise<ClientVault[]>
 }
 
 export default function CategoryTable(props: Props) {
     const data = use(props.categories)
     const [rows, setRows] = useState([...data])
     const type = useCategories((state) => state.type)
-    const [expanded, setExpanded] = useState<ExpandedState>({})
 
     const table = useReactTable({
-        data: rows as RowNode[],
+        data: rows,
         columns,
-        state: {expanded},
-        onExpandedChange: setExpanded,
-        getCoreRowModel: getCoreRowModel(),
-        getExpandedRowModel: getExpandedRowModel(),
-        getSubRows: (row) => row.subcategories,
+        getCoreRowModel: getCoreRowModel()
     })
 
     useEffect(() => {
