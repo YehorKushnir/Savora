@@ -1,4 +1,4 @@
-export interface TransactionCreateType {
+export interface TransactionCreateUpdateType {
     type: 'expense' | 'income' | 'transfer' | 'adjustment'
     amount: string
     sourceVaultId: string

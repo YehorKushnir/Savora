@@ -3,7 +3,7 @@
 import {prisma} from '@/prisma'
 import {Prisma} from '@prisma/client'
 import {auth} from '@/auth'
-import {TransactionCreateType} from '@/src/lib/types/transaction-create-type'
+import {TransactionCreateUpdateType} from '@/src/lib/types/transaction-create-update-type'
 import {createEntries} from '@/src/lib/helpers/create-entries'
 import {restoreVaultBalances} from '@/src/lib/helpers/restore-vault-balances'
 import {revalidatePath} from 'next/cache'
@@ -43,7 +43,7 @@ export const getTransactionsByVault = async (vaultId: string) => {
     })
 }
 
-export const createTransaction = async (payload: TransactionCreateType, tx?: Prisma.TransactionClient) => {
+export const createTransaction = async (payload: TransactionCreateUpdateType, tx?: Prisma.TransactionClient) => {
     const session = await auth()
     const userId = session?.user?.id
     if (!userId) throw new Error('Unauthorized')
@@ -76,7 +76,7 @@ export const createTransaction = async (payload: TransactionCreateType, tx?: Pri
     revalidatePath('transactions')
 }
 
-export const updateTransaction = async (id: string, payload: TransactionCreateType) => {
+export const updateTransaction = async (id: string, payload: TransactionCreateUpdateType) => {
     const session = await auth()
     const userId = session?.user?.id
     if (!userId) throw new Error('Unauthorized')

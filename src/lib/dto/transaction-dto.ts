@@ -1,6 +1,6 @@
-import {TransactionCreateType} from '@/src/lib/types/transaction-create-type'
+import {TransactionCreateUpdateType} from '@/src/lib/types/transaction-create-update-type'
 
-export function transactionDto(data: TransactionCreateType) {
+export function transactionDto(data: TransactionCreateUpdateType) {
     return {
         type: data.type,
         amount: data.amount,

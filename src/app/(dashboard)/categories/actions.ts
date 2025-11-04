@@ -2,8 +2,7 @@
 
 import {prisma} from '@/prisma'
 import {auth} from "@/auth"
-import {CategoryCreateType} from '@/src/lib/types/category-create-type'
-import {CategoryUpdateType} from '@/src/lib/types/category-update-type'
+import {CategoryCreateUpdateType} from '@/src/lib/types/category-create-update-type'
 import {Vault} from '@prisma/client'
 import {revalidatePath} from 'next/cache'
 
@@ -34,7 +33,7 @@ export const getCategories = async (): Promise<ClientVault[]> => {
     }))
 }
 
-export async function createCategory(payload: CategoryCreateType) {
+export async function createCategory(payload: CategoryCreateUpdateType) {
     const session = await auth()
     const userId = session?.user?.id
     if (!userId) throw new Error('Unauthorized')
@@ -58,7 +57,7 @@ export async function createCategory(payload: CategoryCreateType) {
     revalidatePath('categories')
 }
 
-export async function updateCategory(id: string, payload: CategoryUpdateType) {
+export async function updateCategory(id: string, payload: CategoryCreateUpdateType) {
     const session = await auth()
     const userId = session?.user?.id
     if (!userId) throw new Error('Unauthorized')
