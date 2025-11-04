@@ -2,60 +2,113 @@
 
 import {prisma} from '@/prisma'
 import {Prisma} from '@prisma/client'
-import {revalidateTag, unstable_cache} from 'next/cache'
-import {auth} from "@/auth";
+import {auth} from "@/auth"
+import {WalletCreateType} from '@/src/lib/types/wallet-create-type'
+import {WalletUpdateType} from '@/src/lib/types/wallet-update-type'
+import {createTransaction} from '@/src/app/(dashboard)/transactions/actions'
+import {revalidatePath} from 'next/cache'
 
-export const getWallets = unstable_cache(
-    async () => prisma.vault.findMany({
-        where: {type: 'asset'},
-        orderBy: {name: 'asc'}
-    }),
-    ['wallets'],
-    {tags: ['wallets']}
-)
-
-export async function createWallet(formData: FormData) {
+export const getWallets = async () => {
     const session = await auth()
-    if (!session?.user?.id) throw new Error('Unauthorized')
+    const userId = session?.user?.id
+    if (!userId) throw new Error('Unauthorized')
 
-    const name = String(formData.get('name'))
-    const balance = String(formData.get('balance'))
-    const icon = String(formData.get('icon'))
-    const currency = String(formData.get('currency'))
-
-    await prisma.vault.create({
-        data: {
-            name,
-            type: 'asset',
-            icon,
-            currency,
-            balance: new Prisma.Decimal(balance === '' ? 0 : balance),
-            userId: session.user.id,
+    return prisma.vault.findMany({
+        where: {
+            userId,
+            type: {
+                in: ['asset', 'liability']
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
-    revalidateTag('wallets')
 }
 
-export async function updateWallet(formData: FormData) {
-    const id = String(formData.get('id'))
-    const name = String(formData.get('name'))
-    const balance = String(formData.get('balance'))
-    const icon = String(formData.get('icon'))
-    const currency = String(formData.get('currency'))
+export async function createWallet(payload: WalletCreateType) {
+    const session = await auth()
+    const userId = session?.user?.id
+    if (!userId) throw new Error('Unauthorized')
 
-    await prisma.vault.update({
-        where: {id},
-        data: {
-            name,
-            icon,
-            currency,
-            balance: new Prisma.Decimal(balance === '' ? 0 : balance),
+    await prisma.$transaction(async (tx) => {
+        const vault = await tx.vault.create({
+            data: {
+                name: payload.name,
+                type: payload.type,
+                icon: payload.icon,
+                currency: payload.currency,
+                userId,
+            },
+        })
+
+        const balance = new Prisma.Decimal(payload.balance === '' ? 0 : payload.balance)
+
+        if (balance.gt(0)) {
+            const equity = await tx.vault.findFirstOrThrow({
+                where: {userId, type: 'equity'},
+            })
+
+            await createTransaction({
+                type: 'adjustment',
+                description: `Initial balance for ${vault.name}`,
+                amount: payload.balance,
+                targetVaultId: vault.id,
+                sourceVaultId: equity.id,
+                executedAt: new Date(),
+                tagIds: [],
+            }, tx)
         }
     })
-    revalidateTag('wallets')
+    revalidatePath('wallets')
+}
+
+export async function updateWallet(id: string, payload: WalletUpdateType) {
+    const session = await auth()
+    const userId = session?.user?.id
+    if (!userId) throw new Error('Unauthorized')
+
+    await prisma.$transaction(async (tx) => {
+        await tx.vault.update({
+            where: {id},
+            data: {
+                name: payload.name,
+                icon: payload.icon,
+                balance: new Prisma.Decimal(payload.balance === '' ? 0 : payload.balance),
+            }
+        })
+
+        const balance = new Prisma.Decimal(payload.balance === '' ? 0 : payload.balance)
+
+        if (balance.gt(0)) {
+            const equity = await tx.vault.findFirstOrThrow({
+                where: {userId, type: 'equity'},
+            })
+
+            await createTransaction({
+                type: 'adjustment',
+                description: `Update balance for ${payload.name}`,
+                amount: payload.balance,
+                targetVaultId: id,
+                sourceVaultId: equity.id,
+                executedAt: new Date(),
+                tagIds: [],
+            }, tx)
+        }
+    })
+    revalidatePath('wallets')
 }
 
 export async function deleteWallet(id: string) {
+    const session = await auth()
+    if (!session?.user?.id) throw new Error('Unauthorized')
+
+    const vault = await prisma.vault.findUnique({where: {id}, include: {entries: true}})
+
+    if (!vault) throw new Error('Wallet not found')
+
+    if (!vault.entries.length) throw new Error('Wallet cannot be deleted')
+
     await prisma.vault.delete({where: {id}})
-    revalidateTag('wallets')
+    revalidatePath('wallets')
 }

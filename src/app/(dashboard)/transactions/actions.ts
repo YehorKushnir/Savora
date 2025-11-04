@@ -6,6 +6,7 @@ import {auth} from '@/auth'
 import {TransactionCreateType} from '@/src/lib/types/transaction-create-type'
 import {createEntries} from '@/src/lib/helpers/create-entries'
 import {restoreVaultBalances} from '@/src/lib/helpers/restore-vault-balances'
+import {revalidatePath} from 'next/cache'
 
 export const getTransactions = async () => {
     const session = await auth()
@@ -71,6 +72,8 @@ export const createTransaction = async (payload: TransactionCreateType, tx?: Pri
     tx
         ? await run(tx)
         : await prisma.$transaction(run)
+
+    revalidatePath('transactions')
 }
 
 export const updateTransaction = async (id: string, payload: TransactionCreateType) => {
@@ -107,6 +110,8 @@ export const updateTransaction = async (id: string, payload: TransactionCreateTy
         })
 
         await createEntries(tx, updated.id, payload.sourceVaultId, payload.targetVaultId, amount)
+
+        revalidatePath('transactions')
     })
 }
 
@@ -127,5 +132,7 @@ export const deleteTransaction = async (id: string) => {
         await restoreVaultBalances(tx, transaction.entries, id)
 
         await tx.transaction.delete({where: {id}})
+
+        revalidatePath('transactions')
     })
 }

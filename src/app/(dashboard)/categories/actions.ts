@@ -1,53 +1,90 @@
 'use server'
 
 import {prisma} from '@/prisma'
-import {revalidateTag, unstable_cache} from 'next/cache'
-import {z} from 'zod'
-import {categorySchema} from '@/src/components/category-modal'
-import {subcategorySchema} from '@/src/components/subcategory-modal'
-import { Prisma } from '@prisma/client'
+import {auth} from "@/auth"
+import {CategoryCreateType} from '@/src/lib/types/category-create-type'
+import {CategoryUpdateType} from '@/src/lib/types/category-update-type'
+import {Vault} from '@prisma/client'
+import {revalidatePath} from 'next/cache'
 
-export type CategoryWithSubs = Prisma.CategoryGetPayload<{
-    include: { subcategories: true }
-}>
-
-export const getCategories = unstable_cache(
-    async (): Promise<CategoryWithSubs[]> => prisma.category.findMany({
-        orderBy: {name: 'asc'},
-        include: {
-            subcategories: true
-        }
-    }),
-    ['categories'],
-    {tags: ['categories']}
-)
-
-export async function createCategory(data: z.infer<typeof categorySchema>) {
-    await prisma.category.create({data})
-    revalidateTag('categories')
+export type ClientVault = Omit<Vault, 'balance'> & {
+    balance: number
 }
 
-export async function updateCategory(id: string, data: z.infer<typeof categorySchema>) {
-    await prisma.category.update({where: {id}, data})
-    revalidateTag('categories')
+export const getCategories = async (): Promise<ClientVault[]> => {
+    const session = await auth()
+    const userId = session?.user?.id
+    if (!userId) throw new Error('Unauthorized')
+
+    const categories = await prisma.vault.findMany({
+        where: {
+            userId,
+            type: {
+                in: ['income', 'expense']
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    })
+
+    return categories.map(category => ({
+        ...category,
+        balance: category.balance.toNumber()
+    }))
+}
+
+export async function createCategory(payload: CategoryCreateType) {
+    const session = await auth()
+    const userId = session?.user?.id
+    if (!userId) throw new Error('Unauthorized')
+
+    const user = await prisma.user.findUnique({
+        where: {id: userId}
+    })
+
+    if (!user) throw new Error('User not found')
+
+    await prisma.vault.create({
+        data: {
+            name: payload.name,
+            type: payload.type,
+            icon: payload.icon,
+            currency: user.currency,
+            userId
+        },
+    })
+
+    revalidatePath('categories')
+}
+
+export async function updateCategory(id: string, payload: CategoryUpdateType) {
+    const session = await auth()
+    const userId = session?.user?.id
+    if (!userId) throw new Error('Unauthorized')
+
+    await prisma.vault.update({
+        where: {id},
+        data: {
+            name: payload.name,
+            type: payload.type,
+            icon: payload.icon
+        },
+    })
+
+    revalidatePath('categories')
 }
 
 export async function deleteCategory(id: string) {
-    await prisma.category.delete({where: {id}})
-    revalidateTag('categories')
-}
+    const session = await auth()
+    if (!session?.user?.id) throw new Error('Unauthorized')
 
-export async function createSubcategory(categoryId: string, data: z.infer<typeof subcategorySchema>) {
-    await prisma.subcategory.create({data: {categoryId, ...data}})
-    revalidateTag('categories')
-}
+    const vault = await prisma.vault.findUnique({where: {id}, include: {entries: true}})
 
-export async function updateSubcategory(id: string, data: z.infer<typeof subcategorySchema>) {
-    await prisma.subcategory.update({where: {id}, data})
-    revalidateTag('categories')
-}
+    if (!vault) throw new Error('Category not found')
 
-export async function deleteSubcategory(id: string) {
-    await prisma.subcategory.delete({where: {id}})
-    revalidateTag('categories')
+    if (vault.entries.length > 0) throw new Error('Category cannot be deleted')
+
+    await prisma.vault.delete({where: {id}})
+    revalidatePath('categories')
 }
