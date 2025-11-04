@@ -1,14 +1,10 @@
-"use client"
 
-import { Button } from "@/src/components/ui/button"
 import { Separator } from "@/src/components/ui/separator"
 import { SidebarTrigger } from "@/src/components/ui/sidebar"
 import {usePathname} from "next/navigation";
-import {Switch} from "@/src/components/ui/switch";
-import {useNavbar} from "@/src/lib/stores/navbare-store";
+import {ToggleSidebar} from "@/src/components/toggle-sidebar";
 
 export function SiteHeader() {
-    const {navbarState, toggleNavbar} = useNavbar()
     const pathname = usePathname()
     const formattedPath = pathname.replace("/", "").charAt(0).toUpperCase() + pathname.replace("/", "").slice(1)
 
@@ -22,7 +18,7 @@ export function SiteHeader() {
                 />
                 <h1 className="text-base font-medium">{formattedPath}</h1>
                 <div className="ml-auto flex items-center gap-4">
-                    <Switch checked={navbarState} onCheckedChange={toggleNavbar} id="airplane-mode" className="scale-125 cursor-pointer" />
+                    <ToggleSidebar/>
                 </div>
             </div>
         </header>

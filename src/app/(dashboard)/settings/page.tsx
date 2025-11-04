@@ -1,6 +1,5 @@
-"use client"
-
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/src/components/ui/tabs"
+import {ToggleSidebar} from "@/src/components/toggle-sidebar";
 
 export default function Settings() {
     return (
@@ -18,6 +17,8 @@ export default function Settings() {
                             <div className="flex gap-4 flex-col">
                                 <h1 className="text-lg font-semibold">Profile Settings</h1>
                                 <div className="flex gap-3 items-center space-x-2">
+                                    <ToggleSidebar/>
+                                    <h2 className="text-lg">Sidebar/Navbar</h2>
                                 </div>
                             </div>
                         </TabsContent>

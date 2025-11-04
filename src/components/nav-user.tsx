@@ -1,14 +1,6 @@
 "use client"
 
 import {
-    IconCreditCard,
-    IconDotsVertical,
-    IconLogout,
-    IconNotification,
-    IconUserCircle,
-} from "@tabler/icons-react"
-
-import {
     Avatar,
     AvatarFallback,
     AvatarImage,
@@ -28,9 +20,11 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/src/components/ui/sidebar"
-import {SessionProvider, useSession} from "next-auth/react";
+import {SessionProvider, signOut, useSession} from "next-auth/react";
 import UserAvatar from '@/src/components/user-avatar'
 import {Skeleton} from '@/src/components/ui/skeleton'
+import {Bell, CreditCard, EllipsisVertical, LogOut, Settings, UserRound} from "lucide-react";
+import Link from "next/link";
 
 export function NavUser() {
     const {isMobile} = useSidebar()
@@ -66,7 +60,7 @@ export function NavUser() {
                                   {session.data?.user.email}
                                 </span>
                             </div>
-                            <IconDotsVertical className="ml-auto size-4"/>
+                            <EllipsisVertical className="ml-auto size-4"/>
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -92,21 +86,27 @@ export function NavUser() {
                         <DropdownMenuSeparator/>
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
-                                <IconUserCircle/>
+                                <UserRound />
                                 Account
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                                <IconCreditCard/>
+                                <Link href="/settings" className="flex gap-2">
+                                    <Settings/>
+                                    Settings
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <CreditCard />
                                 Billing
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                                <IconNotification/>
+                                <Bell />
                                 Notifications
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator/>
-                        <DropdownMenuItem>
-                            <IconLogout/>
+                        <DropdownMenuItem onClick={() => signOut()}>
+                            <LogOut />
                             Log out
                         </DropdownMenuItem>
                     </DropdownMenuContent>
