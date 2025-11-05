@@ -3,7 +3,7 @@ import {Button} from "@/src/components/ui/button";
 import {FC} from "react";
 
 interface Props {
-    table: ReactTableInstance<any>
+  table: ReactTableInstance<any>
 }
 
 export const WalletTablePagination: FC<Props> = ({ table }) => {

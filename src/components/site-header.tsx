@@ -1,8 +1,8 @@
-
 import { Separator } from "@/src/components/ui/separator"
 import { SidebarTrigger } from "@/src/components/ui/sidebar"
 import {usePathname} from "next/navigation";
 import {ToggleSidebar} from "@/src/components/toggle-sidebar";
+import {ToggleTheme} from "@/src/components/toggle-theme";
 
 export function SiteHeader() {
     const pathname = usePathname()
@@ -18,6 +18,7 @@ export function SiteHeader() {
                 />
                 <h1 className="text-base font-medium">{formattedPath}</h1>
                 <div className="ml-auto flex items-center gap-4">
+                    <ToggleTheme/>
                     <ToggleSidebar/>
                 </div>
             </div>

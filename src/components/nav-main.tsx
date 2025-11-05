@@ -31,7 +31,7 @@ export const NavMain:FC<Props> = ({items}) => {
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton tooltip={item.title}
                                                isActive={pathname === item.url}
-                                               className="text-gray-700 hover:bg-gray-100 flex gap-4 items-center cursor-pointer data-[active=true]:!bg-gray-200 data-[active=true]:!text-gray-900 data-[active=true]:!font-bold">
+                                               className=" flex gap-4 items-center cursor-pointer">
                                 <Link href={item.url} className="flex gap-4 items-center w-full">
                                     {item.icon && <item.icon />}
                                     <span>{item.title}</span>

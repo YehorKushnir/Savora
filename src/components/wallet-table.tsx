@@ -386,7 +386,6 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
                     </TableBody>
                 </Table>
             </div>
-
             <WalletTablePagination table={table} />
         </div>
     )

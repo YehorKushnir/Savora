@@ -14,7 +14,7 @@ export default function RootLayout({children,}: Readonly<{ children: ReactNode }
 
     return (
         <SessionProvider>
-            {navbarState ?
+            {navbarState === 'navbar' ?
                 (
                     <div className="max-w-[1200] my-0 mx-auto flex flex-col gap-5 px-3">
                         <Header/>

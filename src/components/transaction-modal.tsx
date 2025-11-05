@@ -20,7 +20,7 @@ import {CategoryWithSubs} from '@/src/app/(dashboard)/categories/actions'
 import {Wallet} from '@prisma/client'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/src/components/ui/select'
 import LucideIcon, {IconName} from '@/src/components/lucide-icon'
-import {incomeOrExpenseDto, transferDto} from '@/src/lib/dto/transaction-dto'
+import {transactionDto} from '@/src/lib/dto/transaction-dto'
 import {createTransaction, updateTransaction} from '@/src/app/(dashboard)/transactions/actions'
 
 
