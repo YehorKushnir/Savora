@@ -1,24 +1,39 @@
 "use client"
 
-import {useTheme} from "@/src/lib/stores/theme-store";
-import {Moon, Sun} from "lucide-react";
-import {useEffect} from "react";
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
 
-export const ToggleTheme = () => {
-    const {theme, toggleTheme} = useTheme();
+import { Button } from "@/src/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/src/components/ui/dropdown-menu"
 
-
-    useEffect(() => {
-        const root = document.documentElement;
-        root.classList.toggle("dark", theme === "dark");
-    }, [theme]);
+export function ToggleTheme() {
+    const { setTheme } = useTheme()
 
     return (
-        <div onClick={toggleTheme} className="cursor-pointer active:scale-90 transition-transform duration-150">
-            {theme === 'light'
-                ? <Sun className="w-5 h-5"/>
-                : <Moon className="w-5 h-5"/>
-            }
-        </div>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                    <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+                    <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                    <span className="sr-only">Toggle theme</span>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                    Light
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                    Dark
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                    System
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     )
 }

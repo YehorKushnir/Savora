@@ -29,14 +29,16 @@ export const NavMain:FC<Props> = ({items}) => {
                 <SidebarMenu className="gap-2">
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton tooltip={item.title}
-                                               isActive={pathname === item.url}
-                                               className=" flex gap-4 items-center cursor-pointer">
-                                <Link href={item.url} className="flex gap-4 items-center w-full">
-                                    {item.icon && <item.icon />}
-                                    <span>{item.title}</span>
-                                </Link>
-                            </SidebarMenuButton>
+                            <Link href={item.url}>
+                                <SidebarMenuButton tooltip={item.title}
+                                                   isActive={pathname === item.url}
+                                                   className=" flex gap-4 items-center cursor-pointer">
+                                    <div className="flex gap-4 items-center w-full">
+                                        {item.icon && <item.icon />}
+                                        <span>{item.title}</span>
+                                    </div>
+                                </SidebarMenuButton>
+                            </Link>
                         </SidebarMenuItem>
                     ))}
                 </SidebarMenu>
