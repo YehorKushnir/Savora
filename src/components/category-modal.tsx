@@ -19,11 +19,12 @@ import {DialogClose} from '@radix-ui/react-dialog'
 import {useCategories} from '@/src/lib/stores/categories-store'
 import {createCategory, updateCategory} from '@/src/app/(dashboard)/categories/actions'
 import {Tabs, TabsList, TabsTrigger} from './ui/tabs'
+import {categoryDto} from '@/src/lib/dto/category-dto'
 
 export const categorySchema = z.object({
     name: z.string().min(2).max(20),
     icon: z.string().min(2),
-    type: z.string().min(2),
+    type: z.enum(['expense', 'income']),
 })
 
 const CategoryModal = () => {
@@ -48,8 +49,8 @@ const CategoryModal = () => {
 
     const onSubmit = form.handleSubmit(async (values) => {
         category
-            ? await updateCategory(category.id, values)
-            : await createCategory(values)
+            ? await updateCategory(category.id, categoryDto(values))
+            : await createCategory(categoryDto(values))
 
         setOpen(false)
     })

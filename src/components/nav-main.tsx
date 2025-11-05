@@ -1,7 +1,7 @@
 "use client"
 
-import { type LucideIcon } from "lucide-react"
-import { usePathname } from "next/navigation"
+import {type LucideIcon} from "lucide-react"
+import {usePathname} from "next/navigation"
 
 import {
     SidebarGroup,
@@ -21,8 +21,9 @@ interface Props {
     }[]
 }
 
-export const NavMain:FC<Props> = ({items}) => {
+export const NavMain: FC<Props> = ({items}) => {
     const pathname = usePathname()
+
     return (
         <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-4">
@@ -30,11 +31,13 @@ export const NavMain:FC<Props> = ({items}) => {
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
                             <Link href={item.url}>
-                                <SidebarMenuButton tooltip={item.title}
-                                                   isActive={pathname === item.url}
-                                                   className=" flex gap-4 items-center cursor-pointer">
+                                <SidebarMenuButton
+                                    tooltip={item.title}
+                                    isActive={pathname === item.url}
+                                    className=" flex gap-4 items-center cursor-pointer"
+                                >
                                     <div className="flex gap-4 items-center w-full">
-                                        {item.icon && <item.icon />}
+                                        {item.icon && <item.icon/>}
                                         <span>{item.title}</span>
                                     </div>
                                 </SidebarMenuButton>

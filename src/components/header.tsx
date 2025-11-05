@@ -9,7 +9,7 @@ const Header = () => {
         <div className="w-full h-12 flex items-center justify-between">
             <Image width={32} height={32} src={'/light.svg'} alt={'logo'}/>
             <Navigation/>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-2 items-center">
                 <ToggleTheme/>
                 <ToggleSidebar/>
                 <UserLogo/>

@@ -4,17 +4,19 @@ import Header from '@/src/components/header'
 import {CSSProperties, ReactNode} from "react";
 import {SidebarInset, SidebarProvider} from "@/src/components/ui/sidebar";
 import {AppSidebar} from "@/src/components/app-sidebar";
-import {useNavbar} from "@/src/lib/stores/navbare-store";
 import {SiteHeader} from "@/src/components/site-header";
 import {SessionProvider} from 'next-auth/react'
+import {useSidebarStore} from '@/src/lib/stores/navbare-store'
 
 export default function RootLayout({children,}: Readonly<{ children: ReactNode }>
 ) {
-    const {navbarState} = useNavbar()
+    const {isOpen, type, setOpen, hydrated} = useSidebarStore()
+
+    if (!hydrated) return null
 
     return (
         <SessionProvider>
-            {navbarState === 'navbar' ?
+            {type === 'fixed' ?
                 (
                     <div className="max-w-[1200] my-0 mx-auto flex flex-col gap-5 px-3">
                         <Header/>
@@ -24,6 +26,8 @@ export default function RootLayout({children,}: Readonly<{ children: ReactNode }
                     </div>
                 ) : (
                     <SidebarProvider
+                        open={isOpen}
+                        onOpenChange={setOpen}
                         style={
                             {
                                 "--sidebar-width": "calc(var(--spacing) * 60)",
@@ -32,7 +36,7 @@ export default function RootLayout({children,}: Readonly<{ children: ReactNode }
                         }
                     >
                         <AppSidebar variant="floating"/>
-                        <SidebarInset className="flex flex-col gap-5 px-3">
+                        <SidebarInset className="flex flex-col gap-5 px-4">
                             <SiteHeader/>
                             <div className="w-full">
                                 {children}
