@@ -10,10 +10,7 @@ import {getWallets} from '@/src/app/(dashboard)/wallets/actions'
 export default async function Wallets() {
     const currencies = getCurrencies()
     const transactions = await getTransactions()
-    const wallets = (await getWallets()).map(w => ({
-        ...w,
-        balance: w.balance.toString(), // Приводим Decimal → string
-    })); // затычка гпт сказал
+    const wallets = await getWallets()
 
     return (
         <div className={'w-full flex gap-4'}>

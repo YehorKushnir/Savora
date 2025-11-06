@@ -15,7 +15,6 @@ import {Input} from '@/src/components/ui/input'
 import {z} from "zod"
 import {zodResolver} from '@hookform/resolvers/zod'
 import {useForm} from 'react-hook-form'
-import {walletTypes} from '@/src/lib/wallet-types'
 import IconPicker, {IconName} from '@/src/components/icon-picker'
 import {ChevronsUpDown, icons, Loader2Icon, type LucideIcon, Check} from 'lucide-react'
 import {createWallet, updateWallet} from '@/src/app/(dashboard)/wallets/actions'
@@ -25,13 +24,15 @@ import {Popover, PopoverContent, PopoverTrigger} from './ui/popover'
 import {cn} from '@/src/lib/utils'
 import {useWallets} from '@/src/lib/stores/wallets-store'
 import {DialogClose} from '@radix-ui/react-dialog'
+import {walletCreateDto} from '@/src/lib/dto/wallet-create-dto'
+import {walletUpdateDto} from '@/src/lib/dto/wallet-update-dto'
 
 const formSchema = z.object({
     name: z.string().min(2).max(20),
     balance: z.string(),
     icon: z.string().min(2),
-    type: z.string().min(2),
-    currency: z.string().min(3),
+    type: z.enum(['asset', 'liability']),
+    currency: z.string().min(3)
 })
 
 interface Props {
@@ -48,7 +49,7 @@ const WalletModal: FC<Props> = ({currencies}) => {
         resolver: zodResolver(formSchema),
         defaultValues: wallets ?? {
             name: '',
-            type: '',
+            type: 'asset',
             icon: 'CreditCard',
             currency: 'EUR',
             balance: ''
@@ -62,18 +63,9 @@ const WalletModal: FC<Props> = ({currencies}) => {
     const Icon = icons[form.watch().icon as IconName] as LucideIcon
 
     const onSubmit = form.handleSubmit(async (values) => {
-        const data = new FormData()
-
-        if (wallets) data.append('id', wallets?.id)
-        data.append('name', values.name)
-        data.append('icon', values.icon)
-        data.append('balance', values.balance)
-        data.append('type', values.type)
-        data.append('currency', values.currency)
-
         wallets
-            ? await updateWallet(data)
-            : await createWallet(data)
+            ? await updateWallet(wallets.id, walletUpdateDto(values))
+            : await createWallet(walletCreateDto(values))
 
         setOpen(false)
     })
@@ -120,9 +112,8 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                                         <SelectValue placeholder="Type"/>
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {walletTypes.map(type => (
-                                                            <SelectItem key={type} value={type}>{type}</SelectItem>
-                                                        ))}
+                                                        <SelectItem value="asset">Debit</SelectItem>
+                                                        <SelectItem value="liability">Credit</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </FormControl>

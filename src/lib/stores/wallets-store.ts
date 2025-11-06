@@ -5,7 +5,7 @@ export interface Wallet {
     name: string
     balance: string
     icon: string
-    type: string
+    type: 'asset' | 'liability'
     currency: string
 }
 

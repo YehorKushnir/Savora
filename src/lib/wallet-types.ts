@@ -1,1 +1,1 @@
-export const walletTypes = ['Cash', 'Bank', 'Card', 'Deposit', 'Investment']
+export const walletTypes = ['asset', 'liability']

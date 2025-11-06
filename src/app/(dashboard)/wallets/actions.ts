@@ -13,7 +13,7 @@ export const getWallets = async () => {
     const userId = session?.user?.id
     if (!userId) throw new Error('Unauthorized')
 
-    return prisma.vault.findMany({
+    const wallets = await prisma.vault.findMany({
         where: {
             userId,
             type: {
@@ -24,6 +24,12 @@ export const getWallets = async () => {
             createdAt: 'desc'
         }
     })
+
+    return wallets.map(wallet => ({
+        ...wallet,
+        balance: wallet.balance.toString(),
+        type: wallet.type as 'asset' | 'liability',
+    }))
 }
 
 export async function createWallet(payload: WalletCreateType) {
@@ -107,7 +113,7 @@ export async function deleteWallet(id: string) {
 
     if (!vault) throw new Error('Wallet not found')
 
-    if (!vault.entries.length) throw new Error('Wallet cannot be deleted')
+    if (vault.entries.length > 0) throw new Error('Wallet cannot be deleted')
 
     await prisma.vault.delete({where: {id}})
     revalidatePath('wallets')
