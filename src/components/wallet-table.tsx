@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import {
     ColumnDef,
     flexRender,
@@ -14,7 +13,7 @@ import {
     PaginationState,
     useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, ChevronRight, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import { Button } from "@/src/components/ui/button"
 import {
     DropdownMenu,
@@ -43,41 +42,29 @@ import { Transaction, TransactionEntry } from "@/src/lib/types/transactions"
 
 export const columns: ColumnDef<Transaction | TransactionEntry>[] = [
     {
-        id: "expander",
-        header: "",
-        cell: ({ row }) =>
-            row.getCanExpand() ? (
-                <Button
-                    variant="ghost"
-                    className="h-8 w-8 p-0"
-                    onClick={row.getToggleExpandedHandler()}
-                >
-                    {row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}
-                </Button>
-            ) : null,
-        enableSorting: false,
-        enableHiding: false,
-        size: 67,
-        minSize: 56,
-    },
-    {
-        accessorKey: "executedAt",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Executed At
-                <ArrowUpDown />
-            </Button>
-        ),
+        accessorKey: "baseAmount",
+        header: () => <div className="text-center">Amount</div>,
         cell: ({ row }) => {
-            if (row.depth === 1) return <div className="px-4" />
-            const date = new Date(row.getValue("executedAt") as string)
-            return <div className="px-4">{date.toLocaleDateString()}</div>
+            if (row.depth === 1) {
+                const entry = row.original as any
+                const amount = Number(entry.amount ?? 0)
+                return (
+                    <div className="text-center font-medium">
+                        {amount.toFixed(2)}
+                    </div>
+                )
+            }
+
+            const amount = Number(row.getValue("baseAmount") ?? 0)
+            const currency = String(row.getValue("currency") ?? "EUR")
+
+            const formatted = new Intl.NumberFormat(undefined, {
+                style: "currency",
+                currency,
+            }).format(amount)
+
+            return <div className="text-center font-medium">{formatted}</div>
         },
-        size: 198,
-        minSize: 140,
     },
     {
         accessorKey: "type",
@@ -109,8 +96,20 @@ export const columns: ColumnDef<Transaction | TransactionEntry>[] = [
                 <div className="capitalize">{row.getValue("type") as string}</div>
             )
         },
-        size: 100,
-        minSize: 80,
+    },
+    {
+        accessorKey: "target",
+        header: () => <div className="text-center">Target</div>,
+        cell: ({ row }) => {
+            if (row.depth === 1) {
+                return <div className="text-center h-5" />
+            }
+            return (
+                <div className="text-center">
+                    {row.getValue("currency") as string}
+                </div>
+            )
+        },
     },
     {
         accessorKey: "description",
@@ -126,47 +125,21 @@ export const columns: ColumnDef<Transaction | TransactionEntry>[] = [
         minSize: 180,
     },
     {
-        accessorKey: "baseAmount",
-        header: () => <div className="text-center">Amount</div>,
+        accessorKey: "executedAt",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Executed At
+                <ArrowUpDown />
+            </Button>
+        ),
         cell: ({ row }) => {
-            if (row.depth === 1) {
-                const entry = row.original as any
-                const amount = Number(entry.amount ?? 0)
-                return (
-                    <div className="text-center font-medium">
-                        {amount.toFixed(2)}
-                    </div>
-                )
-            }
-
-            const amount = Number(row.getValue("baseAmount") ?? 0)
-            const currency = String(row.getValue("currency") ?? "EUR")
-
-            const formatted = new Intl.NumberFormat(undefined, {
-                style: "currency",
-                currency,
-            }).format(amount)
-
-            return <div className="text-center font-medium">{formatted}</div>
+            if (row.depth === 1) return <div className="px-4" />
+            const date = new Date(row.getValue("executedAt") as string)
+            return <div className="px-4">{date.toLocaleDateString()}</div>
         },
-        size: 120,
-        minSize: 100,
-    },
-    {
-        accessorKey: "currency",
-        header: () => <div className="text-center">Currency</div>,
-        cell: ({ row }) => {
-            if (row.depth === 1) {
-                return <div className="text-center h-5" />
-            }
-            return (
-                <div className="text-center">
-                    {row.getValue("currency") as string}
-                </div>
-            )
-        },
-        size: 106,
-        minSize: 80,
     },
     {
         id: "actions",
@@ -334,7 +307,7 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
                 <Table className="table-fixed w-full">
                     <TableHeader>
                         {table.getHeaderGroups().map(headerGroup => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow key={headerGroup.id} >
                                 {headerGroup.headers.map(header => {
                                     return (
                                         <TableHead

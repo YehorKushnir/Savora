@@ -1,273 +1,2803 @@
 {
   "transactions": [
     {
-      "id": "tx_expense_1",
-      "userId": "user_seed_1",
-      "type": "expense",
-      "description": "Покупка продуктов",
-      "executedAt": "2025-10-23T12:30:00Z",
-      "exchangeRate": 1,
-      "baseAmount": 18.4,
-      "currency": "EUR",
-      "tags": ["groceries"],
-      "entries": [
-        { "type": "credit", "amount": 18.4, "vaultId": "seed_vault_cash", "balanceBefore": 250.0, "balanceAfter": 231.6 },
-        { "type": "debit", "amount": 18.4, "vaultId": "seed_vault_expenseFood", "balanceBefore": 0.0, "balanceAfter": 18.4 }
-      ]
-    },
-    {
-      "id": "tx_income_1",
+      "id": "tx_001",
       "userId": "user_seed_1",
       "type": "income",
-      "description": "Зарплата",
-      "executedAt": "2025-10-20T08:00:00Z",
+      "description": "Стартовый баланс",
+      "executedAt": "2025-10-01T09:00:00Z",
       "exchangeRate": 1,
-      "baseAmount": 1500.0,
-      "currency": "EUR",
-      "tags": ["salary"],
+      "baseAmount": 1000.0,
+      "tagIds": [
+        "tag_salary"
+      ],
       "entries": [
-        { "type": "debit", "amount": 1500.0, "vaultId": "seed_vault_card", "balanceBefore": 1200.0, "balanceAfter": 2700.0 },
-        { "type": "credit", "amount": 1500.0, "vaultId": "seed_vault_incomeCat", "balanceBefore": 0.0, "balanceAfter": 1500.0 }
+        {
+          "type": "debit",
+          "amount": "1000.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 0.0,
+          "balanceAfter": 1000.0
+        },
+        {
+          "type": "credit",
+          "amount": "1000.00",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 0.0,
+          "balanceAfter": 1000.0
+        }
       ]
     },
     {
-      "id": "tx_transfer_1",
-      "userId": "user_seed_1",
-      "type": "transfer",
-      "description": "Перевод на сбережения",
-      "executedAt": "2025-10-24T19:45:00Z",
-      "exchangeRate": 1,
-      "baseAmount": 300.0,
-      "currency": "EUR",
-      "tags": ["transfer"],
-      "entries": [
-        { "type": "credit", "amount": 300.0, "vaultId": "seed_vault_card", "balanceBefore": 2700.0, "balanceAfter": 2400.0 },
-        { "type": "debit", "amount": 300.0, "vaultId": "seed_vault_savings", "balanceBefore": 5000.0, "balanceAfter": 5300.0 }
-      ]
-    },
-    {
-      "id": "tx_expense_2",
+      "id": "tx_002",
       "userId": "user_seed_1",
       "type": "expense",
-      "description": "Кофе и сэндвич",
-      "executedAt": "2025-10-21T09:15:00Z",
+      "description": "Аренда комнаты",
+      "executedAt": "2025-10-01T19:03:00Z",
       "exchangeRate": 1,
-      "baseAmount": 6.5,
-      "currency": "EUR",
-      "tags": ["food", "coffee"],
+      "baseAmount": 280.0,
+      "tagIds": [
+        "tag_rent"
+      ],
       "entries": [
-        { "type": "credit", "amount": 6.5, "vaultId": "seed_vault_cash", "balanceBefore": 231.6, "balanceAfter": 225.1 },
-        { "type": "debit", "amount": 6.5, "vaultId": "seed_vault_expenseFood", "balanceBefore": 18.4, "balanceAfter": 24.9 }
+        {
+          "type": "credit",
+          "amount": "280.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1000.0,
+          "balanceAfter": 720.0
+        },
+        {
+          "type": "debit",
+          "amount": "280.00",
+          "vaultId": "seed_vault_rent",
+          "balanceBefore": 0.0,
+          "balanceAfter": 280.0
+        }
       ]
     },
     {
-      "id": "tx_income_2",
+      "id": "tx_003",
       "userId": "user_seed_1",
       "type": "income",
-      "description": "Фриланс — дизайн",
-      "executedAt": "2025-10-18T14:00:00Z",
+      "description": "Фриланс — задача",
+      "executedAt": "2025-10-02T11:12:00Z",
       "exchangeRate": 1,
-      "baseAmount": 320.0,
-      "currency": "EUR",
-      "tags": ["freelance"],
+      "baseAmount": 120.0,
+      "tagIds": [
+        "tag_freelance"
+      ],
       "entries": [
-        { "type": "debit", "amount": 320.0, "vaultId": "seed_vault_card", "balanceBefore": 2400.0, "balanceAfter": 2720.0 },
-        { "type": "credit", "amount": 320.0, "vaultId": "seed_vault_incomeCat", "balanceBefore": 1500.0, "balanceAfter": 1820.0 }
+        {
+          "type": "debit",
+          "amount": "120.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 720.0,
+          "balanceAfter": 840.0
+        },
+        {
+          "type": "credit",
+          "amount": "120.00",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1000.0,
+          "balanceAfter": 1120.0
+        }
       ]
     },
     {
-      "id": "tx_expense_3",
+      "id": "tx_004",
       "userId": "user_seed_1",
       "type": "expense",
-      "description": "Бензин",
-      "executedAt": "2025-10-15T17:20:00Z",
+      "description": "Суши с друзьями",
+      "executedAt": "2025-10-02T17:03:00Z",
       "exchangeRate": 1,
-      "baseAmount": 45.0,
-      "currency": "EUR",
-      "tags": ["transport"],
+      "baseAmount": 20.07,
+      "tagIds": [
+        "tag_fun"
+      ],
       "entries": [
-        { "type": "credit", "amount": 45.0, "vaultId": "seed_vault_card", "balanceBefore": 2720.0, "balanceAfter": 2675.0 },
-        { "type": "debit", "amount": 45.0, "vaultId": "seed_vault_expenseTransport", "balanceBefore": 0.0, "balanceAfter": 45.0 }
+        {
+          "type": "credit",
+          "amount": "20.07",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 840.0,
+          "balanceAfter": 819.93
+        },
+        {
+          "type": "debit",
+          "amount": "20.07",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 0.0,
+          "balanceAfter": 20.07
+        }
       ]
     },
     {
-      "id": "tx_transfer_2",
+      "id": "tx_005",
       "userId": "user_seed_1",
-      "type": "transfer",
-      "description": "Перевод на карту друга",
-      "executedAt": "2025-10-05T20:00:00Z",
+      "type": "expense",
+      "description": "Книга по JS",
+      "executedAt": "2025-10-02T11:12:00Z",
       "exchangeRate": 1,
-      "baseAmount": 50.0,
-      "currency": "EUR",
-      "tags": ["transfer", "friends"],
+      "baseAmount": 9.1,
+      "tagIds": [
+        "tag_education"
+      ],
       "entries": [
-        { "type": "credit", "amount": 50.0, "vaultId": "seed_vault_card", "balanceBefore": 2697.5, "balanceAfter": 2647.5 },
-        { "type": "debit", "amount": 50.0, "vaultId": "seed_vault_outgoing", "balanceBefore": 0.0, "balanceAfter": 50.0 }
+        {
+          "type": "credit",
+          "amount": "9.10",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 819.93,
+          "balanceAfter": 810.83
+        },
+        {
+          "type": "debit",
+          "amount": "9.10",
+          "vaultId": "seed_vault_expenseEdu",
+          "balanceBefore": 0.0,
+          "balanceAfter": 9.1
+        }
       ]
     },
     {
-      "id": "tx_income_3",
+      "id": "tx_006",
       "userId": "user_seed_1",
       "type": "income",
-      "description": "Продажа дизайна",
-      "executedAt": "2025-10-03T13:00:00Z",
+      "description": "Продажа ненужной вещи",
+      "executedAt": "2025-10-03T19:57:00Z",
       "exchangeRate": 1,
-      "baseAmount": 75.0,
-      "currency": "EUR",
-      "tags": ["freelance"],
+      "baseAmount": 12.98,
+      "tagIds": [
+        "tag_sale"
+      ],
       "entries": [
-        { "type": "debit", "amount": 75.0, "vaultId": "seed_vault_cash", "balanceBefore": 225.1, "balanceAfter": 300.1 },
-        { "type": "credit", "amount": 75.0, "vaultId": "seed_vault_incomeCat", "balanceBefore": 1820.0, "balanceAfter": 1895.0 }
+        {
+          "type": "debit",
+          "amount": "12.98",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 810.83,
+          "balanceAfter": 823.81
+        },
+        {
+          "type": "credit",
+          "amount": "12.98",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1120.0,
+          "balanceAfter": 1132.98
+        }
       ]
     },
     {
-      "id": "tx_expense_4",
+      "id": "tx_007",
       "userId": "user_seed_1",
       "type": "expense",
-      "description": "Подписка — учебный курс",
-      "executedAt": "2025-10-02T07:00:00Z",
+      "description": "Такси",
+      "executedAt": "2025-10-03T09:12:00Z",
       "exchangeRate": 1,
-      "baseAmount": 12.0,
-      "currency": "EUR",
-      "tags": ["education"],
+      "baseAmount": 7.92,
+      "tagIds": [
+        "tag_transport"
+      ],
       "entries": [
-        { "type": "credit", "amount": 12.0, "vaultId": "seed_vault_card", "balanceBefore": 2647.5, "balanceAfter": 2635.5 },
-        { "type": "debit", "amount": 12.0, "vaultId": "seed_vault_expenseEdu", "balanceBefore": 0.0, "balanceAfter": 12.0 }
+        {
+          "type": "credit",
+          "amount": "7.92",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 823.81,
+          "balanceAfter": 815.89
+        },
+        {
+          "type": "debit",
+          "amount": "7.92",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 0.0,
+          "balanceAfter": 7.92
+        }
       ]
     },
     {
-      "id": "tx_expense_5",
+      "id": "tx_008",
       "userId": "user_seed_1",
       "type": "expense",
-      "description": "Книги",
-      "executedAt": "2025-10-06T18:45:00Z",
+      "description": "Игры",
+      "executedAt": "2025-10-04T11:24:00Z",
       "exchangeRate": 1,
-      "baseAmount": 29.9,
-      "currency": "EUR",
-      "tags": ["education", "books"],
+      "baseAmount": 11.28,
+      "tagIds": [
+        "tag_fun"
+      ],
       "entries": [
-        { "type": "credit", "amount": 29.9, "vaultId": "seed_vault_card", "balanceBefore": 2635.5, "balanceAfter": 2605.6 },
-        { "type": "debit", "amount": 29.9, "vaultId": "seed_vault_expenseEdu", "balanceBefore": 12.0, "balanceAfter": 41.9 }
+        {
+          "type": "credit",
+          "amount": "11.28",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 815.89,
+          "balanceAfter": 804.61
+        },
+        {
+          "type": "debit",
+          "amount": "11.28",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 20.07,
+          "balanceAfter": 31.35
+        }
       ]
     },
     {
-      "id": "tx_income_4",
+      "id": "tx_009",
       "userId": "user_seed_1",
       "type": "income",
       "description": "Кэшбек",
-      "executedAt": "2025-10-07T09:00:00Z",
+      "executedAt": "2025-10-04T13:24:00Z",
       "exchangeRate": 1,
-      "baseAmount": 3.75,
-      "currency": "EUR",
-      "tags": ["cashback"],
+      "baseAmount": 2.52,
+      "tagIds": [
+        "tag_cashback"
+      ],
       "entries": [
-        { "type": "debit", "amount": 3.75, "vaultId": "seed_vault_card", "balanceBefore": 2605.6, "balanceAfter": 2609.35 },
-        { "type": "credit", "amount": 3.75, "vaultId": "seed_vault_incomeCat", "balanceBefore": 1895.0, "balanceAfter": 1898.75 }
+        {
+          "type": "debit",
+          "amount": "2.52",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 804.61,
+          "balanceAfter": 807.13
+        },
+        {
+          "type": "credit",
+          "amount": "2.52",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1132.98,
+          "balanceAfter": 1135.5
+        }
       ]
     },
     {
-      "id": "tx_expense_6",
+      "id": "tx_010",
       "userId": "user_seed_1",
       "type": "expense",
-      "description": "Обед в столовой",
-      "executedAt": "2025-10-08T12:30:00Z",
+      "description": "Суши с друзьями",
+      "executedAt": "2025-10-04T15:03:00Z",
       "exchangeRate": 1,
-      "baseAmount": 7.2,
-      "currency": "EUR",
-      "tags": ["food"],
+      "baseAmount": 8.37,
+      "tagIds": [
+        "tag_fun"
+      ],
       "entries": [
-        { "type": "credit", "amount": 7.2, "vaultId": "seed_vault_card", "balanceBefore": 2609.35, "balanceAfter": 2602.15 },
-        { "type": "debit", "amount": 7.2, "vaultId": "seed_vault_expenseFood", "balanceBefore": 24.9, "balanceAfter": 32.1 }
+        {
+          "type": "credit",
+          "amount": "8.37",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 807.13,
+          "balanceAfter": 798.76
+        },
+        {
+          "type": "debit",
+          "amount": "8.37",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 31.35,
+          "balanceAfter": 39.72
+        }
       ]
     },
     {
-      "id": "tx_transfer_3",
-      "userId": "user_seed_1",
-      "type": "transfer",
-      "description": "Перевод из наличных на карту",
-      "executedAt": "2025-10-09T11:00:00Z",
-      "exchangeRate": 1,
-      "baseAmount": 100.0,
-      "currency": "EUR",
-      "tags": ["transfer"],
-      "entries": [
-        { "type": "credit", "amount": 100.0, "vaultId": "seed_vault_cash", "balanceBefore": 300.1, "balanceAfter": 200.1 },
-        { "type": "debit", "amount": 100.0, "vaultId": "seed_vault_card", "balanceBefore": 2602.15, "balanceAfter": 2702.15 }
-      ]
-    },
-    {
-      "id": "tx_expense_7",
+      "id": "tx_011",
       "userId": "user_seed_1",
       "type": "expense",
-      "description": "Аптечные товары",
-      "executedAt": "2025-10-11T16:10:00Z",
+      "description": "Интернет",
+      "executedAt": "2025-10-05T17:24:00Z",
       "exchangeRate": 1,
-      "baseAmount": 11.0,
-      "currency": "EUR",
-      "tags": ["health"],
+      "baseAmount": 15.0,
+      "tagIds": [
+        "tag_bills"
+      ],
       "entries": [
-        { "type": "credit", "amount": 11.0, "vaultId": "seed_vault_card", "balanceBefore": 2702.15, "balanceAfter": 2691.15 },
-        { "type": "debit", "amount": 11.0, "vaultId": "seed_vault_expenseHealth", "balanceBefore": 0.0, "balanceAfter": 11.0 }
+        {
+          "type": "credit",
+          "amount": "15.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 798.76,
+          "balanceAfter": 783.76
+        },
+        {
+          "type": "debit",
+          "amount": "15.00",
+          "vaultId": "seed_vault_expenseBills",
+          "balanceBefore": 0.0,
+          "balanceAfter": 15.0
+        }
       ]
     },
     {
-      "id": "tx_income_5",
+      "id": "tx_012",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кино",
+      "executedAt": "2025-10-05T13:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 18.56,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "18.56",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 783.76,
+          "balanceAfter": 765.2
+        },
+        {
+          "type": "debit",
+          "amount": "18.56",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 39.72,
+          "balanceAfter": 58.28
+        }
+      ]
+    },
+    {
+      "id": "tx_013",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Аптека",
+      "executedAt": "2025-10-05T15:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 10.56,
+      "tagIds": [
+        "tag_health"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "10.56",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 765.2,
+          "balanceAfter": 754.64
+        },
+        {
+          "type": "debit",
+          "amount": "10.56",
+          "vaultId": "seed_vault_expenseHealth",
+          "balanceBefore": 0.0,
+          "balanceAfter": 10.56
+        }
+      ]
+    },
+    {
+      "id": "tx_014",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Пицца",
+      "executedAt": "2025-10-06T19:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 16.04,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "16.04",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 754.64,
+          "balanceAfter": 738.6
+        },
+        {
+          "type": "debit",
+          "amount": "16.04",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 0.0,
+          "balanceAfter": 16.04
+        }
+      ]
+    },
+    {
+      "id": "tx_015",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кофе",
+      "executedAt": "2025-10-06T11:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 12.68,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "12.68",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 738.6,
+          "balanceAfter": 725.92
+        },
+        {
+          "type": "debit",
+          "amount": "12.68",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 16.04,
+          "balanceAfter": 28.72
+        }
+      ]
+    },
+    {
+      "id": "tx_016",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Абонплата за телефон",
+      "executedAt": "2025-10-07T19:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 12.0,
+      "tagIds": [
+        "tag_bills"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "12.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 725.92,
+          "balanceAfter": 713.92
+        },
+        {
+          "type": "debit",
+          "amount": "12.00",
+          "vaultId": "seed_vault_expenseBills",
+          "balanceBefore": 15.0,
+          "balanceAfter": 27.0
+        }
+      ]
+    },
+    {
+      "id": "tx_017",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кино",
+      "executedAt": "2025-10-07T09:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 10.35,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "10.35",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 713.92,
+          "balanceAfter": 703.57
+        },
+        {
+          "type": "debit",
+          "amount": "10.35",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 58.28,
+          "balanceAfter": 68.63
+        }
+      ]
+    },
+    {
+      "id": "tx_018",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Автобус",
+      "executedAt": "2025-10-07T17:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 2.95,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "2.95",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 703.57,
+          "balanceAfter": 700.62
+        },
+        {
+          "type": "debit",
+          "amount": "2.95",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 7.92,
+          "balanceAfter": 10.87
+        }
+      ]
+    },
+    {
+      "id": "tx_019",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Плагин для IDE",
+      "executedAt": "2025-10-08T11:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 18.86,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "18.86",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 700.62,
+          "balanceAfter": 681.76
+        },
+        {
+          "type": "debit",
+          "amount": "18.86",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 0.0,
+          "balanceAfter": 18.86
+        }
+      ]
+    },
+    {
+      "id": "tx_020",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Суши с друзьями",
+      "executedAt": "2025-10-08T17:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 10.99,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "10.99",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 681.76,
+          "balanceAfter": 670.77
+        },
+        {
+          "type": "debit",
+          "amount": "10.99",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 68.63,
+          "balanceAfter": 79.62
+        }
+      ]
+    },
+    {
+      "id": "tx_021",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Плагин для IDE",
+      "executedAt": "2025-10-08T11:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 29.38,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "29.38",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 670.77,
+          "balanceAfter": 641.39
+        },
+        {
+          "type": "debit",
+          "amount": "29.38",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 18.86,
+          "balanceAfter": 48.24
+        }
+      ]
+    },
+    {
+      "id": "tx_022",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Курс по React",
+      "executedAt": "2025-10-09T09:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 23.62,
+      "tagIds": [
+        "tag_education"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "23.62",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 641.39,
+          "balanceAfter": 617.77
+        },
+        {
+          "type": "debit",
+          "amount": "23.62",
+          "vaultId": "seed_vault_expenseEdu",
+          "balanceBefore": 9.1,
+          "balanceAfter": 32.72
+        }
+      ]
+    },
+    {
+      "id": "tx_023",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Проезд",
+      "executedAt": "2025-10-09T17:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 5.59,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "5.59",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 617.77,
+          "balanceAfter": 612.18
+        },
+        {
+          "type": "debit",
+          "amount": "5.59",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 10.87,
+          "balanceAfter": 16.46
+        }
+      ]
+    },
+    {
+      "id": "tx_024",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кафе",
+      "executedAt": "2025-10-10T09:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 5.16,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "5.16",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 612.18,
+          "balanceAfter": 607.02
+        },
+        {
+          "type": "debit",
+          "amount": "5.16",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 28.72,
+          "balanceAfter": 33.88
+        }
+      ]
+    },
+    {
+      "id": "tx_025",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Плагин для IDE",
+      "executedAt": "2025-10-10T11:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 58.65,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "58.65",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 607.02,
+          "balanceAfter": 548.37
+        },
+        {
+          "type": "debit",
+          "amount": "58.65",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 48.24,
+          "balanceAfter": 106.89
+        }
+      ]
+    },
+    {
+      "id": "tx_026",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Аптека",
+      "executedAt": "2025-10-10T11:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 7.83,
+      "tagIds": [
+        "tag_health"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "7.83",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 548.37,
+          "balanceAfter": 540.54
+        },
+        {
+          "type": "debit",
+          "amount": "7.83",
+          "vaultId": "seed_vault_expenseHealth",
+          "balanceBefore": 10.56,
+          "balanceAfter": 18.39
+        }
+      ]
+    },
+    {
+      "id": "tx_027",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Компоненты для проекта",
+      "executedAt": "2025-10-11T15:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 40.75,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "40.75",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 540.54,
+          "balanceAfter": 499.79
+        },
+        {
+          "type": "debit",
+          "amount": "40.75",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 106.89,
+          "balanceAfter": 147.64
+        }
+      ]
+    },
+    {
+      "id": "tx_028",
       "userId": "user_seed_1",
       "type": "income",
-      "description": "Возмещение от университета",
-      "executedAt": "2025-10-14T10:00:00Z",
+      "description": "Кэшбек",
+      "executedAt": "2025-10-11T13:12:00Z",
       "exchangeRate": 1,
-      "baseAmount": 40.0,
-      "currency": "EUR",
-      "tags": ["refund", "university"],
+      "baseAmount": 2.45,
+      "tagIds": [
+        "tag_cashback"
+      ],
       "entries": [
-        { "type": "debit", "amount": 40.0, "vaultId": "seed_vault_card", "balanceBefore": 2691.15, "balanceAfter": 2731.15 },
-        { "type": "credit", "amount": 40.0, "vaultId": "seed_vault_incomeCat", "balanceBefore": 1898.75, "balanceAfter": 1938.75 }
+        {
+          "type": "debit",
+          "amount": "2.45",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 499.79,
+          "balanceAfter": 502.24
+        },
+        {
+          "type": "credit",
+          "amount": "2.45",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1135.5,
+          "balanceAfter": 1137.95
+        }
       ]
     },
     {
-      "id": "tx_expense_8",
-      "userId": "user_seed_1",
-      "type": "expense",
-      "description": "Такси домой",
-      "executedAt": "2025-10-17T23:30:00Z",
-      "exchangeRate": 1,
-      "baseAmount": 14.0,
-      "currency": "EUR",
-      "tags": ["transport", "taxi"],
-      "entries": [
-        { "type": "credit", "amount": 14.0, "vaultId": "seed_vault_card", "balanceBefore": 2731.15, "balanceAfter": 2717.15 },
-        { "type": "debit", "amount": 14.0, "vaultId": "seed_vault_expenseTransport", "balanceBefore": 45.0, "balanceAfter": 59.0 }
-      ]
-    },
-    {
-      "id": "tx_income_6",
+      "id": "tx_029",
       "userId": "user_seed_1",
       "type": "income",
-      "description": "Продажа старой техники",
-      "executedAt": "2025-10-25T15:00:00Z",
+      "description": "Продажа ненужной вещи",
+      "executedAt": "2025-10-11T09:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 23.17,
+      "tagIds": [
+        "tag_sale"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "23.17",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 502.24,
+          "balanceAfter": 525.41
+        },
+        {
+          "type": "credit",
+          "amount": "23.17",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1137.95,
+          "balanceAfter": 1161.12
+        }
+      ]
+    },
+    {
+      "id": "tx_030",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Аптека",
+      "executedAt": "2025-10-12T15:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 7.54,
+      "tagIds": [
+        "tag_health"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "7.54",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 525.41,
+          "balanceAfter": 517.87
+        },
+        {
+          "type": "debit",
+          "amount": "7.54",
+          "vaultId": "seed_vault_expenseHealth",
+          "balanceBefore": 18.39,
+          "balanceAfter": 25.93
+        }
+      ]
+    },
+    {
+      "id": "tx_031",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Перекус",
+      "executedAt": "2025-10-12T15:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 19.45,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "19.45",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 517.87,
+          "balanceAfter": 498.42
+        },
+        {
+          "type": "debit",
+          "amount": "19.45",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 33.88,
+          "balanceAfter": 53.33
+        }
+      ]
+    },
+    {
+      "id": "tx_032",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Компоненты для проекта",
+      "executedAt": "2025-10-13T15:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 46.22,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "46.22",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 498.42,
+          "balanceAfter": 452.2
+        },
+        {
+          "type": "debit",
+          "amount": "46.22",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 147.64,
+          "balanceAfter": 193.86
+        }
+      ]
+    },
+    {
+      "id": "tx_033",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кофе",
+      "executedAt": "2025-10-13T09:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 3.28,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "3.28",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 452.2,
+          "balanceAfter": 448.92
+        },
+        {
+          "type": "debit",
+          "amount": "3.28",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 53.33,
+          "balanceAfter": 56.61
+        }
+      ]
+    },
+    {
+      "id": "tx_034",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Интернет",
+      "executedAt": "2025-10-13T19:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 5.11,
+      "tagIds": [
+        "tag_bills"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "5.11",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 448.92,
+          "balanceAfter": 443.81
+        },
+        {
+          "type": "debit",
+          "amount": "5.11",
+          "vaultId": "seed_vault_expenseBills",
+          "balanceBefore": 27.0,
+          "balanceAfter": 32.11
+        }
+      ]
+    },
+    {
+      "id": "tx_035",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Продукты",
+      "executedAt": "2025-10-14T13:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 20.11,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "20.11",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 443.81,
+          "balanceAfter": 423.7
+        },
+        {
+          "type": "debit",
+          "amount": "20.11",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 56.61,
+          "balanceAfter": 76.72
+        }
+      ]
+    },
+    {
+      "id": "tx_036",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кофе",
+      "executedAt": "2025-10-14T17:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 16.47,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "16.47",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 423.7,
+          "balanceAfter": 407.23
+        },
+        {
+          "type": "debit",
+          "amount": "16.47",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 76.72,
+          "balanceAfter": 93.19
+        }
+      ]
+    },
+    {
+      "id": "tx_037",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Проезд",
+      "executedAt": "2025-10-14T11:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 7.9,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "7.90",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 407.23,
+          "balanceAfter": 399.33
+        },
+        {
+          "type": "debit",
+          "amount": "7.90",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 16.46,
+          "balanceAfter": 24.36
+        }
+      ]
+    },
+    {
+      "id": "tx_038",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кафе",
+      "executedAt": "2025-10-15T15:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 9.09,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "9.09",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 399.33,
+          "balanceAfter": 390.24
+        },
+        {
+          "type": "debit",
+          "amount": "9.09",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 93.19,
+          "balanceAfter": 102.28
+        }
+      ]
+    },
+    {
+      "id": "tx_039",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Продажа ненужной вещи",
+      "executedAt": "2025-10-15T19:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 19.8,
+      "tagIds": [
+        "tag_sale"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "19.80",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 390.24,
+          "balanceAfter": 410.04
+        },
+        {
+          "type": "credit",
+          "amount": "19.80",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1161.12,
+          "balanceAfter": 1180.92
+        }
+      ]
+    },
+    {
+      "id": "tx_040",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Зарплата (часть)",
+      "executedAt": "2025-10-16T09:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 600.0,
+      "tagIds": [
+        "tag_salary"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "600.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 410.04,
+          "balanceAfter": 1010.04
+        },
+        {
+          "type": "credit",
+          "amount": "600.00",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1180.92,
+          "balanceAfter": 1780.92
+        }
+      ]
+    },
+    {
+      "id": "tx_041",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Аптека",
+      "executedAt": "2025-10-16T11:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 8.98,
+      "tagIds": [
+        "tag_health"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "8.98",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1010.04,
+          "balanceAfter": 1001.06
+        },
+        {
+          "type": "debit",
+          "amount": "8.98",
+          "vaultId": "seed_vault_expenseHealth",
+          "balanceBefore": 25.93,
+          "balanceAfter": 34.91
+        }
+      ]
+    },
+    {
+      "id": "tx_042",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Проезд",
+      "executedAt": "2025-10-16T15:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 2.72,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "2.72",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1001.06,
+          "balanceAfter": 998.34
+        },
+        {
+          "type": "debit",
+          "amount": "2.72",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 24.36,
+          "balanceAfter": 27.08
+        }
+      ]
+    },
+    {
+      "id": "tx_043",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Перекус",
+      "executedAt": "2025-10-17T09:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 18.72,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "18.72",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 998.34,
+          "balanceAfter": 979.62
+        },
+        {
+          "type": "debit",
+          "amount": "18.72",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 102.28,
+          "balanceAfter": 121.0
+        }
+      ]
+    },
+    {
+      "id": "tx_044",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Фриланс — задача",
+      "executedAt": "2025-10-17T09:12:00Z",
       "exchangeRate": 1,
       "baseAmount": 120.0,
-      "currency": "EUR",
-      "tags": ["sale"],
+      "tagIds": [
+        "tag_freelance"
+      ],
       "entries": [
-        { "type": "debit", "amount": 120.0, "vaultId": "seed_vault_card", "balanceBefore": 2717.15, "balanceAfter": 2837.15 },
-        { "type": "credit", "amount": 120.0, "vaultId": "seed_vault_incomeCat", "balanceBefore": 1938.75, "balanceAfter": 2058.75 }
+        {
+          "type": "debit",
+          "amount": "120.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 979.62,
+          "balanceAfter": 1099.62
+        },
+        {
+          "type": "credit",
+          "amount": "120.00",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1780.92,
+          "balanceAfter": 1900.92
+        }
       ]
     },
     {
-      "id": "tx_expense_9",
+      "id": "tx_045",
       "userId": "user_seed_1",
       "type": "expense",
-      "description": "Покупка компонентов для проекта",
-      "executedAt": "2025-10-26T19:30:00Z",
+      "description": "Кафе",
+      "executedAt": "2025-10-17T15:24:00Z",
       "exchangeRate": 1,
-      "baseAmount": 58.9,
-      "currency": "EUR",
-      "tags": ["projects", "electronics"],
+      "baseAmount": 7.3,
+      "tagIds": [
+        "tag_food"
+      ],
       "entries": [
-        { "type": "credit", "amount": 58.9, "vaultId": "seed_vault_card", "balanceBefore": 2837.15, "balanceAfter": 2778.25 },
-        { "type": "debit", "amount": 58.9, "vaultId": "seed_vault_expenseProjects", "balanceBefore": 0.0, "balanceAfter": 58.9 }
+        {
+          "type": "credit",
+          "amount": "7.30",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1099.62,
+          "balanceAfter": 1092.32
+        },
+        {
+          "type": "debit",
+          "amount": "7.30",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 121.0,
+          "balanceAfter": 128.3
+        }
+      ]
+    },
+    {
+      "id": "tx_046",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Проезд",
+      "executedAt": "2025-10-18T13:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 2.48,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "2.48",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1092.32,
+          "balanceAfter": 1089.84
+        },
+        {
+          "type": "debit",
+          "amount": "2.48",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 27.08,
+          "balanceAfter": 29.56
+        }
+      ]
+    },
+    {
+      "id": "tx_047",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Компоненты для проекта",
+      "executedAt": "2025-10-18T09:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 47.9,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "47.90",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1089.84,
+          "balanceAfter": 1041.94
+        },
+        {
+          "type": "debit",
+          "amount": "47.90",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 193.86,
+          "balanceAfter": 241.76
+        }
+      ]
+    },
+    {
+      "id": "tx_048",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Перекус",
+      "executedAt": "2025-10-19T11:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 3.6,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "3.60",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1041.94,
+          "balanceAfter": 1038.34
+        },
+        {
+          "type": "debit",
+          "amount": "3.60",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 128.3,
+          "balanceAfter": 131.9
+        }
+      ]
+    },
+    {
+      "id": "tx_049",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Курс по React",
+      "executedAt": "2025-10-19T15:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 39.89,
+      "tagIds": [
+        "tag_education"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "39.89",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1038.34,
+          "balanceAfter": 998.45
+        },
+        {
+          "type": "debit",
+          "amount": "39.89",
+          "vaultId": "seed_vault_expenseEdu",
+          "balanceBefore": 32.72,
+          "balanceAfter": 72.61
+        }
+      ]
+    },
+    {
+      "id": "tx_050",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Учебные материалы",
+      "executedAt": "2025-10-19T17:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 32.32,
+      "tagIds": [
+        "tag_education"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "32.32",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 998.45,
+          "balanceAfter": 966.13
+        },
+        {
+          "type": "debit",
+          "amount": "32.32",
+          "vaultId": "seed_vault_expenseEdu",
+          "balanceBefore": 72.61,
+          "balanceAfter": 104.93
+        }
+      ]
+    },
+    {
+      "id": "tx_051",
+      "userId": "user_seed_1",
+      "type": "transfer",
+      "description": "В сбережения",
+      "executedAt": "2025-10-20T11:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 50.0,
+      "tagIds": [
+        "tag_transfer"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "50.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 966.13,
+          "balanceAfter": 916.13
+        },
+        {
+          "type": "debit",
+          "amount": "50.00",
+          "vaultId": "seed_vault_savings",
+          "balanceBefore": 0.0,
+          "balanceAfter": 50.0
+        }
+      ]
+    },
+    {
+      "id": "tx_052",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Пицца",
+      "executedAt": "2025-10-20T09:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 11.14,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "11.14",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 916.13,
+          "balanceAfter": 904.99
+        },
+        {
+          "type": "debit",
+          "amount": "11.14",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 131.9,
+          "balanceAfter": 143.04
+        }
+      ]
+    },
+    {
+      "id": "tx_053",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Автобус",
+      "executedAt": "2025-10-20T11:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 1.81,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "1.81",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 904.99,
+          "balanceAfter": 903.18
+        },
+        {
+          "type": "debit",
+          "amount": "1.81",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 29.56,
+          "balanceAfter": 31.37
+        }
+      ]
+    },
+    {
+      "id": "tx_054",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Пицца",
+      "executedAt": "2025-10-21T11:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 19.62,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "19.62",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 903.18,
+          "balanceAfter": 883.56
+        },
+        {
+          "type": "debit",
+          "amount": "19.62",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 143.04,
+          "balanceAfter": 162.66
+        }
+      ]
+    },
+    {
+      "id": "tx_055",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Курс по React",
+      "executedAt": "2025-10-21T19:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 27.57,
+      "tagIds": [
+        "tag_education"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "27.57",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 883.56,
+          "balanceAfter": 855.99
+        },
+        {
+          "type": "debit",
+          "amount": "27.57",
+          "vaultId": "seed_vault_expenseEdu",
+          "balanceBefore": 104.93,
+          "balanceAfter": 132.5
+        }
+      ]
+    },
+    {
+      "id": "tx_056",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Продукты",
+      "executedAt": "2025-10-22T11:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 20.78,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "20.78",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 855.99,
+          "balanceAfter": 835.21
+        },
+        {
+          "type": "debit",
+          "amount": "20.78",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 162.66,
+          "balanceAfter": 183.44
+        }
+      ]
+    },
+    {
+      "id": "tx_057",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Кэшбек",
+      "executedAt": "2025-10-22T17:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 1.43,
+      "tagIds": [
+        "tag_cashback"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "1.43",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 835.21,
+          "balanceAfter": 836.64
+        },
+        {
+          "type": "credit",
+          "amount": "1.43",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1900.92,
+          "balanceAfter": 1902.35
+        }
+      ]
+    },
+    {
+      "id": "tx_058",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кино",
+      "executedAt": "2025-10-22T13:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 19.06,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "19.06",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 836.64,
+          "balanceAfter": 817.58
+        },
+        {
+          "type": "debit",
+          "amount": "19.06",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 79.62,
+          "balanceAfter": 98.68
+        }
+      ]
+    },
+    {
+      "id": "tx_059",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Автобус",
+      "executedAt": "2025-10-23T15:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 1.97,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "1.97",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 817.58,
+          "balanceAfter": 815.61
+        },
+        {
+          "type": "debit",
+          "amount": "1.97",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 31.37,
+          "balanceAfter": 33.34
+        }
+      ]
+    },
+    {
+      "id": "tx_060",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Кэшбек",
+      "executedAt": "2025-10-23T11:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 2.33,
+      "tagIds": [
+        "tag_cashback"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "2.33",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 815.61,
+          "balanceAfter": 817.94
+        },
+        {
+          "type": "credit",
+          "amount": "2.33",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1902.35,
+          "balanceAfter": 1904.68
+        }
+      ]
+    },
+    {
+      "id": "tx_061",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Фриланс — задача",
+      "executedAt": "2025-10-23T17:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 120.0,
+      "tagIds": [
+        "tag_freelance"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "120.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 817.94,
+          "balanceAfter": 937.94
+        },
+        {
+          "type": "credit",
+          "amount": "120.00",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 1904.68,
+          "balanceAfter": 2024.68
+        }
+      ]
+    },
+    {
+      "id": "tx_062",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Коммунальные",
+      "executedAt": "2025-10-24T19:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 6.13,
+      "tagIds": [
+        "tag_bills"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "6.13",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 937.94,
+          "balanceAfter": 931.81
+        },
+        {
+          "type": "debit",
+          "amount": "6.13",
+          "vaultId": "seed_vault_expenseBills",
+          "balanceBefore": 32.11,
+          "balanceAfter": 38.24
+        }
+      ]
+    },
+    {
+      "id": "tx_063",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Подписка на софт",
+      "executedAt": "2025-10-24T11:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 13.74,
+      "tagIds": [
+        "tag_bills"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "13.74",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 931.81,
+          "balanceAfter": 918.07
+        },
+        {
+          "type": "debit",
+          "amount": "13.74",
+          "vaultId": "seed_vault_expenseBills",
+          "balanceBefore": 38.24,
+          "balanceAfter": 51.98
+        }
+      ]
+    },
+    {
+      "id": "tx_064",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Пицца",
+      "executedAt": "2025-10-25T09:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 9.29,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "9.29",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 918.07,
+          "balanceAfter": 908.78
+        },
+        {
+          "type": "debit",
+          "amount": "9.29",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 183.44,
+          "balanceAfter": 192.73
+        }
+      ]
+    },
+    {
+      "id": "tx_065",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Фриланс — задача",
+      "executedAt": "2025-10-25T15:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 150.0,
+      "tagIds": [
+        "tag_freelance"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "150.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 908.78,
+          "balanceAfter": 1058.78
+        },
+        {
+          "type": "credit",
+          "amount": "150.00",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 2024.68,
+          "balanceAfter": 2174.68
+        }
+      ]
+    },
+    {
+      "id": "tx_066",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Компоненты для проекта",
+      "executedAt": "2025-10-25T11:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 53.5,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "53.50",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1058.78,
+          "balanceAfter": 1005.28
+        },
+        {
+          "type": "debit",
+          "amount": "53.50",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 241.76,
+          "balanceAfter": 295.26
+        }
+      ]
+    },
+    {
+      "id": "tx_067",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Пицца",
+      "executedAt": "2025-10-26T15:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 17.65,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "17.65",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1005.28,
+          "balanceAfter": 987.63
+        },
+        {
+          "type": "debit",
+          "amount": "17.65",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 192.73,
+          "balanceAfter": 210.38
+        }
+      ]
+    },
+    {
+      "id": "tx_068",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Продукты",
+      "executedAt": "2025-10-26T09:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 9.65,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "9.65",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 987.63,
+          "balanceAfter": 977.98
+        },
+        {
+          "type": "debit",
+          "amount": "9.65",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 210.38,
+          "balanceAfter": 220.03
+        }
+      ]
+    },
+    {
+      "id": "tx_069",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кафе",
+      "executedAt": "2025-10-26T11:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 8.99,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "8.99",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 977.98,
+          "balanceAfter": 968.99
+        },
+        {
+          "type": "debit",
+          "amount": "8.99",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 220.03,
+          "balanceAfter": 229.02
+        }
+      ]
+    },
+    {
+      "id": "tx_070",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Кэшбек",
+      "executedAt": "2025-10-27T13:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 1.77,
+      "tagIds": [
+        "tag_cashback"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "1.77",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 968.99,
+          "balanceAfter": 970.76
+        },
+        {
+          "type": "credit",
+          "amount": "1.77",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 2174.68,
+          "balanceAfter": 2176.45
+        }
+      ]
+    },
+    {
+      "id": "tx_071",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Проезд",
+      "executedAt": "2025-10-27T17:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 6.84,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "6.84",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 970.76,
+          "balanceAfter": 963.92
+        },
+        {
+          "type": "debit",
+          "amount": "6.84",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 33.34,
+          "balanceAfter": 40.18
+        }
+      ]
+    },
+    {
+      "id": "tx_072",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Компоненты для проекта",
+      "executedAt": "2025-10-28T13:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 54.1,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "54.10",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 963.92,
+          "balanceAfter": 909.82
+        },
+        {
+          "type": "debit",
+          "amount": "54.10",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 295.26,
+          "balanceAfter": 349.36
+        }
+      ]
+    },
+    {
+      "id": "tx_073",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кафе",
+      "executedAt": "2025-10-28T13:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 8.91,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "8.91",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 909.82,
+          "balanceAfter": 900.91
+        },
+        {
+          "type": "debit",
+          "amount": "8.91",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 229.02,
+          "balanceAfter": 237.93
+        }
+      ]
+    },
+    {
+      "id": "tx_074",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Компоненты для проекта",
+      "executedAt": "2025-10-28T19:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 24.23,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "24.23",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 900.91,
+          "balanceAfter": 876.68
+        },
+        {
+          "type": "debit",
+          "amount": "24.23",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 349.36,
+          "balanceAfter": 373.59
+        }
+      ]
+    },
+    {
+      "id": "tx_075",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Перекус",
+      "executedAt": "2025-10-29T19:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 15.74,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "15.74",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 876.68,
+          "balanceAfter": 860.94
+        },
+        {
+          "type": "debit",
+          "amount": "15.74",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 237.93,
+          "balanceAfter": 253.67
+        }
+      ]
+    },
+    {
+      "id": "tx_076",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Игры",
+      "executedAt": "2025-10-29T19:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 14.19,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "14.19",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 860.94,
+          "balanceAfter": 846.75
+        },
+        {
+          "type": "debit",
+          "amount": "14.19",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 98.68,
+          "balanceAfter": 112.87
+        }
+      ]
+    },
+    {
+      "id": "tx_077",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Игры",
+      "executedAt": "2025-10-29T19:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 15.64,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "15.64",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 846.75,
+          "balanceAfter": 831.11
+        },
+        {
+          "type": "debit",
+          "amount": "15.64",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 112.87,
+          "balanceAfter": 128.51
+        }
+      ]
+    },
+    {
+      "id": "tx_078",
+      "userId": "user_seed_1",
+      "type": "transfer",
+      "description": "В сбережения",
+      "executedAt": "2025-10-30T15:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 80.0,
+      "tagIds": [
+        "tag_transfer"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "80.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 831.11,
+          "balanceAfter": 751.11
+        },
+        {
+          "type": "debit",
+          "amount": "80.00",
+          "vaultId": "seed_vault_savings",
+          "balanceBefore": 50.0,
+          "balanceAfter": 130.0
+        }
+      ]
+    },
+    {
+      "id": "tx_079",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Учебные материалы",
+      "executedAt": "2025-10-30T09:24:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 23.02,
+      "tagIds": [
+        "tag_education"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "23.02",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 751.11,
+          "balanceAfter": 728.09
+        },
+        {
+          "type": "debit",
+          "amount": "23.02",
+          "vaultId": "seed_vault_expenseEdu",
+          "balanceBefore": 132.5,
+          "balanceAfter": 155.52
+        }
+      ]
+    },
+    {
+      "id": "tx_080",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кафе",
+      "executedAt": "2025-10-31T17:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 17.72,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "17.72",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 728.09,
+          "balanceAfter": 710.37
+        },
+        {
+          "type": "debit",
+          "amount": "17.72",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 253.67,
+          "balanceAfter": 271.39
+        }
+      ]
+    },
+    {
+      "id": "tx_081",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Аптека",
+      "executedAt": "2025-10-31T13:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 13.91,
+      "tagIds": [
+        "tag_health"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "13.91",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 710.37,
+          "balanceAfter": 696.46
+        },
+        {
+          "type": "debit",
+          "amount": "13.91",
+          "vaultId": "seed_vault_expenseHealth",
+          "balanceBefore": 34.91,
+          "balanceAfter": 48.82
+        }
+      ]
+    },
+    {
+      "id": "tx_082",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Суши с друзьями",
+      "executedAt": "2025-10-31T11:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 12.37,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "12.37",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 696.46,
+          "balanceAfter": 684.09
+        },
+        {
+          "type": "debit",
+          "amount": "12.37",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 128.51,
+          "balanceAfter": 140.88
+        }
+      ]
+    },
+    {
+      "id": "tx_083",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кофе",
+      "executedAt": "2025-11-01T09:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 4.95,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "4.95",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 684.09,
+          "balanceAfter": 679.14
+        },
+        {
+          "type": "debit",
+          "amount": "4.95",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 271.39,
+          "balanceAfter": 276.34
+        }
+      ]
+    },
+    {
+      "id": "tx_084",
+      "userId": "user_seed_1",
+      "type": "income",
+      "description": "Зарплата (часть)",
+      "executedAt": "2025-11-01T09:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 600.0,
+      "tagIds": [
+        "tag_salary"
+      ],
+      "entries": [
+        {
+          "type": "debit",
+          "amount": "600.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 679.14,
+          "balanceAfter": 1279.14
+        },
+        {
+          "type": "credit",
+          "amount": "600.00",
+          "vaultId": "seed_vault_incomeCat",
+          "balanceBefore": 2176.45,
+          "balanceAfter": 2776.45
+        }
+      ]
+    },
+    {
+      "id": "tx_085",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Компоненты для проекта",
+      "executedAt": "2025-11-01T15:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 46.48,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "46.48",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1279.14,
+          "balanceAfter": 1232.66
+        },
+        {
+          "type": "debit",
+          "amount": "46.48",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 373.59,
+          "balanceAfter": 420.07
+        }
+      ]
+    },
+    {
+      "id": "tx_086",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Метро",
+      "executedAt": "2025-11-02T09:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 6.65,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "6.65",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1232.66,
+          "balanceAfter": 1226.01
+        },
+        {
+          "type": "debit",
+          "amount": "6.65",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 40.18,
+          "balanceAfter": 46.83
+        }
+      ]
+    },
+    {
+      "id": "tx_087",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кино",
+      "executedAt": "2025-11-02T19:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 9.34,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "9.34",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1226.01,
+          "balanceAfter": 1216.67
+        },
+        {
+          "type": "debit",
+          "amount": "9.34",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 140.88,
+          "balanceAfter": 150.22
+        }
+      ]
+    },
+    {
+      "id": "tx_088",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Аренда комнаты",
+      "executedAt": "2025-11-03T09:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 280.0,
+      "tagIds": [
+        "tag_rent"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "280.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 1216.67,
+          "balanceAfter": 936.67
+        },
+        {
+          "type": "debit",
+          "amount": "280.00",
+          "vaultId": "seed_vault_rent",
+          "balanceBefore": 280.0,
+          "balanceAfter": 560.0
+        }
+      ]
+    },
+    {
+      "id": "tx_089",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Спортзал (разово)",
+      "executedAt": "2025-11-03T15:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 17.4,
+      "tagIds": [
+        "tag_health"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "17.40",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 936.67,
+          "balanceAfter": 919.27
+        },
+        {
+          "type": "debit",
+          "amount": "17.40",
+          "vaultId": "seed_vault_expenseHealth",
+          "balanceBefore": 48.82,
+          "balanceAfter": 66.22
+        }
+      ]
+    },
+    {
+      "id": "tx_090",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Спортзал (разово)",
+      "executedAt": "2025-11-03T17:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 15.97,
+      "tagIds": [
+        "tag_health"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "15.97",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 919.27,
+          "balanceAfter": 903.3
+        },
+        {
+          "type": "debit",
+          "amount": "15.97",
+          "vaultId": "seed_vault_expenseHealth",
+          "balanceBefore": 66.22,
+          "balanceAfter": 82.19
+        }
+      ]
+    },
+    {
+      "id": "tx_091",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Метро",
+      "executedAt": "2025-11-04T13:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 8.17,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "8.17",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 903.3,
+          "balanceAfter": 895.13
+        },
+        {
+          "type": "debit",
+          "amount": "8.17",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 46.83,
+          "balanceAfter": 55.0
+        }
+      ]
+    },
+    {
+      "id": "tx_092",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Метро",
+      "executedAt": "2025-11-04T09:57:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 3.48,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "3.48",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 895.13,
+          "balanceAfter": 891.65
+        },
+        {
+          "type": "debit",
+          "amount": "3.48",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 55.0,
+          "balanceAfter": 58.48
+        }
+      ]
+    },
+    {
+      "id": "tx_093",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Пицца",
+      "executedAt": "2025-11-04T17:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 8.72,
+      "tagIds": [
+        "tag_food"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "8.72",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 891.65,
+          "balanceAfter": 882.93
+        },
+        {
+          "type": "debit",
+          "amount": "8.72",
+          "vaultId": "seed_vault_expenseFood",
+          "balanceBefore": 276.34,
+          "balanceAfter": 285.06
+        }
+      ]
+    },
+    {
+      "id": "tx_094",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Кино",
+      "executedAt": "2025-11-05T13:44:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 13.88,
+      "tagIds": [
+        "tag_fun"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "13.88",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 882.93,
+          "balanceAfter": 869.05
+        },
+        {
+          "type": "debit",
+          "amount": "13.88",
+          "vaultId": "seed_vault_expenseFun",
+          "balanceBefore": 150.22,
+          "balanceAfter": 164.1
+        }
+      ]
+    },
+    {
+      "id": "tx_095",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Автобус",
+      "executedAt": "2025-11-05T15:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 2.92,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "2.92",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 869.05,
+          "balanceAfter": 866.13
+        },
+        {
+          "type": "debit",
+          "amount": "2.92",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 58.48,
+          "balanceAfter": 61.4
+        }
+      ]
+    },
+    {
+      "id": "tx_096",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Интернет",
+      "executedAt": "2025-11-06T19:03:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 15.0,
+      "tagIds": [
+        "tag_bills"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "15.00",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 866.13,
+          "balanceAfter": 851.13
+        },
+        {
+          "type": "debit",
+          "amount": "15.00",
+          "vaultId": "seed_vault_expenseBills",
+          "balanceBefore": 51.98,
+          "balanceAfter": 66.98
+        }
+      ]
+    },
+    {
+      "id": "tx_097",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Такси",
+      "executedAt": "2025-11-06T15:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 3.68,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "3.68",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 851.13,
+          "balanceAfter": 847.45
+        },
+        {
+          "type": "debit",
+          "amount": "3.68",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 61.4,
+          "balanceAfter": 65.08
+        }
+      ]
+    },
+    {
+      "id": "tx_098",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Интернет",
+      "executedAt": "2025-11-06T13:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 12.32,
+      "tagIds": [
+        "tag_bills"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "12.32",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 847.45,
+          "balanceAfter": 835.13
+        },
+        {
+          "type": "debit",
+          "amount": "12.32",
+          "vaultId": "seed_vault_expenseBills",
+          "balanceBefore": 66.98,
+          "balanceAfter": 79.3
+        }
+      ]
+    },
+    {
+      "id": "tx_099",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Проезд",
+      "executedAt": "2025-11-07T19:38:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 3.99,
+      "tagIds": [
+        "tag_transport"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "3.99",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 835.13,
+          "balanceAfter": 831.14
+        },
+        {
+          "type": "debit",
+          "amount": "3.99",
+          "vaultId": "seed_vault_expenseTransport",
+          "balanceBefore": 65.08,
+          "balanceAfter": 69.07
+        }
+      ]
+    },
+    {
+      "id": "tx_100",
+      "userId": "user_seed_1",
+      "type": "expense",
+      "description": "Компоненты для проекта",
+      "executedAt": "2025-11-07T15:12:00Z",
+      "exchangeRate": 1,
+      "baseAmount": 16.03,
+      "tagIds": [
+        "tag_projects"
+      ],
+      "entries": [
+        {
+          "type": "credit",
+          "amount": "16.03",
+          "vaultId": "seed_vault_card",
+          "balanceBefore": 831.14,
+          "balanceAfter": 815.11
+        },
+        {
+          "type": "debit",
+          "amount": "16.03",
+          "vaultId": "seed_vault_expenseProjects",
+          "balanceBefore": 420.07,
+          "balanceAfter": 436.1
+        }
       ]
     }
   ]

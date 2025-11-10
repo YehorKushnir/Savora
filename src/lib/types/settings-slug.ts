@@ -1,0 +1,1 @@
+export type SectionSlug = 'appearance' | 'account' | '404'

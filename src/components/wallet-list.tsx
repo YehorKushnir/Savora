@@ -34,7 +34,7 @@ const WalletList: FC<Props> = ({wallets}) => {
     }
 
     const clsx = (id : string) => {
-        return active === id ? 'border-2 border-blue-500' : 'border-2 border-transparent'
+        return active === id ? 'border-2 border-[var(--accent-foreground)]' : 'border-2 border-transparent'
     }
 
     return (
