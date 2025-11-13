@@ -34,27 +34,17 @@ import {
 
 import { useEffect, useRef, useState } from "react"
 import { WalletTablePagination } from "@/src/components/wallet-pagination"
-import { useWallets } from "@/src/lib/stores/wallet-store"
+import {useTypeOptions} from "@/src/lib/stores/type-options-store"
 import WalletOptions from "@/src/components/wallet-options"
 import { useWalletGlobalFilter } from "@/src/hooks/use-wallet-global-filter"
 import { WalletSearch } from "@/src/components/wallet-search"
 import { Transaction, TransactionEntry } from "@/src/lib/types/transactions"
 
-export const columns: ColumnDef<Transaction | TransactionEntry>[] = [
+export const columns: ColumnDef<Transaction>[] = [
     {
         accessorKey: "baseAmount",
         header: () => <div className="text-center">Amount</div>,
         cell: ({ row }) => {
-            if (row.depth === 1) {
-                const entry = row.original as any
-                const amount = Number(entry.amount ?? 0)
-                return (
-                    <div className="text-center font-medium">
-                        {amount.toFixed(2)}
-                    </div>
-                )
-            }
-
             const amount = Number(row.getValue("baseAmount") ?? 0)
             const currency = String(row.getValue("currency") ?? "EUR")
 
@@ -79,47 +69,38 @@ export const columns: ColumnDef<Transaction | TransactionEntry>[] = [
             </Button>
         ),
         cell: ({ row }) => {
-            if (row.depth === 1) {
-                const entry = row.original as any
-                const isCredit = entry.type === "credit"
-                return (
-                    <div
-                        className={`capitalize ${
-                            isCredit ? "text-red-600" : "text-green-600"
-                        }`}
-                    >
-                        {entry.type ?? ""}
-                    </div>
-                )
-            }
             return (
-                <div className="capitalize">{row.getValue("type") as string}</div>
+                <div className="capitalize">{row.getValue("type")}</div>
             )
         },
+        size: 150,
+        minSize: 70,
+        maxSize: 90,
     },
     {
         accessorKey: "target",
         header: () => <div className="text-center">Target</div>,
         cell: ({ row }) => {
-            if (row.depth === 1) {
-                return <div className="text-center h-5" />
-            }
+            const entries = row.original.entries
+            console.log("entries", entries)
+            const VaultId = entries
+                .filter((entry: TransactionEntry) => entry.type === "debit")
+                .map((entry: TransactionEntry) => entry.vaultId.replace(/^seed_vault_/, ""))
             return (
                 <div className="text-center">
-                    {row.getValue("currency") as string}
+                    {VaultId}
                 </div>
             )
         },
+        size: 150,
+        minSize: 100,
+        maxSize: 120,
     },
     {
         accessorKey: "description",
         header: "Description",
         cell: ({ row }) => {
-            if (row.depth === 1) {
-                const entry = row.original as any
-                return <div>{entry.vaultId ?? ""}</div>
-            }
-            return <div>{row.getValue("description") as string}</div>
+            return <div>{row.getValue("description")}</div>
         },
         size: 251,
         minSize: 180,
@@ -136,7 +117,6 @@ export const columns: ColumnDef<Transaction | TransactionEntry>[] = [
             </Button>
         ),
         cell: ({ row }) => {
-            if (row.depth === 1) return <div className="px-4" />
             const date = new Date(row.getValue("executedAt") as string)
             return <div className="px-4">{date.toLocaleDateString()}</div>
         },
@@ -145,10 +125,7 @@ export const columns: ColumnDef<Transaction | TransactionEntry>[] = [
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            if (row.depth === 1) {
-                return <div className="h-5" />
-            }
-            const transaction = row.original as any
+            const transaction = row.original
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -179,7 +156,7 @@ export const columns: ColumnDef<Transaction | TransactionEntry>[] = [
 
 export function WalletTable({ data = [] }: { data?: Transaction[] }) {
     const safeData = Array.isArray(data) ? data : []
-    const walletFilterType = useWallets(state => state.type)
+    const walletFilterType = useTypeOptions(state => state.type)
 
     const [tableData, setTableData] = useState<Transaction[]>(safeData)
 

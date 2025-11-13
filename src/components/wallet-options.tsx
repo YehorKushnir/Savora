@@ -1,9 +1,9 @@
 import {Tabs, TabsList, TabsTrigger} from '@/src/components/ui/tabs'
-import {useWallets} from "@/src/lib/stores/wallet-store";
+import {useTypeOptions} from "@/src/lib/stores/type-options-store";
 
 const WalletOptions = () => {
-    const type = useWallets((state) => state.type)
-    const setType = useWallets((state) => state.setType)
+    const type = useTypeOptions((state) => state.type)
+    const setType = useTypeOptions((state) => state.setType)
 
     return (
         <>

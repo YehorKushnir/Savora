@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {ICurrencies} from '@/src/lib/types/currencies'
 import {Transactions} from "@/src/lib/types/transactions";
+import {Wallet} from "@/src/lib/types/wallets"
 
 export async function getCurrencies() {
     const res = await axios.get<{

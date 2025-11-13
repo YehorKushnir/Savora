@@ -26,7 +26,12 @@ const chartConfig = {
 
 export function StaticsChartFunds({ data = [] }: { data?: Transaction[] }) {
     const {timeRange, timePhrase, customRange} =  useTimeRange()
-    const filteredData = filterTransactionsByDate(data, customRange ?  customRange : timeRange)
+    const filteredData = filterTransactionsByDate(data, customRange
+        ? customRange
+        : timeRange !== "custom"
+            ? timeRange
+            : "90"
+    )
 
     const baseRecords: ChartDataType[] = filteredData
         .map((item) => {
