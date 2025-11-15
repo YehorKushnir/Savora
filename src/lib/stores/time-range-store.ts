@@ -1,10 +1,8 @@
 import {create} from "zustand";
-import {devtools} from "zustand/middleware";
 
 interface State {
     timeRange: string
     customRange: string | undefined
-    setRange: (params: { fromDate?: Date | undefined, toDate?: Date | undefined, range?: string }) => void;
     timePhrase: string
     openFrom: boolean;
     openTo: boolean;
@@ -14,9 +12,10 @@ interface State {
     setToOpen: (value: boolean) => void;
     setFromDate: (date: Date | undefined) => void;
     setToDate: (date: Date | undefined) => void;
+    setRange: (params: { fromDate?: Date | undefined, toDate?: Date | undefined, range?: string }) => void;
 }
 
-export  const useTimeRange = create<State>()(devtools((set) => ({
+export  const useTimeRange = create<State>((set) => ({
     timeRange: "90",
     timePhrase: "3 months",
     fromDate: undefined,
@@ -56,4 +55,4 @@ export  const useTimeRange = create<State>()(devtools((set) => ({
             set({ timeRange: "custom", timePhrase: "custom range", fromDate, toDate });
         }
     },
-}), {name : "TimeRange"}))
+}))

@@ -57,7 +57,7 @@ export const WalletTablePagination: FC<Props> = ({ table }) => {
                         value={table.getState().pagination.pageSize}
                         onChange={(e) => table.setPageSize(Number(e.target.value))}
                     >
-                        {[10, 20, 30, 50].map((size) => (
+                        {[15, 20, 30, 50].map((size) => (
                             <option key={size} value={size}>
                                 {size}
                             </option>

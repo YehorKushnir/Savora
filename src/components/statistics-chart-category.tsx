@@ -24,6 +24,25 @@ export function StaticsChartCategory({ data = [] }: { data?: Transaction[] }) {
     const totals: Record<string, number> = {};
     const filteredData = filterTransactionsByDate(data, customRange ?  customRange : timeRange)
 
+    if (!filteredData || filteredData.length === 0) {
+        return (
+            <Card className="@container/card pb-4">
+                <CardHeader>
+                    <CardTitle>Largest expenditures by category</CardTitle>
+                    <CardDescription className="flex gap-2 flex-col">
+                         <span className="hidden @[540px]/card:block">
+                            Total for the last {timePhrase}
+                         </span>
+                        <span className="@[540px]/card:hidden">Last {timePhrase}</span>
+                        <span>
+                              No data available for the selected range.
+                        </span>
+                    </CardDescription>
+                </CardHeader>
+            </Card>
+        )
+    }
+
     for (const transaction of filteredData) {
       for (const entries of transaction.entries) {
         if (entries.vaultId === "seed_vault_card" || entries.vaultId.includes("income")) continue;

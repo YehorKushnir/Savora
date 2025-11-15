@@ -52,92 +52,98 @@ export function StaticsChartFunds({ data = [] }: { data?: Transaction[] }) {
         <Card className="@container/card pb-4">
             <CardHeader>
                 <CardTitle>Total Funds</CardTitle>
-                <CardDescription>
-                <span className="hidden @[540px]/card:block">
-                    Total for the last {timePhrase}
-                </span>
-                <span className="@[540px]/card:hidden">Last {timePhrase}</span>
+                <CardDescription className="flex gap-2 flex-col">
+                     <span className="hidden @[540px]/card:block">
+                         Total for the last {timePhrase}
+                     </span>
+                    <span className="@[540px]/card:hidden">Last {timePhrase}</span>
+                   {baseRecords.length === 0 && (
+                       <span>No data available for the selected range.</span>
+                   )}
                 </CardDescription>
             </CardHeader>
-            <CardContent className="px-2 pt-4 sm:px-4">
-                <ChartContainer
-                    config={chartConfig}
-                    className="aspect-auto h-[290px] w-full"
-                >
-                    <AreaChart data={baseRecords}>
-                        <defs>
-                            <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                                <stop
-                                    offset="5%"
-                                    stopColor="var(--primary)"
-                                    stopOpacity={1.0}
-                                />
-                                <stop
-                                    offset="95%"
-                                    stopColor="var(--primary)"
-                                    stopOpacity={0.1}
-                                />
-                            </linearGradient>
-                            <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                                <stop
-                                    offset="5%"
-                                    stopColor="var(--primary)"
-                                    stopOpacity={0.8}
-                                />
-                                <stop
-                                    offset="95%"
-                                    stopColor="var(--primary)"
-                                    stopOpacity={0.1}
-                                />
-                            </linearGradient>
-                        </defs>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="date"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                            minTickGap={32}
-                            tickFormatter={(value) => {
-                                const date = new Date(value)
-                                return date.toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                })
-                            }}
-                        />
-                        <YAxis
-                            dataKey="amount"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                            minTickGap={32}
-                            tickFormatter={(value) => `${value} €`}
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={
-                                <ChartTooltipContent
-                                    labelFormatter={(value) => {
-                                        return new Date(value).toLocaleDateString("en-US", {
-                                            month: "short",
-                                            day: "numeric",
-                                        })
-                                    }}
-                                    indicator="dot"
-                                />
-                            }
-                        />
-                        <Area
-                            type="natural"
-                            dataKey="amount"
-                            connectNulls
-                            fill="url(#fillDesktop)"
-                            stroke="var(--primary)"
-                        />
-                    </AreaChart>
-                </ChartContainer>
-            </CardContent>
+            { baseRecords.length > 0
+                ? <CardContent className="px-2 pt-4 sm:px-4">
+                     <ChartContainer
+                        config={chartConfig}
+                        className="aspect-auto h-[290px] w-full"
+                    >
+                        <AreaChart data={baseRecords}>
+                            <defs>
+                                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                                    <stop
+                                        offset="5%"
+                                        stopColor="var(--primary)"
+                                        stopOpacity={1.0}
+                                    />
+                                    <stop
+                                        offset="95%"
+                                        stopColor="var(--primary)"
+                                        stopOpacity={0.1}
+                                    />
+                                </linearGradient>
+                                <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                                    <stop
+                                        offset="5%"
+                                        stopColor="var(--primary)"
+                                        stopOpacity={0.8}
+                                    />
+                                    <stop
+                                        offset="95%"
+                                        stopColor="var(--primary)"
+                                        stopOpacity={0.1}
+                                    />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="date"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                minTickGap={32}
+                                tickFormatter={(value) => {
+                                    const date = new Date(value)
+                                    return date.toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                    })
+                                }}
+                            />
+                            <YAxis
+                                dataKey="amount"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                minTickGap={32}
+                                tickFormatter={(value) => `${value} €`}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={
+                                    <ChartTooltipContent
+                                        labelFormatter={(value) => {
+                                            return new Date(value).toLocaleDateString("en-US", {
+                                                month: "short",
+                                                day: "numeric",
+                                            })
+                                        }}
+                                        indicator="dot"
+                                    />
+                                }
+                            />
+                            <Area
+                                type="natural"
+                                dataKey="amount"
+                                connectNulls
+                                fill="url(#fillDesktop)"
+                                stroke="var(--primary)"
+                            />
+                        </AreaChart>
+                    </ChartContainer>
+                </CardContent>
+                : null
+            }
         </Card>
     )
 }
