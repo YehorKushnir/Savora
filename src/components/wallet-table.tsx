@@ -1,5 +1,7 @@
 "use client"
 
+import { CSSProperties, useEffect, useMemo, useRef, useState } from "react"
+
 import {
     ColumnDef,
     flexRender,
@@ -7,13 +9,35 @@ import {
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
-    getExpandedRowModel,
     SortingState,
     VisibilityState,
     PaginationState,
-    useReactTable, Header, Cell,
+    useReactTable,
+    Header,
+    Cell,
 } from "@tanstack/react-table"
+
 import { ArrowUpDown, ChevronDown, MoreHorizontal, GripVertical } from "lucide-react"
+
+import {
+    DndContext,
+    KeyboardSensor,
+    MouseSensor,
+    TouchSensor,
+    closestCenter,
+    type DragEndEvent,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core"
+import { restrictToHorizontalAxis, restrictToParentElement } from "@dnd-kit/modifiers"
+import {
+    arrayMove,
+    SortableContext,
+    horizontalListSortingStrategy,
+} from "@dnd-kit/sortable"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+
 import { Button } from "@/src/components/ui/button"
 import {
     DropdownMenu,
@@ -32,35 +56,16 @@ import {
     TableRow,
 } from "@/src/components/ui/table"
 
-import {
-    DndContext,
-    KeyboardSensor,
-    MouseSensor,
-    TouchSensor,
-    closestCenter,
-    type DragEndEvent,
-    useSensor,
-    useSensors,
-} from '@dnd-kit/core'
-import { restrictToHorizontalAxis, restrictToParentElement } from '@dnd-kit/modifiers'
-import {
-    arrayMove,
-    SortableContext,
-    horizontalListSortingStrategy,
-} from '@dnd-kit/sortable'
-
-// needed for row & cell level scope DnD setup
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-
-import {CSSProperties, useEffect, useMemo, useRef, useState} from "react"
-import { WalletTablePagination } from "@/src/components/wallet-pagination"
-import {useTypeOptions} from "@/src/lib/stores/type-options-store"
 import WalletOptions from "@/src/components/wallet-options"
-import { useWalletGlobalFilter } from "@/src/hooks/use-wallet-global-filter"
+import { WalletTablePagination } from "@/src/components/wallet-pagination"
 import { WalletSearch } from "@/src/components/wallet-search"
+
+import { useWalletGlobalFilter } from "@/src/hooks/use-wallet-global-filter"
+
+import { useTypeOptions } from "@/src/lib/stores/type-options-store"
+import { useWallets } from "@/src/lib/stores/wallets-store"
+
 import { Transaction, TransactionEntry } from "@/src/lib/types/transactions"
-import {useWallets} from "@/src/lib/stores/wallets-store";
 
 const DraggableTableHeader = ({ header }: {
     header: Header<Transaction, unknown>
@@ -82,7 +87,7 @@ const DraggableTableHeader = ({ header }: {
     return (
         <TableHead
             colSpan={header.colSpan}
-            ref={setNodeRef as any}
+            ref={setNodeRef}
             style={style}
             className="group relative"
         >
@@ -107,7 +112,7 @@ const DraggableHeaderButton = ({ id }: { id: string }) => {
 
     return (
         <Button
-            ref={setNodeRef as any}
+            ref={setNodeRef}
             variant="ghost"
             {...attributes}
             {...listeners}
@@ -138,7 +143,7 @@ const DragAlongCell = ({ cell }: { cell: Cell<Transaction, unknown> }) => {
         <TableCell
             key={cell.id}
             style={{ ...style, touchAction: 'none', userSelect: 'none' }}
-            ref={setNodeRef as any}
+            ref={setNodeRef}
         >
             {flexRender(
                 cell.column.columnDef.cell,
@@ -163,11 +168,7 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
     })
 
     const [searchValue, setSearchValue] = useState<string>("")
-    const [expanded, setExpanded] = useState<Record<string, boolean>>({})
-
-    const prevSearchRef = useRef("")
-
-    const globalFilterFn = useWalletGlobalFilter(expanded)
+    const globalFilterFn = useWalletGlobalFilter()
 
     const columns = useMemo<ColumnDef<Transaction>[]>(() => [
         {
@@ -202,7 +203,7 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
                 const amount = Number(row.getValue("baseAmount") ?? 0)
                 const currency = "EUR"
 
-                const formatted = new Intl.NumberFormat(undefined, {
+                const formatted = new Intl.NumberFormat("en-GB", {
                     style: "currency",
                     currency,
                 }).format(amount)// поменять местами чтоб евро было спереди
@@ -307,7 +308,10 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
 
     useEffect(() => {
         if(columnOrder.length === 0) {
-            setColumnOrder(columns.map((column, index) => column.id ?? (column as any).accessorKey ?? String(index)))
+            setColumnOrder(columns.map((column, index) => {
+                const accessor = 'accessorKey' in column ? column.accessorKey : undefined;
+                return column.id ?? accessor ?? String(index)
+            }))
         }
     }, []);
 
@@ -319,63 +323,26 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
         )
     }, [safeData, walletFilterType])
 
-    useEffect(() => {
-        const previous = prevSearchRef.current.trim()
-        const current = searchValue.trim()
-
-        const hadPrevSearch = previous.length > 0
-        const hasCurrentSearch = current.length > 0
-
-        if (!hadPrevSearch && hasCurrentSearch) {
-            setExpanded({})
-        }
-
-        prevSearchRef.current = current
-    }, [searchValue])
-
     const table = useReactTable({
         data: tableData,
         columns,
-        getRowId: (row: any, index, parent) => {
-            if (!parent) {
-                return row.id ? String(row.id) : `tx-${index}`
-            }
-            const entryKey = row.vaultId ?? row.type ?? index
-
-            return `${parent.id}.${entryKey}`
-        },
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        getExpandedRowModel: getExpandedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        paginateExpandedRows: false,
         filterFromLeafRows: false,
         enableGlobalFilter: true,
-        getRowCanExpand: row =>
-            Array.isArray((row.original as any).entries) &&
-            (row.original as any).entries.length > 0,
-        getSubRows: (row: any) => row.entries ?? [],
         globalFilterFn: globalFilterFn,
         onSortingChange: setSorting,
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         onPaginationChange: setPagination,
-        onExpandedChange: (updater) => {
-            setExpanded((prev) => {
-                if (typeof updater === "function") {
-                    return (updater as (old: Record<string, boolean>) => Record<string, boolean>)(prev)
-                }
-                return updater as Record<string, boolean>
-            })
-        },
         state: {
             columnOrder,
             sorting,
             columnVisibility,
             rowSelection,
             pagination,
-            expanded,
             globalFilter: searchValue,
         },
     })

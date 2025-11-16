@@ -1,10 +1,6 @@
-import { Row } from "@tanstack/react-table"
+import {Row} from "@tanstack/react-table"
 
-type ExpandedState = Record<string, boolean>
 type AnyRow = Row<any>
-type EntryLike = Record<string, unknown> & {
-  amount?: number | string
-}
 
 function formatDateDDMMYYYY(input: any): string | null {
     if (!input) return null
@@ -18,7 +14,7 @@ function formatDateDDMMYYYY(input: any): string | null {
     return `${dd}.${mm}.${yyyy}`
 }
 
-export function useWalletGlobalFilter(_expanded: ExpandedState) {
+export function useWalletGlobalFilter() {
     return (row: AnyRow, _columnId: string, rawSearch: string) => {
         const rowData: any = row.original
 
@@ -26,35 +22,32 @@ export function useWalletGlobalFilter(_expanded: ExpandedState) {
         const query = rawText.toLowerCase()
         const isSearching = query.length > 0
 
-        // дочерняя строка (entry)
-        if (row.depth > 0) {
-            // дети никогда не режем фильтром.
-            // они появляются только вместе с родителем, значит это безопасно
-            return true
-        }
-
-        // родительская строка (transaction)
         if (!isSearching) {
             return true
         }
 
-        // добавляем отформатированную дату в поля поиска
         const formattedDate = formatDateDDMMYYYY(rowData.executedAt)
+
+        const targetValues = (rowData.entries || [])
+            .filter((entry: any) => entry.type === "debit")
+            .map((entry: any) => entry.vaultId?.replace(/^seed_vault_/, "") || "")
+            .join(" ")
 
         const parentFields = [
             rowData.id,
             rowData.executedAt,
-            formattedDate,         // <- теперь можно искать "23.10.2025"
+            formattedDate,
             rowData.type,
             rowData.description,
             rowData.vaultId,
             rowData.amount,
             rowData.baseAmount,
             rowData.currency,
+            targetValues,
         ]
 
-        // числовой поиск: "18", "6.50", "320,00"
-        const numericPattern = /^[0-9]+([.,][0-9]+)?$/
+        console.log(rawText)
+        const numericPattern = /^\d{1,3}(?:,\d{3})*(?:\.\d+)?$/
         const isNumericQuery = numericPattern.test(rawText)
 
         if (isNumericQuery) {
@@ -67,38 +60,13 @@ export function useWalletGlobalFilter(_expanded: ExpandedState) {
                     .includes(rawText.replace(",", "."))
             })
 
-            const entries = Array.isArray(rowData.entries) ? (rowData.entries as EntryLike[]) : []
-            const childNumberMatch = entries.some((entry: EntryLike) => {
-              const amt = entry?.amount
-              if (amt === undefined || amt === null) return false
-              return String(amt)
-                .replace(",", ".")
-                .includes(rawText.replace(",", "."))
-            })
-
-            if (parentNumberMatch || childNumberMatch) {
+            if (parentNumberMatch) {
                 return true
             }
         }
 
-        const entries = Array.isArray(rowData.entries) ? (rowData.entries as EntryLike[]) : []
-        const entriesText = entries
-          .map((entry: EntryLike) => Object.values(entry ?? {}).join(" "))
-          .join(" ")
-          .toLowerCase()
-
-        const parentMatch = parentFields
+        return parentFields // Match
             .filter((v) => v !== undefined && v !== null)
-            .some((v) => String(v).toLowerCase().includes(query))
-
-        if (parentMatch) {
-            return true
-        }
-
-        if (entriesText.includes(query)) {
-            return true
-        }
-
-        return false
+            .some((v) => String(v).toLowerCase().includes(query));
     }
 }
