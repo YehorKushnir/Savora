@@ -18,7 +18,6 @@ export function WalletSearch({value = "", onChangeAction, placeholder = "Search 
         setLocal(value)
     }, [value])
 
-    // дебаунс
     useEffect(() => {
         const t = setTimeout(() => {
             onChangeAction(local)

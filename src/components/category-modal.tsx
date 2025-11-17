@@ -48,7 +48,7 @@ const CategoryModal = () => {
     const Icon = icons[form.watch().icon as IconName] as LucideIcon
 
     const onSubmit = form.handleSubmit(async (values) => {
-        category
+        category?.id
             ? await updateCategory(category.id, categoryDto(values))
             : await createCategory(categoryDto(values))
 

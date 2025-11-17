@@ -1,6 +1,6 @@
 "use client"
 
-import { CSSProperties, useEffect, useMemo, useRef, useState } from "react"
+import { CSSProperties, useEffect, useMemo, useState } from "react"
 
 import {
     ColumnDef,
@@ -70,7 +70,7 @@ import { Transaction, TransactionEntry } from "@/src/lib/types/transactions"
 const DraggableTableHeader = ({ header }: {
     header: Header<Transaction, unknown>
 }) => {
-    const { setNodeRef, isDragging, transform } = useSortable({
+    const {isDragging,setNodeRef, transform } = useSortable({
         id: header.column.id,
     })
 
@@ -154,10 +154,8 @@ const DragAlongCell = ({ cell }: { cell: Cell<Transaction, unknown> }) => {
 }
 
 export function WalletTable({ data = [] }: { data?: Transaction[] }) {
-    const safeData = Array.isArray(data) ? data : []
     const walletFilterType = useTypeOptions(state => state.type)
-
-    const [tableData, setTableData] = useState<Transaction[]>(safeData)
+    const [tableData, setTableData] = useState<Transaction[]>(data)
 
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -185,8 +183,8 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
                 )
             },
             size: 150,
-            minSize: 85,
-            maxSize: 85,
+            minSize: 100,
+            maxSize: 100,
         },
         {
             accessorKey: "baseAmount",
@@ -211,8 +209,8 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
                 return <div className="pl-4 font-medium">{formatted}</div>
             },
             size: 150,
-            minSize: 90,
-            maxSize: 90,
+            minSize: 100,
+            maxSize: 100,
         },
         {
             accessorKey: "target",
@@ -304,7 +302,8 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
         },
     ], [])
 
-    const {columnOrder, setColumnOrder} = useWallets()
+    const columnOrder = useWallets(state => state.columnOrder)
+    const setColumnOrder = useWallets(state => state.setColumnOrder)
 
     useEffect(() => {
         if(columnOrder.length === 0) {
@@ -318,10 +317,10 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
     useEffect(() => {
         setTableData(() =>
             walletFilterType === "all"
-                ? safeData
-                : safeData.filter(item => item.type === walletFilterType),
+                ? data
+                : data.filter(item => item.type === walletFilterType),
         )
-    }, [safeData, walletFilterType])
+    }, [data, walletFilterType])
 
     const table = useReactTable({
         data: tableData,

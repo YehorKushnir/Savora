@@ -1,8 +1,9 @@
 import {Row} from "@tanstack/react-table"
+import {Transaction} from "@/src/lib/types/transactions";
 
 type AnyRow = Row<any>
 
-function formatDateDDMMYYYY(input: any): string | null {
+function formatDateDDMMYYYY(input: string): string | null {
     if (!input) return null
     const dateObj = new Date(input)
     if (isNaN(dateObj.getTime())) return null
@@ -16,7 +17,8 @@ function formatDateDDMMYYYY(input: any): string | null {
 
 export function useWalletGlobalFilter() {
     return (row: AnyRow, _columnId: string, rawSearch: string) => {
-        const rowData: any = row.original
+        const rowData: Transaction = row.original
+        console.log(rowData)
 
         const rawText = String(rawSearch ?? "").trim()
         const query = rawText.toLowerCase()
@@ -39,19 +41,14 @@ export function useWalletGlobalFilter() {
             formattedDate,
             rowData.type,
             rowData.description,
-            rowData.vaultId,
-            rowData.amount,
             rowData.baseAmount,
-            rowData.currency,
             targetValues,
         ]
-
-        console.log(rawText)
         const numericPattern = /^\d{1,3}(?:,\d{3})*(?:\.\d+)?$/
         const isNumericQuery = numericPattern.test(rawText)
 
         if (isNumericQuery) {
-            const parentNumbers = [rowData.amount, rowData.baseAmount]
+            const parentNumbers = [rowData.baseAmount]
 
             const parentNumberMatch = parentNumbers.some((num) => {
                 if (num === undefined || num === null) return false

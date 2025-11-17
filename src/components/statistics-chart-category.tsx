@@ -20,7 +20,9 @@ export type ChartRow = { date: string; [key: string]: number | string };
 export type ChartDataType = ChartRow[];
 
 export function StaticsChartCategory({ data = [] }: { data?: Transaction[] }) {
-    const {timeRange, timePhrase, customRange} = useTimeRange()
+    const timeRange = useTimeRange(state => state.timeRange)
+    const timePhrase = useTimeRange(state => state.timePhrase)
+    const customRange = useTimeRange(state => state.customRange)
     const totals: Record<string, number> = {};
     const filteredData = filterTransactionsByDate(data, customRange ?  customRange : timeRange)
 

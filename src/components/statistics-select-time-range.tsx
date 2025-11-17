@@ -16,7 +16,16 @@ export const StatisticsSelectTimeRange = () => {
     const timeRangePath = searchParams.get("timeRange")
     const fromDatePath = searchParams.get("fromDate")
     const toDatePath = searchParams.get("toDate")
-    const {timeRange, setFromOpen, setToOpen, openFrom,openTo, fromDate, toDate, setToDate, setFromDate, setRange} = useTimeRange();
+    const timeRange = useTimeRange((state) => state.timeRange);
+    const setFromOpen = useTimeRange((state) => state.setFromOpen);
+    const setToOpen = useTimeRange((state) => state.setToOpen);
+    const openFrom = useTimeRange((state) => state.openFrom);
+    const openTo = useTimeRange((state) => state.openTo);
+    const fromDate = useTimeRange((state) => state.fromDate);
+    const toDate = useTimeRange((state) => state.toDate);
+    const setToDate = useTimeRange((state) => state.setToDate);
+    const setFromDate = useTimeRange((state) => state.setFromDate);
+    const setRange = useTimeRange((state) => state.setRange);
 
     function dateConversion() {
         if (fromDate && toDate) {

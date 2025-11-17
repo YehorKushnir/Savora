@@ -13,7 +13,8 @@ import {useTimeRange} from "@/src/lib/stores/time-range-store";
 import {filterTransactionsByDate} from "@/src/lib/helpers/filter-by-date";
 
 export function StatisticCards({ data = [] }: { data?: Transaction[] }) {
-    const {timeRange, customRange} = useTimeRange();
+    const timeRange = useTimeRange(state => state.timeRange)
+    const customRange = useTimeRange(state => state.customRange)
     const filteredData = filterTransactionsByDate(data, customRange ?  customRange : timeRange)
     const [incomeFunds] = getIncomeFunds(filteredData);
     const [expenseFunds] = getExpenseFunds(filteredData);

@@ -8,6 +8,8 @@ const CategoryOptions = () => {
     const setOpenModal = useCategories((state) => state.setOpenModal)
     const type = useCategories((state) => state.type)
     const setType = useCategories((state) => state.setType)
+    const appearance = useCategories((state) => state.appearance)
+    const setAppearance = useCategories((state) => state.setAppearance)
 
     return (
         <div className={'w-full flex justify-between'}>
@@ -18,9 +20,17 @@ const CategoryOptions = () => {
                     <TabsTrigger value="expense">Expenses</TabsTrigger>
                 </TabsList>
             </Tabs>
-            <Button onClick={() => setOpenModal(true)}>
-                Add category
-            </Button>
+            <div className="flex gap-4">
+                <Tabs value={appearance} onValueChange={setAppearance}>
+                    <TabsList>
+                        <TabsTrigger value="table">Table</TabsTrigger>
+                        <TabsTrigger value="card">Card</TabsTrigger>
+                    </TabsList>
+                </Tabs>
+                <Button onClick={() => setOpenModal(true)}>
+                    Add category
+                </Button>
+            </div>
         </div>
     )
 }

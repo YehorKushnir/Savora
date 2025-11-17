@@ -16,8 +16,8 @@ interface State {
 }
 
 export  const useTimeRange = create<State>((set) => ({
-    timeRange: "90",
-    timePhrase: "3 months",
+    timeRange: "30",
+    timePhrase: "30 days",
     fromDate: undefined,
     toDate: undefined,
     openFrom: false,

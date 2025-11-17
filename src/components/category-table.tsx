@@ -6,15 +6,6 @@ import {
     getCoreRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import {MoreHorizontal} from "lucide-react"
-
-import {Button} from "@/src/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/src/components/ui/dropdown-menu"
 import {
     Table,
     TableBody,
@@ -23,10 +14,18 @@ import {
     TableHeader,
     TableRow,
 } from "@/src/components/ui/table"
+import {Button} from "@/src/components/ui/button"
 import {use, useEffect, useState} from "react"
 import LucideIcon, {IconName} from "@/src/components/lucide-icon"
 import {useCategories} from "@/src/lib/stores/categories-store"
-import {ClientVault} from '@/src/app/(dashboard)/categories/actions'
+import {ClientVault} from "@/src/app/(dashboard)/categories/actions";
+import {MoreHorizontal} from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "@/src/components/ui/dropdown-menu";
 
 export const columns: ColumnDef<ClientVault>[] = [
     {
@@ -48,6 +47,14 @@ export const columns: ColumnDef<ClientVault>[] = [
         cell: ({row}) => {
             const setOpenModal = useCategories((state) => state.setOpenModal)
             const setOpenDeleteModal = useCategories((state) => state.setOpenDeleteModal)
+            const categories = row.original
+
+            const category = {
+                id: categories.id,
+                name: categories.name,
+                icon: categories.icon,
+                type: categories.type as 'income' | 'expense'
+            }
 
             return (
                 <DropdownMenu>
@@ -58,20 +65,19 @@ export const columns: ColumnDef<ClientVault>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem
-                            onClick={() => setOpenModal(true, row.original)}
+                            onClick={() => setOpenModal(true, category)}
                         >
                             Edit category
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             className="text-destructive"
-                            onClick={() => setOpenDeleteModal(true, row.original)}
+                            onClick={() => setOpenDeleteModal(true, category)}
                         >
                             Delete
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            )
-        },
+            )},
     },
 ]
 

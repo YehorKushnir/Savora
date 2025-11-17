@@ -4,7 +4,7 @@ export interface Category {
     id: string
     name: string
     icon: string
-    type: string
+    type: 'income' | 'expense'
 }
 
 export interface Subcategory {
@@ -22,6 +22,8 @@ interface State {
     subcategory?: Subcategory
     categoryId: string
     type: string
+    appearance: string
+    setAppearance: (view: string) => void
     setOpenModal: (value: boolean, initState?: Category) => void
     setOpenDeleteModal: (value: boolean, initState?: Category) => void
     setOpenSubcategoryModal: (value: boolean, categoryId?: string, initState?: Subcategory) => void
@@ -36,6 +38,8 @@ export const useCategories = create<State>((set) => ({
     openSubcategoryModal: false,
     openSubcategoryDeleteModal: false,
     subcategory: undefined,
+    appearance: 'table',
+    setAppearance: (appearance) => set({appearance}),
     categoryId: '',
     type: 'all',
     setOpenModal: (value, initState) => set({openModal: value, category: initState}),
