@@ -1,7 +1,5 @@
 import {Row} from "@tanstack/react-table"
-import {Transaction} from "@/src/lib/types/transactions";
-
-type AnyRow = Row<any>
+import {Transaction, TransactionEntry} from "@/src/lib/types/transactions";
 
 function formatDateDDMMYYYY(input: string): string | null {
     if (!input) return null
@@ -16,9 +14,8 @@ function formatDateDDMMYYYY(input: string): string | null {
 }
 
 export function useWalletGlobalFilter() {
-    return (row: AnyRow, _columnId: string, rawSearch: string) => {
+    return (row: Row<Transaction>, _columnId: string, rawSearch: string) => {
         const rowData: Transaction = row.original
-        console.log(rowData)
 
         const rawText = String(rawSearch ?? "").trim()
         const query = rawText.toLowerCase()
@@ -31,8 +28,8 @@ export function useWalletGlobalFilter() {
         const formattedDate = formatDateDDMMYYYY(rowData.executedAt)
 
         const targetValues = (rowData.entries || [])
-            .filter((entry: any) => entry.type === "debit")
-            .map((entry: any) => entry.vaultId?.replace(/^seed_vault_/, "") || "")
+            .filter((entry: TransactionEntry) => entry.type === "debit")
+            .map((entry: TransactionEntry) => entry.vaultId?.replace(/^seed_vault_/, "") || "")
             .join(" ")
 
         const parentFields = [
