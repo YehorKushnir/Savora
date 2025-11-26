@@ -8,9 +8,10 @@ type WalletSearchProps = {
     onChangeAction: (val: string) => void
     placeholder?: string
     delay?: number
+    className?: string
 }
 
-export function WalletSearch({value = "", onChangeAction, placeholder = "Search Savora", delay = 300,}: WalletSearchProps) {
+export function SavoraSearch({value = "", onChangeAction, placeholder = "Search Savora", delay = 300, className = ""}: WalletSearchProps) {
 
     const [local, setLocal] = useState(value)
 
@@ -30,7 +31,7 @@ export function WalletSearch({value = "", onChangeAction, placeholder = "Search 
             value={local}
             onChange={(e) => setLocal(e.target.value)}
             placeholder={placeholder}
-            className="max-w-sm"
+            className={`${className} max-w-sm`}
         />
     )
 }

@@ -89,6 +89,7 @@ export default function CategoryTable(props: Props) {
     const data = use(props.categories)
     const [rows, setRows] = useState([...data])
     const type = useCategories((state) => state.type)
+    const searchValue = useCategories((state) => state.searchValue)
 
     const table = useReactTable({
         data: rows,
@@ -97,8 +98,19 @@ export default function CategoryTable(props: Props) {
     })
 
     useEffect(() => {
-        setRows(() => type === 'all' ? data : data.filter((item) => item.type === type))
-    }, [data, type])
+        let filteredData = type === 'all' ? data : data.filter((item) => item.type === type);
+
+        if (searchValue) {
+            const lowerSearch = searchValue.toLowerCase();
+            filteredData = filteredData.filter((item) =>
+                item.name.toLowerCase().includes(lowerSearch) ||
+                item.balance.toString().includes(lowerSearch)
+            );
+        }
+
+        setRows(filteredData);
+        return
+    }, [data, type, searchValue])
 
     return (
         <div className="max-h-[500px] relative overflow-auto rounded-md border">

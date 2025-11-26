@@ -7,14 +7,10 @@ import Image from "next/image";
 export default function Home() {
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-
-            {/* Navbar */}
             <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="container mx-auto px-6 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                            <span className="text-lg font-bold">S</span>
-                        </div>
+                        <Image width={28} height={28} src={'/light.svg'} alt={'logo'}/>
                         Savora
                     </div>
                     <div className="flex items-center gap-4">

@@ -58,7 +58,7 @@ import {
 
 import WalletOptions from "@/src/components/wallet-options"
 import { WalletTablePagination } from "@/src/components/wallet-pagination"
-import { WalletSearch } from "@/src/components/wallet-search"
+import { SavoraSearch } from "@/src/components/savora-search"
 
 import { useWalletGlobalFilter } from "@/src/hooks/use-wallet-global-filter"
 
@@ -155,6 +155,9 @@ const DragAlongCell = ({ cell }: { cell: Cell<Transaction, unknown> }) => {
 
 export function WalletTable({ data = [] }: { data?: Transaction[] }) {
     const walletFilterType = useTypeOptions(state => state.type)
+    const searchValue = useTypeOptions(state => state.searchValue)
+    const setSearchValue = useTypeOptions(state => state.setSearchValue)
+
     const [tableData, setTableData] = useState<Transaction[]>(data)
 
     const [sorting, setSorting] = useState<SortingState>([])
@@ -165,7 +168,6 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
         pageSize: 15,
     })
 
-    const [searchValue, setSearchValue] = useState<string>("")
     const globalFilterFn = useWalletGlobalFilter()
 
     const columns = useMemo<ColumnDef<Transaction>[]>(() => [
@@ -373,7 +375,7 @@ export function WalletTable({ data = [] }: { data?: Transaction[] }) {
         >
             <div className="w-full">
                 <div className="flex items-center gap-4 justify-between pb-4">
-                    <WalletSearch
+                    <SavoraSearch
                         value={searchValue}
                         onChangeAction={setSearchValue}
                     />

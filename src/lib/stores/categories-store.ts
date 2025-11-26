@@ -23,6 +23,8 @@ interface State {
     categoryId: string
     type: string
     appearance: string
+    searchValue: string
+    setSearchValue: (value: string) => void
     setAppearance: (view: string) => void
     setOpenModal: (value: boolean, initState?: Category) => void
     setOpenDeleteModal: (value: boolean, initState?: Category) => void
@@ -42,6 +44,8 @@ export const useCategories = create<State>((set) => ({
     setAppearance: (appearance) => set({appearance}),
     categoryId: '',
     type: 'all',
+    searchValue: '',
+    setSearchValue: (value) => set({searchValue: value}),
     setOpenModal: (value, initState) => set({openModal: value, category: initState}),
     setOpenDeleteModal: (value, initState) => set({openDeleteModal: value, category: initState}),
     setOpenSubcategoryModal: (value, categoryId, initState) => set({openSubcategoryModal: value, subcategory: initState, categoryId}),
