@@ -10,7 +10,6 @@ import {useTheme} from "next-themes";
 export function AppearanceContent() {
     const {type, toggleType, hydrated} = useSidebarStore()
     const { setTheme, theme} = useTheme()
-    console.log(theme);
     if (!hydrated) return null
     return (
         <div className="flex flex-col gap-4">

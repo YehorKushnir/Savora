@@ -1,7 +1,7 @@
 import {Row} from "@tanstack/react-table"
-import {Transaction, TransactionEntry} from "@/src/lib/types/transactions";
+import {TransactionWithRelations} from '@/src/lib/types/transactions'
 
-function formatDateDDMMYYYY(input: string): string | null {
+function formatDateDDMMYYYY(input: string | Date): string | null {
     if (!input) return null
     const dateObj = new Date(input)
     if (isNaN(dateObj.getTime())) return null
@@ -13,54 +13,46 @@ function formatDateDDMMYYYY(input: string): string | null {
     return `${dd}.${mm}.${yyyy}`
 }
 
-export function useWalletGlobalFilter() {
-    return (row: Row<Transaction>, _columnId: string, rawSearch: string) => {
-        const rowData: Transaction = row.original
-
+export function useTransactionGlobalFilter() {
+    return (row: Row<TransactionWithRelations>, _columnId: string, rawSearch: string) => {
+        const rowData = row.original
         const rawText = String(rawSearch ?? "").trim()
         const query = rawText.toLowerCase()
-        const isSearching = query.length > 0
 
-        if (!isSearching) {
-            return true
-        }
+        if (query.length === 0) return true
 
         const formattedDate = formatDateDDMMYYYY(rowData.executedAt)
 
-        const targetValues = (rowData.entries || [])
-            .filter((entry: TransactionEntry) => entry.type === "debit")
-            .map((entry: TransactionEntry) => entry.vaultId?.replace(/^seed_vault_/, "") || "")
-            .join(" ")
+        const tagsString = rowData.tags?.map(t => t.name).join(" ") || ""
 
-        const parentFields = [
-            rowData.id,
-            rowData.executedAt,
-            formattedDate,
-            rowData.type,
+        const categoryName = rowData.Category?.name || ""
+
+        const textFields = [
             rowData.description,
-            rowData.baseAmount,
-            targetValues,
+            rowData.type,
+            categoryName,
+            tagsString,
+            formattedDate,
         ]
-        const numericPattern = /^\d{1,3}(?:,\d{3})*(?:\.\d+)?$/
+
+        const numericPattern = /^[\d,.]+$/
         const isNumericQuery = numericPattern.test(rawText)
 
         if (isNumericQuery) {
-            const parentNumbers = [rowData.baseAmount]
+            const amount = rowData.entries[0]?.amount
 
-            const parentNumberMatch = parentNumbers.some((num) => {
-                if (num === undefined || num === null) return false
-                return String(num)
-                    .replace(",", ".")
-                    .includes(rawText.replace(",", "."))
-            })
+            if (amount !== undefined && amount !== null) {
+                const amountStr = String(Math.abs(Number(amount))).replace(",", ".")
+                const queryStr = rawText.replace(",", ".")
 
-            if (parentNumberMatch) {
-                return true
+                if (amountStr.includes(queryStr)) {
+                    return true
+                }
             }
         }
 
-        return parentFields // Match
+        return textFields
             .filter((v) => v !== undefined && v !== null)
-            .some((v) => String(v).toLowerCase().includes(query));
+            .some((v) => String(v).toLowerCase().includes(query))
     }
 }

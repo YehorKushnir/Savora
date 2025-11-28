@@ -1,10 +1,10 @@
 import {create} from 'zustand'
 
 interface State {
-    setType: (value: string ) => void,
     type: string
-    searchValue: string,
+    searchValue: string
     setSearchValue: (value: string) => void
+    setType: (value: string ) => void
 }
 
 export const useTypeOptions = create<State>((set) => ({

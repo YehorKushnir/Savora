@@ -9,23 +9,27 @@ import {
 } from '@/src/components/ui/dialog'
 import {Button} from '@/src/components/ui/button'
 import {DialogClose} from '@radix-ui/react-dialog'
-import { Form } from './ui/form'
+import {Form} from '@/src/components/ui/form'
 import {useForm} from 'react-hook-form'
 import {Loader2Icon} from 'lucide-react'
-import {useCategories} from '@/src/lib/stores/categories-store'
-import {deleteCategory} from '@/src/app/(dashboard)/categories/actions'
+import {useTransactions} from '@/src/lib/stores/transactions-store'
+import {deleteTransaction} from '@/src/app/(dashboard)/transactions/actions'
 
-const CategoryDeleteModal = () => {
-    const open = useCategories(state => state.openDeleteModal)
-    const setOpen = useCategories(state => state.setOpenDeleteModal)
-    const category = useCategories(state => state.category)
+const TransactionDeleteModal = () => {
+    const open = useTransactions(state => state.openDeleteModal)
+    const setOpen = useTransactions(state => state.setOpenDeleteModal)
+    const transaction = useTransactions(state => state.transaction)
 
     const form = useForm()
 
     const onSubmit = form.handleSubmit(async () => {
-        if (category?.id) {
-            await deleteCategory(category?.id)
-            setOpen(false, category)
+        if (transaction?.id) {
+            try {
+                await deleteTransaction(transaction.id)
+                setOpen(false)
+            } catch (error) {
+                console.error("Failed to delete transaction:", error)
+            }
         }
     })
 
@@ -33,20 +37,31 @@ const CategoryDeleteModal = () => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className={'max-w-[340px]'} aria-describedby={undefined}>
                 <DialogHeader>
-                    <DialogTitle>Delete wallet</DialogTitle>
+                    <DialogTitle>Delete transaction</DialogTitle>
                 </DialogHeader>
-                <div>Are you sure to delete category "{category?.name}"?</div>
+
+                <div className="py-4">
+                    Are you sure you want to delete
+                    {transaction?.description
+                        ? <span className="font-semibold"> "{transaction.description}"</span>
+                        : " this transaction"}?
+                </div>
+
                 <DialogFooter>
                     <Form {...form}>
-                        <form onSubmit={onSubmit} className={'flex gap-2'}>
+                        <form onSubmit={onSubmit} className={'flex gap-2 w-full justify-end'}>
                             <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline" type="button">Cancel</Button>
                             </DialogClose>
-                            <Button type="submit" variant={'destructive'} disabled={form.formState.isSubmitting}>
+                            <Button
+                                type="submit"
+                                variant={'destructive'}
+                                disabled={form.formState.isSubmitting}
+                            >
                                 {form.formState.isSubmitting
                                     ? (
                                         <>
-                                            <Loader2Icon className="animate-spin"/>
+                                            <Loader2Icon className="mr-2 h-4 w-4 animate-spin"/>
                                             Deleting...
                                         </>
                                     ) : 'Delete'
@@ -60,4 +75,4 @@ const CategoryDeleteModal = () => {
     )
 }
 
-export default CategoryDeleteModal
+export default TransactionDeleteModal

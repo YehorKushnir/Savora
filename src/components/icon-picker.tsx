@@ -5,18 +5,12 @@ import type {LucideIcon} from "lucide-react"
 import {useVirtualizer} from '@tanstack/react-virtual'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {useIsMobile} from '@/src/lib/hooks/use-is-mobile'
-
-export type IconName = keyof typeof icons
-
-export type IconPickerProps = {
-    value: IconName
-    onChange: (name: IconName) => void
-};
+import { IconPickerProps, IconName } from "../lib/types/icon-picker-types"
 
 export default function IconPicker(
     {
         value,
-        onChange,
+        onIconChange,
     }: IconPickerProps) {
 
     const allNames = useMemo(() => Object.keys(icons) as IconName[], [])
@@ -30,7 +24,7 @@ export default function IconPicker(
 
     const pick = (name: IconName) => {
         setInternal(name)
-        onChange?.(name)
+        onIconChange?.(name)
     }
 
     const parentRef = useRef(null)
@@ -52,7 +46,7 @@ export default function IconPicker(
             <div className="flex flex-col items-center gap-3">
                 <div
                     ref={parentRef}
-                    className="sm:w-[462px] w-[290px] h-[168px] overflow-auto"
+                    className="sm:w-[462px] w-[290px] h-[168px] overflow-y-auto overflow-x-hidden"
                 >
                     <div
                         style={{

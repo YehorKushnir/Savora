@@ -1,14 +1,16 @@
 import {StatisticCards} from "@/src/components/statistics-card";
 import {StaticsChartFunds} from "@/src/components/statistics-chart-funds";
-import {getTransactions} from "@/src/app/(dashboard)/actions";
-import {StaticsChartCategory} from "@/src/components/statistics-chart-category";
+import {getTransactions} from "@/src/app/(dashboard)/transactions/actions";
+import {StaticsChartWallets} from "@/src/components/statistics-chart-wallets";
 import {StatisticsSelectTimeRange} from "@/src/components/statistics-select-time-range";
 import {StatisticsChoosingWallet} from "@/src/components/statistics-choosing-wallet";
 import {getWallets} from '@/src/app/(dashboard)/wallets/actions'
+import {Skeleton} from "@/src/components/ui/skeleton";
+import { Suspense } from "react";
 
 export default async function Statistics() {
-    const transactions = await getTransactions()
-    const wallets = await getWallets()
+    const transactions = getTransactions()
+    const wallets = getWallets()
     return (
         <div className="flex flex-1 flex-col">
             <div className="@container/main flex flex-1 flex-col gap-2 pb-2">
@@ -17,9 +19,11 @@ export default async function Statistics() {
                         <StatisticsChoosingWallet wallets={wallets}/>
                         <StatisticsSelectTimeRange/>
                     </div>
-                    <StatisticCards data={transactions} />
-                    <StaticsChartFunds data={transactions} />
-                    <StaticsChartCategory data={transactions}/>
+                    <Suspense fallback={<Skeleton className={'w-full h-[900px]'}/>}>
+                        <StatisticCards transactions={transactions} />
+                        <StaticsChartFunds transactions={transactions} />
+                        <StaticsChartWallets wallets={wallets}/>
+                    </Suspense>
                 </div>
             </div>
         </div>

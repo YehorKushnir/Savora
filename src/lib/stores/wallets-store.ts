@@ -1,4 +1,5 @@
 import {create} from 'zustand'
+import {ClientWallet} from "@/src/lib/types/client-wallet-type";
 
 export interface Wallet {
     id: string
@@ -12,13 +13,13 @@ export interface Wallet {
 interface State {
     openModal: boolean
     openDeleteModal: boolean
-    wallet?: Wallet
-    storeWallets: Wallet[]
-    setOpenModal: (value: boolean, initState?: Wallet) => void
-    setOpenDeleteModal: (value: boolean, initState?: Wallet) => void
+    wallet?: ClientWallet
+    storeWallets: ClientWallet[]
+    setOpenModal: (value: boolean, initState?: ClientWallet) => void
+    setOpenDeleteModal: (value: boolean, initState?: ClientWallet) => void
     columnOrder: string[]
     setColumnOrder: (columnOrder: string[]) => void
-    setWallets: (wallets: Wallet[]) => void
+    setWallets: (wallets: ClientWallet[]) => void
     reorderWallets: (activeId: string, overId: string) => void
 }
 

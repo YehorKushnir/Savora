@@ -2,10 +2,11 @@
 
 import {ContextMenuItem} from '@/src/components/ui/context-menu'
 import {FC} from 'react'
-import {useWallets, Wallet} from '@/src/lib/stores/wallets-store'
+import {useWallets} from '@/src/lib/stores/wallets-store'
+import {ClientWallet} from "@/src/lib/types/client-wallet-type";
 
 interface Props {
-    wallet: Wallet
+    wallet: ClientWallet
 }
 
 const WalletListActions:FC<Props> = ({wallet}) => {

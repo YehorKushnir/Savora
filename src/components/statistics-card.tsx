@@ -1,18 +1,20 @@
 "use client"
 
+import {use} from "react";
 import {
     Card,
     CardDescription,
     CardHeader,
     CardTitle,
 } from "@/src/components/ui/card"
-import {Transaction} from "@/src/lib/types/transactions";
 import {getExpenseFunds} from "@/src/lib/helpers/get-expenses-funds";
 import {getIncomeFunds} from "@/src/lib/helpers/get-incoming-funds";
 import {useTimeRange} from "@/src/lib/stores/time-range-store";
 import {filterTransactionsByDate} from "@/src/lib/helpers/filter-by-date";
+import { PropsTransactionInterface } from "../lib/types/props-transaction-interface";
 
-export function StatisticCards({ data = [] }: { data?: Transaction[] }) {
+export function StatisticCards(props: PropsTransactionInterface) {
+    const data = use(props.transactions)
     const timeRange = useTimeRange(state => state.timeRange)
     const customRange = useTimeRange(state => state.customRange)
     const filteredData = filterTransactionsByDate(data, customRange ?  customRange : timeRange)

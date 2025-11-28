@@ -5,7 +5,6 @@ import {Prisma} from '@prisma/client'
 import {auth} from "@/auth"
 import {WalletCreateType} from '@/src/lib/types/wallet-create-type'
 import {WalletUpdateType} from '@/src/lib/types/wallet-update-type'
-import {createTransaction} from '@/src/app/(dashboard)/transactions/actions'
 import {revalidatePath} from 'next/cache'
 
 export const getWallets = async () => {
@@ -44,26 +43,32 @@ export async function createWallet(payload: WalletCreateType) {
                 type: payload.type,
                 icon: payload.icon,
                 currency: payload.currency,
+                balance: payload.balance,
                 userId,
             },
         })
 
-        const balance = new Prisma.Decimal(payload.balance === '' ? 0 : payload.balance)
+        const initialBalance = Number(payload.balance)
 
-        if (balance.gt(0)) {
-            const equity = await tx.vault.findFirstOrThrow({
-                where: {userId, type: 'equity'},
+        if (initialBalance !== 0) {
+            await tx.transaction.create({
+                data: {
+                    userId,
+                    type: 'openingBalance',
+                    executedAt: new Date(),
+                    currency: payload.currency,
+                    entries: {
+                        create: {
+                            vaultId: vault.id,
+                            amount: initialBalance,
+                            currency: payload.currency,
+                            type: initialBalance > 0 ? 'debit' : 'credit',
+                            balanceBefore: 0,
+                            balanceAfter: initialBalance,
+                        }
+                    }
+                }
             })
-
-            await createTransaction({
-                type: 'adjustment',
-                description: `Initial balance for ${vault.name}`,
-                amount: payload.balance,
-                targetVaultId: vault.id,
-                sourceVaultId: equity.id,
-                executedAt: new Date(),
-                tagIds: [],
-            }, tx)
         }
     })
     revalidatePath('wallets')
@@ -75,33 +80,47 @@ export async function updateWallet(id: string, payload: WalletUpdateType) {
     if (!userId) throw new Error('Unauthorized')
 
     await prisma.$transaction(async (tx) => {
+        const currentVault = await tx.vault.findUniqueOrThrow({
+            where: { id, userId }
+        })
+
+        const oldBalance = currentVault.balance
+        const newBalance = new Prisma.Decimal(payload.balance === '' ? 0 : payload.balance)
+
+        const diff = newBalance.minus(oldBalance)
+
         await tx.vault.update({
-            where: {id},
+            where: { id },
             data: {
                 name: payload.name,
                 icon: payload.icon,
-                balance: new Prisma.Decimal(payload.balance === '' ? 0 : payload.balance),
+                balance: newBalance,
             }
         })
 
-        const balance = new Prisma.Decimal(payload.balance === '' ? 0 : payload.balance)
-
-        if (balance.gt(0)) {
-            const equity = await tx.vault.findFirstOrThrow({
-                where: {userId, type: 'equity'},
+        if (!diff.equals(0)) {
+            await tx.transaction.create({
+                data: {
+                    userId,
+                    type: 'adjustment',
+                    executedAt: new Date(),
+                    currency: currentVault.currency,
+                    description: `Manual balance adjustment`,
+                    entries: {
+                        create: {
+                            vaultId: id,
+                            amount: diff.abs(),
+                            currency: currentVault.currency,
+                            type: diff.isPositive() ? 'debit' : 'credit',
+                            balanceBefore: oldBalance,
+                            balanceAfter: newBalance,
+                        }
+                    }
+                }
             })
-
-            await createTransaction({
-                type: 'adjustment',
-                description: `Update balance for ${payload.name}`,
-                amount: payload.balance,
-                targetVaultId: id,
-                sourceVaultId: equity.id,
-                executedAt: new Date(),
-                tagIds: [],
-            }, tx)
         }
     })
+
     revalidatePath('wallets')
 }
 

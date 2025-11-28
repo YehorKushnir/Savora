@@ -9,15 +9,17 @@ import {
 } from "@/src/components/ui/dropdown-menu"
 import {useSearchParams} from "next/navigation";
 import {ChevronDownIcon} from "lucide-react";
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 import {Wallet} from "@/src/lib/types/wallets";
 import queryString from 'query-string';
+import {ClientWallet} from "@/src/lib/types/client-wallet-type";
 
-type Props = {
-    wallets: Wallet[]
+interface Props {
+    wallets: Promise<ClientWallet[]>
 }
 
 export function StatisticsChoosingWallet({wallets}: Props) {
+    const walletsData = use(wallets)
     const searchParams = useSearchParams()
 
     const initialDisabled = (() => {
@@ -29,7 +31,7 @@ export function StatisticsChoosingWallet({wallets}: Props) {
     })()
 
     const [activeWallets, setActiveWallets] = useState<string[]>(
-        wallets.map(wallet => wallet.id).filter(id => !initialDisabled.includes(id))
+        walletsData.map(wallet => wallet.id).filter(id => !initialDisabled.includes(id))
     )
 
     function writeDisabledToParams(disabled: string[]) {
@@ -46,7 +48,7 @@ export function StatisticsChoosingWallet({wallets}: Props) {
         setActiveWallets(prev => {
             const next = checked ? [...prev, walletId].filter((walletId, index, Array) => Array.indexOf(walletId) === index) : prev.filter(id => id !== walletId)
 
-            const allIds = wallets.map(wallet => wallet.id)
+            const allIds = walletsData.map(wallet => wallet.id)
             const disabled = allIds.filter(id => !next.includes(id))
             writeDisabledToParams(disabled)
 
@@ -59,7 +61,7 @@ export function StatisticsChoosingWallet({wallets}: Props) {
         const disabled = typeof parsed.disabledWallets === 'string'
             ? parsed.disabledWallets.split(',').filter(Boolean)
             : [];
-        const newActive = wallets.map(wallet => wallet.id).filter(id => !disabled.includes(id));
+        const newActive = walletsData.map(wallet => wallet.id).filter(id => !disabled.includes(id));
         setActiveWallets(prev => {
             const same = prev.length === newActive.length && prev.every(id => newActive.includes(id))
             return same ? prev : newActive
@@ -70,14 +72,14 @@ export function StatisticsChoosingWallet({wallets}: Props) {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="justify-between">
-                    {activeWallets.length === wallets.length
+                    {activeWallets.length === walletsData.length
                         ? "All wallets active"
                         : `${activeWallets.length} selected`}
                     <ChevronDownIcon />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                {wallets.map((wallet: Wallet) => {
+                {walletsData.map((wallet: Wallet) => {
                     return (
                         <DropdownMenuCheckboxItem
                             key={wallet.id}

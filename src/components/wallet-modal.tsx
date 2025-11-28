@@ -15,8 +15,9 @@ import {Input} from '@/src/components/ui/input'
 import {z} from "zod"
 import {zodResolver} from '@hookform/resolvers/zod'
 import {useForm} from 'react-hook-form'
-import IconPicker, {IconName} from '@/src/components/icon-picker'
-import {ChevronsUpDown, icons, Loader2Icon, type LucideIcon, Check} from 'lucide-react'
+import IconPicker from '@/src/components/icon-picker'
+import { IconName } from "../lib/types/icon-picker-types"
+import {ChevronsUpDown, icons, Loader2Icon, type LucideIcon, Check, HelpCircle} from 'lucide-react'
 import {createWallet, updateWallet} from '@/src/app/(dashboard)/wallets/actions'
 import {FC, use, useEffect} from 'react'
 import {ICurrencies} from '@/src/lib/types/currencies'
@@ -26,14 +27,17 @@ import {useWallets} from '@/src/lib/stores/wallets-store'
 import {DialogClose} from '@radix-ui/react-dialog'
 import {walletCreateDto} from '@/src/lib/dto/wallet-create-dto'
 import {walletUpdateDto} from '@/src/lib/dto/wallet-update-dto'
+import {ClientWallet} from "@/src/lib/types/client-wallet-type";
 
 const formSchema = z.object({
     name: z.string().min(2).max(20),
-    balance: z.string(),
+    balance: z.string().transform((val) => val === "" ? "0" : val),
     icon: z.string().min(2),
     type: z.enum(['asset', 'liability']),
     currency: z.string().min(3)
 })
+
+type WalletFormValues = z.infer<typeof formSchema>
 
 interface Props {
     currencies: Promise<ICurrencies>
@@ -42,32 +46,49 @@ interface Props {
 const WalletModal: FC<Props> = ({currencies}) => {
     const open = useWallets(state => state.openModal)
     const setOpen = useWallets(state => state.setOpenModal)
-    const wallets = useWallets(state => state.wallet)
+
+    const wallets = useWallets(state => state.wallet) as ClientWallet | undefined
+
     const allCurrencies = use(currencies)
 
-    const form = useForm<z.infer<typeof formSchema>>({
+    const defaultValues: WalletFormValues = wallets ? {
+        name: wallets.name,
+        type: wallets.type as 'asset' | 'liability',
+        icon: wallets.icon,
+        currency: wallets.currency,
+        balance: String(wallets.balance)
+    } : {
+        name: '',
+        type: 'asset',
+        icon: 'CreditCard',
+        currency: 'EUR',
+        balance: ''
+    }
+
+    const form = useForm<WalletFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: wallets ?? {
-            name: '',
-            type: 'asset',
-            icon: 'CreditCard',
-            currency: 'EUR',
-            balance: ''
-        }
+        defaultValues: defaultValues
     })
 
     useEffect(() => {
-        if (open) form.reset(wallets)
+        if (open) form.reset(defaultValues)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, wallets, form])
 
-    const Icon = icons[form.watch().icon as IconName] as LucideIcon
+    const iconName = form.watch().icon as IconName
+    const Icon = (icons[iconName] || HelpCircle) as LucideIcon
 
     const onSubmit = form.handleSubmit(async (values) => {
-        wallets
-            ? await updateWallet(wallets.id, walletUpdateDto(values))
-            : await createWallet(walletCreateDto(values))
+        try {
+            wallets
+                ? await updateWallet(wallets.id, walletUpdateDto(values))
+                : await createWallet(walletCreateDto(values))
 
-        setOpen(false)
+            setOpen(false)
+            form.reset() // Очистка после успешной отправки
+        } catch (error) {
+            console.error(error)
+        }
     })
 
     return (
@@ -132,7 +153,7 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                     <FormControl>
                                         <div>
                                             <input type="hidden" name="icon" value={field.value}/>
-                                            <IconPicker value={field.value as IconName} onChange={field.onChange}/>
+                                            <IconPicker value={field.value as IconName} onIconChange={field.onChange}/>
                                         </div>
                                     </FormControl>
                                     <FormMessage/>

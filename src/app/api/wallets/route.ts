@@ -6,13 +6,13 @@ import {revalidateTag} from 'next/cache'
 export const dynamic = 'force-static'
 
 export async function GET() {
-    const data = await prisma.wallet.findMany()
+    const data = await prisma.vault.findMany()
     return Response.json({data})
 }
 
 export async function POST(req: NextRequest) {
     const data = await req.json()
-    await prisma.wallet.create({
+    await prisma.vault.create({
         data: {
             ...data,
             balance: new Prisma.Decimal(data.balance),

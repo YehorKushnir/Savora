@@ -6,7 +6,7 @@ interface Props {
   table: ReactTableInstance<any>
 }
 
-export const WalletTablePagination: FC<Props> = ({ table }) => {
+export const TablePagination: FC<Props> = ({ table }) => {
     return (
         <div className="flex items-center justify-end space-x-2 py-4">
             <div className="text-muted-foreground flex-1 text-sm">

@@ -1,12 +1,11 @@
 "use client"
 
-import { use, useEffect, useState } from "react";
+import {ReactNode, use, useEffect, useState} from "react";
 import { useCategories } from "@/src/lib/stores/categories-store";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/src/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/src/components/ui/card";
 import LucideIcon, { IconName } from "@/src/components/lucide-icon";
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger, ContextMenuItem } from '@/src/components/ui/context-menu'
-import { ClientVault } from "@/src/app/(dashboard)/categories/actions";
-import { getCurrencySymbol } from "@/src/lib/get-currency-symol";
+import { ClientCategory } from "@/src/app/(dashboard)/categories/actions";
 
 import {
     DndContext,
@@ -27,10 +26,10 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 interface Props {
-    categories: Promise<ClientVault[]>
+    categories: Promise<ClientCategory[]>
 }
 
-const SortableItem = ({ item, children }: { item: ClientVault, children: React.ReactNode }) => {
+const SortableItem = ({ item, children }: { item: ClientCategory, children: ReactNode }) => {
     const {
         attributes,
         listeners,
@@ -58,7 +57,6 @@ const SortableItem = ({ item, children }: { item: ClientVault, children: React.R
 export const CategoryCard = (props: Props) => {
     const data = use(props.categories)
     const [card, setCard] = useState([...data])
-    console.log(card)
     const type = useCategories((state) => state.type)
     const setOpenModal = useCategories((state) => state.setOpenModal)
     const setOpenDeleteModal = useCategories((state) => state.setOpenDeleteModal)
@@ -75,7 +73,7 @@ export const CategoryCard = (props: Props) => {
         })
     );
 
-    const typeConversion = (categories: ClientVault) => {
+    const typeConversion = (categories: ClientCategory) => {
         return {
             id: categories.id,
             name: categories.name,
@@ -90,8 +88,7 @@ export const CategoryCard = (props: Props) => {
         if (searchValue) {
             const lowerSearch = searchValue.toLowerCase();
             filteredData = filteredData.filter((item) =>
-                item.name.toLowerCase().includes(lowerSearch) ||
-                item.balance.toString().includes(lowerSearch)
+                item.name.toLowerCase().includes(lowerSearch)
             );
         }
 
@@ -134,7 +131,6 @@ export const CategoryCard = (props: Props) => {
                                         <LucideIcon name={item.icon as IconName} size={40} />
                                         <CardHeader className={'w-full p-0'}>
                                             <CardTitle className={'flex'}>{item.name}</CardTitle>
-                                            <CardDescription>{getCurrencySymbol(item.currency)} {`${item.balance}`}</CardDescription>
                                         </CardHeader>
                                     </Card>
                                 </ContextMenuTrigger>

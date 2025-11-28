@@ -24,7 +24,7 @@ const CategoryOptions = () => {
                         <TabsTrigger value="expense">Expenses</TabsTrigger>
                     </TabsList>
                 </Tabs>
-                <SavoraSearch onChangeAction={setSearchValue} value={searchValue} className="w-[250px]"/>
+                <SavoraSearch onChangeAction={setSearchValue} value={searchValue} className="w-[384px]"/>
             </div>
             <div className="flex gap-4">
                 <Tabs value={appearance} onValueChange={setAppearance}>

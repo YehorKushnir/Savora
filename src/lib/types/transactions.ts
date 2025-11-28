@@ -1,23 +1,9 @@
-export type TransactionEntry = {
-    type: 'debit' | 'credit';
-    amount: number;
-    vaultId: string;
-    balanceBefore?: number;
-    balanceAfter?: number;
-    transactionId: string;
+import { Transaction, Entry, Tag, Category } from '@prisma/client'
+
+export type TransactionWithRelations = Transaction & {
+    entries: Entry[]
+    tags: Tag[]
+    Category?: Category | null
 }
 
-export interface Transaction {
-    id: string
-    userId?: string
-    type: 'expense' | 'income' | 'transfer' | 'adjustment'
-    description?: string
-    executedAt: string
-    baseAmount: number
-    exchangeRate: string
-    tags?: string[]
-    entries: TransactionEntry[]
-    createdAt: Date
-}
-
-export type Transactions = Transaction[];
+export type Transactions = TransactionWithRelations[];

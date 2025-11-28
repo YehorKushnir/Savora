@@ -18,16 +18,16 @@ import {Button} from "@/src/components/ui/button"
 import {use, useEffect, useState} from "react"
 import LucideIcon, {IconName} from "@/src/components/lucide-icon"
 import {useCategories} from "@/src/lib/stores/categories-store"
-import {ClientVault} from "@/src/app/(dashboard)/categories/actions";
+import {ClientCategory} from "@/src/app/(dashboard)/categories/actions";
 import {MoreHorizontal} from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
+    DropdownMenuItem, DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/src/components/ui/dropdown-menu";
 
-export const columns: ColumnDef<ClientVault>[] = [
+export const columns: ColumnDef<ClientCategory>[] = [
     {
         accessorKey: "name",
         header: "Name",
@@ -67,8 +67,9 @@ export const columns: ColumnDef<ClientVault>[] = [
                         <DropdownMenuItem
                             onClick={() => setOpenModal(true, category)}
                         >
-                            Edit category
+                            Edit
                         </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem
                             className="text-destructive"
                             onClick={() => setOpenDeleteModal(true, category)}
@@ -82,7 +83,7 @@ export const columns: ColumnDef<ClientVault>[] = [
 ]
 
 interface Props {
-    categories: Promise<ClientVault[]>
+    categories: Promise<ClientCategory[]>
 }
 
 export default function CategoryTable(props: Props) {
@@ -103,8 +104,7 @@ export default function CategoryTable(props: Props) {
         if (searchValue) {
             const lowerSearch = searchValue.toLowerCase();
             filteredData = filteredData.filter((item) =>
-                item.name.toLowerCase().includes(lowerSearch) ||
-                item.balance.toString().includes(lowerSearch)
+                item.name.toLowerCase().includes(lowerSearch)
             );
         }
 

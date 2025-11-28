@@ -1,219 +1,109 @@
 "use client"
 
+import {use, useEffect, useMemo, useState} from "react"
 import {
-    ColumnDef,
-    ExpandedState,
-    flexRender,
     getCoreRowModel,
-    getExpandedRowModel,
-    useReactTable,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    SortingState,
+    VisibilityState,
+    PaginationState,
+    useReactTable, OnChangeFn, ColumnOrderState,
 } from "@tanstack/react-table"
-import {ChevronDown, ChevronRight, MoreHorizontal} from "lucide-react"
 
-import {Button} from "@/src/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/src/components/ui/dropdown-menu"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/src/components/ui/table"
-import {use, useEffect, useState} from "react"
-import LucideIcon, {IconName} from "@/src/components/lucide-icon"
-import {CategoryWithSubs} from "@/src/app/(dashboard)/categories/actions"
-import {useCategories} from "@/src/lib/stores/categories-store"
+import { useTransactions } from "@/src/lib/stores/transactions-store"
+import TransactionOptions from "@/src/components/transaction-options"
+import { useTransactionGlobalFilter } from "@/src/hooks/use-wallet-global-filter"
+import { PropsTransactionInterface } from "@/src/lib/types/props-transaction-interface"
 
-type RowNode = {
-    id: string
-    name: string
-    createdAt: Date
-    updatedAt: Date
-    icon: string
-    type: string
-    categoryId: string
-    subcategories: RowNode[]
-}
+import { DataTable } from "@/src/components/data-table/data-table"
+import {useTransactionColumns} from "@/src/components/data-table/use-transaction-columns";
+import {useWallets} from "@/src/lib/stores/wallets-store";
 
-export const columns: ColumnDef<RowNode>[] = [
-    {
-        id: "expander",
-        header: "",
-        cell: ({row}) =>
-            row.getCanExpand() ? (
-                <Button
-                    variant="ghost"
-                    className="h-8 w-8 p-0"
-                    onClick={row.getToggleExpandedHandler()}
-                >
-                    {row.getIsExpanded() ? <ChevronDown/> : <ChevronRight/>}
-                </Button>
-            ) : null,
-        enableSorting: false,
-        enableHiding: false,
-        size: 48,
-    },
-    {
-        accessorKey: "name",
-        header: "Name",
-        cell: ({row}) => (
-            <div className={`flex items-center gap-3 ${row.depth === 1 ? "pl-9" : ""}`}>
-                {"icon" in row.original && (
-                    <LucideIcon name={row.original.icon as IconName}/>
-                )}
-                {row.getValue("name")}
-            </div>
-        ),
-    },
-    {
-        id: "actions",
-        enableHiding: false,
-        size: 48,
-        cell: ({row}) => {
-            const setOpenModal = useCategories((state) => state.setOpenModal)
-            const setOpenDeleteModal = useCategories((state) => state.setOpenDeleteModal)
-            const setOpenSubcategoryModal = useCategories((state) => state.setOpenSubcategoryModal)
-            const setOpenSubcategoryDeleteModal = useCategories((state) => state.setOpenSubcategoryDeleteModal)
+export default function TransactionTable(props: PropsTransactionInterface) {
+    const filterType = useTransactions(state => state.type)
+    const searchValue = useTransactions(state => state.searchValue)
+    const data = use(props.transactions)
+    const tableData = useMemo(() => {
+        let filtered = data
+        if (filterType !== "all") {
+             filtered = filtered.filter(item => item.type === filterType)
+        }
 
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal/>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {row.depth === 0 ? (
-                            <>
-                                <DropdownMenuItem
-                                    onClick={() => {
-                                        if (row.original.icon) {
-                                            setOpenModal(true, row.original)
-                                        }
-                                    }}
-                                >
-                                    Edit category
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={() => setOpenSubcategoryModal(true, row.original.id)}
-                                >
-                                    Add subcategory
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className="text-destructive"
-                                    onClick={() => setOpenDeleteModal(true, row.original)}
-                                >
-                                    Delete
-                                </DropdownMenuItem>
-                            </>
-                        ) : (
-                            <>
-                                <DropdownMenuItem
-                                    onClick={() => setOpenSubcategoryModal(true, row.original.id, row.original)}
-                                >
-                                    Edit subcategory
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className="text-destructive"
-                                    onClick={() =>
-                                        setOpenSubcategoryDeleteModal(true, row.original)
-                                    }
-                                >
-                                    Delete
-                                </DropdownMenuItem>
-                            </>
-                        )}
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        },
-    },
-]
+        return filtered
+    }, [data, filterType])
+    const globalFilterFn = useTransactionGlobalFilter()
 
-interface Props {
-    categories: Promise<CategoryWithSubs[]>
-}
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const [rowSelection, setRowSelection] = useState({})
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 15,
+    })
 
-export default function CategoryTable(props: Props) {
-    const data = use(props.categories)
-    const [rows, setRows] = useState([...data])
-    const type = useCategories((state) => state.type)
-    const [expanded, setExpanded] = useState<ExpandedState>({})
+    const columns = useTransactionColumns()
 
-    const table = useReactTable({
-        data: rows as RowNode[],
-        columns,
-        state: {expanded},
-        onExpandedChange: setExpanded,
-        getCoreRowModel: getCoreRowModel(),
-        getExpandedRowModel: getExpandedRowModel(),
-        getSubRows: (row) => row.subcategories,
+    const columnOrderStore = useWallets(state => state.columnOrder)
+    const setColumnOrderStore = useWallets(state => state.setColumnOrder)
+
+    const defaultOrder = useMemo(() =>
+            columns.map(c => c.id || (c as any).accessorKey || ""),
+        [columns])
+
+    const [columnOrder, setColumnOrder] = useState<string[]>(() => {
+        if (columnOrderStore && columnOrderStore.length > 0) {
+            return columnOrderStore
+        }
+        return defaultOrder
     })
 
     useEffect(() => {
-        setRows(() => type === 'all' ? data : data.filter((item) => item.type === type))
-    }, [data, type])
+        if (columnOrderStore.length === 0 && defaultOrder.length > 0) {
+            setColumnOrderStore(defaultOrder)
+        }
+    }, [defaultOrder, columnOrderStore.length, setColumnOrderStore])
+
+    const handleColumnOrderChange: OnChangeFn<ColumnOrderState> = (updaterOrValue) => {
+        const newOrder = typeof updaterOrValue === 'function'
+            ? updaterOrValue(columnOrder)
+            : updaterOrValue
+
+        setColumnOrder(newOrder)
+        setColumnOrderStore(newOrder)
+    }
+
+    const table = useReactTable({
+        data: tableData,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        globalFilterFn: globalFilterFn,
+        onSortingChange: setSorting,
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
+        onPaginationChange: setPagination,
+        onColumnOrderChange: handleColumnOrderChange,
+        state: {
+            sorting,
+            columnVisibility,
+            rowSelection,
+            pagination,
+            columnOrder,
+            globalFilter: searchValue
+        },
+    })
 
     return (
-        <div className="max-h-[500px] relative overflow-auto rounded-md border">
-            <Table className="border-collapse">
-                <TableHeader>
-                    {table.getHeaderGroups().map((hg) => (
-                        <TableRow key={hg.id}
-                                  className={'sticky top-0 hover:bg-background bg-background z-10 after:absolute after:inset-x-0 after:-bottom-px after:h-px after:bg-border'}>
-                            {hg.headers.map((header) => (
-                                <TableHead key={header.id}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                            header.column.columnDef.header,
-                                            header.getContext()
-                                        )}
-                                </TableHead>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell
-                                        key={cell.id}
-                                        className={
-                                            cell.column.id === "actions" ||
-                                            cell.column.id === "expander"
-                                                ? "w-12"
-                                                : ""
-                                        }
-                                    >
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell
-                                colSpan={columns.length}
-                                className="h-24 text-center"
-                            >
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </div>
+        <DataTable
+            table={table}
+            columnOrder={columnOrder}
+            setColumnOrder={handleColumnOrderChange as (order: string[]) => void}
+        >
+            <TransactionOptions table={table} />
+        </DataTable>
     )
 }

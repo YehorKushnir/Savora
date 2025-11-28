@@ -16,12 +16,12 @@ import {Loader2Icon} from 'lucide-react'
 import {use, useEffect} from 'react'
 import {Tabs, TabsList, TabsTrigger} from './ui/tabs'
 import {useTransactions} from '@/src/lib/stores/transactions-store'
-import {CategoryWithSubs} from '@/src/app/(dashboard)/categories/actions'
-import {Wallet} from '@prisma/client'
+import {ClientCategory} from '@/src/app/(dashboard)/categories/actions'
+import {Vault} from '@prisma/client'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/src/components/ui/select'
 import LucideIcon, {IconName} from '@/src/components/lucide-icon'
-import {transactionDto} from '@/src/lib/dto/transaction-dto'
 import {createTransaction, updateTransaction} from '@/src/app/(dashboard)/transactions/actions'
+import {ClientWallet} from "@/src/lib/types/client-wallet-type";
 
 
 export const transactionSchema = z.object({
@@ -31,9 +31,8 @@ export const transactionSchema = z.object({
     amount: z.string().min(1),
     toReceive: z.string().optional(),
 
-    tag: z.string().optional(),
+    tagName: z.string().optional(),
     categoryId: z.string().optional(),
-    subcategoryId: z.string().optional(),
 
     sourceWalletId: z.string().optional(),
     targetWalletId: z.string().optional(),
@@ -93,8 +92,8 @@ export const transactionSchema = z.object({
 export type TTransaction = z.infer<typeof transactionSchema>
 
 interface Props {
-    categories: Promise<CategoryWithSubs[]>
-    wallets: Promise<Wallet[]>
+    categories: Promise<ClientCategory[]>
+    wallets: Promise<ClientWallet[]>
 }
 
 export default function TransactionModal(props: Props) {
@@ -104,36 +103,77 @@ export default function TransactionModal(props: Props) {
     const setOpen = useTransactions(state => state.setOpenModal)
     const transaction = useTransactions(state => state.transaction)
 
+    const defaultValues: Partial<TTransaction> = transaction ? {
+        id: transaction.id,
+        type: transaction.type as "income" | "expense" | "transfer",
+        description: transaction.description || '',
+
+        tagName: transaction.tags && transaction.tags.length > 0
+            ? transaction.tags[0].name
+            : '',
+
+        amount: transaction.entries && transaction.entries.length > 0
+            ? Math.abs(Number(transaction.entries[0].amount)).toString()
+            : '',
+
+        categoryId: transaction.categoryId || '',
+
+        sourceWalletId: transaction.entries?.find(e => Number(e.amount) < 0)?.vaultId || '',
+
+        targetWalletId: transaction.type === 'transfer'
+            ? transaction.entries?.find(e => Number(e.amount) > 0)?.vaultId
+            : '',
+
+    } : {
+        type: 'expense',
+        amount: '',
+        toReceive: '',
+        tagName: '',
+        description: '',
+        categoryId: '',
+        sourceWalletId: '',
+        targetWalletId: '',
+    }
+
     const form = useForm<TTransaction>({
         resolver: zodResolver(transactionSchema),
         shouldUnregister: true,
-        defaultValues: transaction ?? {
-            type: 'expense',
-            amount: '',
-            toReceive: '',
-            tag: '',
-            description: '',
-            categoryId: '',
-            subcategoryId: '',
-            sourceWalletId: '',
-            targetWalletId: '',
-        }
+        defaultValues: defaultValues as TTransaction
     })
 
+    const currentType = form.watch('type')
+    const filteredCategories = categories.filter(cat => cat.type === currentType)
+
     useEffect(() => {
-        if (open) form.reset(transaction)
+        if (open) form.reset(defaultValues)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, transaction, form])
 
     const onSubmit = form.handleSubmit(async (values) => {
-        const dataToSend = values.type === 'transfer'
-            ? transferDto(values)
-            : incomeOrExpenseDto(values)
+        const payload = {
+            type: values.type,
+            amount: values.amount,
+            description: values.description,
+            executedAt: new Date(),
 
-        transaction?.id
-            ? await updateTransaction(transaction.id, dataToSend)
-            : await createTransaction(dataToSend)
+            sourceVaultId: values.sourceWalletId!,
 
-        setOpen(false)
+            targetVaultId: values.type === 'transfer' ? values.targetWalletId : undefined,
+            categoryId: values.type !== 'transfer' ? values.categoryId : undefined,
+
+            tagName: values.tagName,
+        }
+
+        try {
+            transaction?.id
+                ? await updateTransaction(transaction.id, payload as any)
+                : await createTransaction(payload as any)
+
+            setOpen(false)
+            form.reset()
+        } catch (e) {
+            console.error(e)
+        }
     })
 
     return (
@@ -257,20 +297,29 @@ export default function TransactionModal(props: Props) {
                                         <FormItem className={'w-full flex items-center gap-2 mb-4'}>
                                             <FormLabel className={'min-w-20'}>Category</FormLabel>
                                             <FormControl>
-                                                <Select {...field} onValueChange={value => field.onChange(value)}>
+                                                <Select
+                                                    {...field}
+                                                    onValueChange={value => field.onChange(value)}
+                                                    value={field.value}
+                                                >
                                                     <SelectTrigger className={'w-full'}>
                                                         <SelectValue placeholder={'Category'}/>
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {categories.map(item => (
-                                                            <SelectItem
-                                                                key={item.id}
-                                                                value={item.id}
-                                                            >
-                                                                <LucideIcon name={item.icon as IconName}/>
-                                                                {item.name}
-                                                            </SelectItem>
-                                                        ))}
+                                                        {filteredCategories.length > 0 ? (
+                                                            filteredCategories.map(item => (
+                                                                <SelectItem key={item.id} value={item.id}>
+                                                                    <div className="flex items-center gap-2">
+                                                                        {item.icon && <LucideIcon name={item.icon as IconName} className="w-4 h-4"/>}
+                                                                        {item.name}
+                                                                    </div>
+                                                                </SelectItem>
+                                                            ))
+                                                        ) : (
+                                                            <div className="p-2 text-sm text-muted-foreground text-center">
+                                                                No categories found for {currentType}
+                                                            </div>
+                                                        )}
                                                     </SelectContent>
                                                 </Select>
                                             </FormControl>
@@ -329,7 +378,7 @@ export default function TransactionModal(props: Props) {
                         />
                         <FormField
                             control={form.control}
-                            name="tag"
+                            name="tagName"
                             render={({field}) => (
                                 <FormItem className={'flex items-center gap-2 mb-4'}>
                                     <FormLabel className={'min-w-20'}>Tag</FormLabel>

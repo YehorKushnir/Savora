@@ -3,34 +3,26 @@
 import {prisma} from '@/prisma'
 import {auth} from "@/auth"
 import {CategoryCreateUpdateType} from '@/src/lib/types/category-create-update-type'
-import {Vault} from '@prisma/client'
+import {Category} from '@prisma/client'
 import {revalidatePath} from 'next/cache'
 
-export type ClientVault = Omit<Vault, 'balance'> & {
-    balance: number
-}
+export type ClientCategory = Category
 
-export const getCategories = async (): Promise<ClientVault[]> => {
+export const getCategories = async (): Promise<ClientCategory[]> => {
     const session = await auth()
     const userId = session?.user?.id
     if (!userId) throw new Error('Unauthorized')
 
-    const categories = await prisma.vault.findMany({
+    const categories = await prisma.category.findMany({
         where: {
             userId,
-            type: {
-                in: ['income', 'expense']
-            }
         },
         orderBy: {
             createdAt: 'desc'
         }
     })
 
-    return categories.map(category => ({
-        ...category,
-        balance: category.balance.toNumber()
-    }))
+    return categories
 }
 
 export async function createCategory(payload: CategoryCreateUpdateType) {
@@ -38,18 +30,11 @@ export async function createCategory(payload: CategoryCreateUpdateType) {
     const userId = session?.user?.id
     if (!userId) throw new Error('Unauthorized')
 
-    const user = await prisma.user.findUnique({
-        where: {id: userId}
-    })
-
-    if (!user) throw new Error('User not found')
-
-    await prisma.vault.create({
+    await prisma.category.create({
         data: {
             name: payload.name,
             type: payload.type,
             icon: payload.icon,
-            currency: user.currency,
             userId
         },
     })
@@ -62,7 +47,7 @@ export async function updateCategory(id: string, payload: CategoryCreateUpdateTy
     const userId = session?.user?.id
     if (!userId) throw new Error('Unauthorized')
 
-    await prisma.vault.update({
+    await prisma.category.update({
         where: {id},
         data: {
             name: payload.name,
@@ -78,12 +63,15 @@ export async function deleteCategory(id: string) {
     const session = await auth()
     if (!session?.user?.id) throw new Error('Unauthorized')
 
-    const vault = await prisma.vault.findUnique({where: {id}, include: {entries: true}})
+    const category = await prisma.category.findUnique({
+        where: {id},
+        include: {transactions: true}
+    })
 
-    if (!vault) throw new Error('Category not found')
+    if (!category) throw new Error('Category not found')
 
-    if (vault.entries.length > 0) throw new Error('Category cannot be deleted')
+    if (category.transactions.length > 0) throw new Error('Category cannot be deleted because it has related transactions')
 
-    await prisma.vault.delete({where: {id}})
+    await prisma.category.delete({where: {id}})
     revalidatePath('categories')
 }

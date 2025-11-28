@@ -1,12 +1,13 @@
 "use client"
 
+import {use, useMemo} from "react";
+
 import {Area, AreaChart, CartesianGrid, XAxis, YAxis} from "recharts"
 
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/src/components/ui/card"
 import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent,} from "@/src/components/ui/chart"
-import {Transaction} from "@/src/lib/types/transactions"
 import {useTimeRange} from "@/src/lib/stores/time-range-store";
-import {filterTransactionsByDate} from "@/src/lib/helpers/filter-by-date";
+import { PropsTransactionInterface } from "../lib/types/props-transaction-interface"
 
 type ChartDataType = {
     date: string
@@ -24,31 +25,66 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function StaticsChartFunds({ data = [] }: { data?: Transaction[] }) {
+export function StaticsChartFunds(props: PropsTransactionInterface) {
+    const data = use(props.transactions)
+
     const timeRange = useTimeRange(state => state.timeRange)
     const timePhrase = useTimeRange(state => state.timePhrase)
-    const customRange = useTimeRange(state => state.customRange)
-    const filteredData = filterTransactionsByDate(data, customRange
-        ? customRange
-        : timeRange !== "custom"
-            ? timeRange
-            : "90"
-    )
+    const fromDate = useTimeRange(state => state.fromDate)
+    const toDate = useTimeRange(state => state.toDate)
 
-    const baseRecords: ChartDataType[] = filteredData
-        .map((item) => {
-            const cardEntry = item.entries?.find((e) => e.vaultId === "seed_vault_card")
-            if (!cardEntry) return null
-            const dateOnly = item.executedAt.split("T")[0]
-            const after = cardEntry.balanceAfter ? cardEntry.balanceAfter : 0
-            const amount = Math.round(after)
-            return {
-                date: dateOnly,
-                amount,
+    const baseRecords = useMemo(() => {
+        const sortedAll = [...data].sort((a, b) =>
+            new Date(a.executedAt).getTime() - new Date(b.executedAt).getTime()
+        )
+
+        const balances: Record<string, number> = {}
+        const history: ChartDataType[] = []
+
+        for (const tx of sortedAll) {
+            for (const entry of tx.entries) {
+                balances[entry.vaultId] = Number(entry.balanceAfter)
             }
+
+            const total = Object.values(balances).reduce((sum, val) => sum + val, 0)
+            const dateStr = new Date(tx.executedAt).toISOString().split('T')[0]
+
+            const lastPoint = history[history.length - 1]
+            if (lastPoint && lastPoint.date === dateStr) {
+                lastPoint.amount = Math.round(total)
+            } else {
+                history.push({ date: dateStr, amount: Math.round(total) })
+            }
+        }
+
+        const now = new Date()
+        let startDate = new Date(0)
+        let endDate = new Date()
+
+        if (fromDate && toDate) {
+            startDate = fromDate
+            endDate = toDate
+        }
+        else if (timeRange !== "all") {
+            const days = parseInt(timeRange)
+            if (!isNaN(days)) {
+                startDate = new Date()
+                startDate.setDate(now.getDate() - days)
+            }
+        }
+
+        return history.filter(item => {
+            const d = new Date(item.date)
+            d.setHours(0, 0, 0, 0)
+            const start = new Date(startDate)
+            start.setHours(0, 0, 0, 0)
+            const end = new Date(endDate)
+            end.setHours(23, 59, 59, 999)
+
+            return d >= start && d <= end
         })
-        .filter((x): x is ChartDataType => Boolean(x))
-        .sort((a, b) => a.date.localeCompare(b.date))
+
+    }, [data, timeRange, fromDate, toDate])
 
     return (
         <Card className="@container/card pb-4">
@@ -59,14 +95,14 @@ export function StaticsChartFunds({ data = [] }: { data?: Transaction[] }) {
                          Total for the last {timePhrase}
                      </span>
                     <span className="@[540px]/card:hidden">Last {timePhrase}</span>
-                   {baseRecords.length === 0 && (
-                       <span>No data available for the selected range.</span>
-                   )}
+                    {baseRecords.length === 0 && (
+                        <span>No data available for the selected range.</span>
+                    )}
                 </CardDescription>
             </CardHeader>
             { baseRecords.length > 0
                 ? <CardContent className="px-2 pt-4 sm:px-4">
-                     <ChartContainer
+                    <ChartContainer
                         config={chartConfig}
                         className="aspect-auto h-[290px] w-full"
                     >

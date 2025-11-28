@@ -1,12 +1,19 @@
-import { Transaction } from "@/src/lib/types/transactions";
+import { TransactionWithRelations } from "@/src/lib/types/transactions";
 
-export function getExpenseFunds(transactions: Transaction[]): [string, string] {
+export function getExpenseFunds(transactions: TransactionWithRelations[]): [string, string] {
     const expenseSum = transactions
         .filter(tx => tx.type === 'expense')
-        .reduce((sum, tx) => sum + tx.baseAmount, 0);
+        .reduce((sum, tx) => {
+            // Берем сумму из первой записи (entries[0])
+            const amount = tx.entries[0]?.amount ? Number(tx.entries[0].amount) : 0
+            return sum + Math.abs(amount)
+        }, 0);
 
     const totalSum = transactions
-        .reduce((sum, tx) => sum + tx.baseAmount, 0);
+        .reduce((sum, tx) => {
+            const amount = tx.entries[0]?.amount ? Number(tx.entries[0].amount) : 0
+            return sum + Math.abs(amount)
+        }, 0);
 
     const percentage = totalSum > 0 ? (expenseSum / totalSum) * 100 : 0;
 

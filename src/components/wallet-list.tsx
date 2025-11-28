@@ -1,13 +1,14 @@
 'use client'
 
-import {FC, useState, useEffect} from 'react'
+import {FC, useEffect, use} from 'react'
 import {Card, CardDescription, CardHeader, CardTitle} from '@/src/components/ui/card'
 import LucideIcon, {IconName} from '@/src/components/lucide-icon'
 import {ContextMenu, ContextMenuContent, ContextMenuTrigger} from '@/src/components/ui/context-menu'
 import {getCurrencySymbol} from '@/src/lib/get-currency-symol'
 import WalletListActions from '@/src/components/wallet-list-actions'
-import {useSearchParams} from "next/navigation"
-import {Wallet, useWallets} from "@/src/lib/stores/wallets-store"
+// Убрали useSearchParams и useRouter
+import {useWalletSelection} from "@/src/lib/stores/wallet-selection-store"
+import {useWallets} from "@/src/lib/stores/wallets-store"
 import {
     DndContext,
     closestCenter,
@@ -24,18 +25,19 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
+import { ClientWallet } from '../lib/types/client-wallet-type'
 
 interface Props {
-    wallets: Wallet[]
+    wallets: Promise<ClientWallet[]>
 }
 
 interface SortableWalletItemProps {
-    wallet: Wallet
-    active: string
+    wallet: ClientWallet
+    activeId: string
     onSelect: (id: string) => void
 }
 
-const SortableWalletItem: FC<SortableWalletItemProps> = ({wallet, active, onSelect}) => {
+const SortableWalletItem: FC<SortableWalletItemProps> = ({wallet, activeId, onSelect}) => {
     const {
         attributes,
         listeners,
@@ -48,7 +50,6 @@ const SortableWalletItem: FC<SortableWalletItemProps> = ({wallet, active, onSele
     const restrictedTransform = transform
         ? { ...transform, x: 0 }
         : null
-    // x
 
     const style = {
         transform: CSS.Transform.toString(restrictedTransform),
@@ -56,7 +57,8 @@ const SortableWalletItem: FC<SortableWalletItemProps> = ({wallet, active, onSele
         opacity: isDragging ? 0.5 : 1,
     }
 
-    const clsx = active === wallet.id ? 'border-2 border-[var(--accent-foreground)]' : 'border-2 border-transparent'
+    const isActive = activeId === wallet.id
+    const clsx = isActive ? 'border-2 border-[var(--accent-foreground)]' : 'border-2 border-transparent'
 
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
@@ -64,7 +66,7 @@ const SortableWalletItem: FC<SortableWalletItemProps> = ({wallet, active, onSele
                 <ContextMenuTrigger className={'w-full'}>
                     <Card
                         onClick={() => onSelect(wallet.id)}
-                        className={`w-full flex flex-row gap-4 items-center py-2 px-4 rounded-md cursor-pointer ${clsx}`}
+                        className={`w-full flex flex-row gap-4 items-center py-2 px-4 rounded-md cursor-pointer transition-colors ${clsx}`}
                     >
                         <LucideIcon name={wallet.icon as IconName} size={40}/>
                         <CardHeader className={'w-full p-0'}>
@@ -81,14 +83,15 @@ const SortableWalletItem: FC<SortableWalletItemProps> = ({wallet, active, onSele
     )
 }
 
-const WalletList: FC<Props> = ({wallets}) => {
-    const searchParams = useSearchParams()
+const WalletList = (props: Props) => {
+    const wallets = use(props.wallets)
+
+    const activeWalletId = useWalletSelection(state => state.activeWalletId)
+    const setActiveWalletId = useWalletSelection(state => state.setActiveWalletId)
+
     const storeWallets = useWallets((state) =>  state.storeWallets)
     const setWallets = useWallets((state) =>  state.setWallets)
     const reorderWallets = useWallets((state) =>  state.reorderWallets)
-    const initialActive = searchParams.get('activeWallet')
-        || (wallets.length ? wallets[0].id : '')
-    const [active, setActive] = useState(initialActive)
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -108,22 +111,28 @@ const WalletList: FC<Props> = ({wallets}) => {
     }, [wallets, setWallets])
 
     useEffect(() => {
-        const current = searchParams.get('activeWallet')
-        if (current && current !== active) {
-            setActive(current)
+        if (activeWalletId) return
+
+        if (wallets.length > 0) {
+            const defaultId = wallets[0].id
+            setActiveWalletId(defaultId)
+
+            const params = new URLSearchParams(window.location.search)
+            params.set('activeWallet', defaultId)
+            window.history.replaceState(null, '', `?${params.toString()}`)
         }
-    }, [searchParams, active])
+    }, [wallets, activeWalletId, setActiveWalletId])
 
     function updateActiveWallet(walletId: string) {
-        const params = new URLSearchParams(searchParams.toString())
-        setActive(walletId)
+        setActiveWalletId(walletId)
+
+        const params = new URLSearchParams(window.location.search)
         params.set('activeWallet', walletId)
-        window.history.pushState(null, '', `?${params.toString()}`)
+        window.history.replaceState(null, '', `?${params.toString()}`)
     }
 
     function handleDragEnd(event: DragEndEvent) {
         const {active, over} = event
-
         if (over && active.id !== over.id) {
             reorderWallets(active.id as string, over.id as string)
         }
@@ -146,7 +155,7 @@ const WalletList: FC<Props> = ({wallets}) => {
                         <SortableWalletItem
                             key={wallet.id}
                             wallet={wallet}
-                            active={active}
+                            activeId={activeWalletId || ''}
                             onSelect={updateActiveWallet}
                         />
                     ))}

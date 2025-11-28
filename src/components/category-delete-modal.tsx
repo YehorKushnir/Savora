@@ -33,7 +33,7 @@ const CategoryDeleteModal = () => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className={'max-w-[340px]'} aria-describedby={undefined}>
                 <DialogHeader>
-                    <DialogTitle>Delete wallet</DialogTitle>
+                    <DialogTitle>Delete category</DialogTitle>
                 </DialogHeader>
                 <div>Are you sure to delete category "{category?.name}"?</div>
                 <DialogFooter>
