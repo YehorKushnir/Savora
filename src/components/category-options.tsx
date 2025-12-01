@@ -20,15 +20,6 @@ const CategoryOptions = () => {
                 <Button onClick={() => setOpenModal(true)}>
                     Add category
                 </Button>
-                <SavoraSearch onChangeAction={setSearchValue} value={searchValue} className="w-[384px]"/>
-            </div>
-            <div className="flex gap-4">
-                <Tabs value={appearance} onValueChange={setAppearance}>
-                    <TabsList>
-                        <TabsTrigger value="table">Table</TabsTrigger>
-                        <TabsTrigger value="card">Card</TabsTrigger>
-                    </TabsList>
-                </Tabs>
                 <Tabs value={type} onValueChange={setType}>
                     <TabsList>
                         <TabsTrigger value="all">All</TabsTrigger>
@@ -36,7 +27,14 @@ const CategoryOptions = () => {
                         <TabsTrigger value="expense">Expenses</TabsTrigger>
                     </TabsList>
                 </Tabs>
+                <Tabs value={appearance} onValueChange={setAppearance}>
+                    <TabsList>
+                        <TabsTrigger value="table">Table</TabsTrigger>
+                        <TabsTrigger value="card">Card</TabsTrigger>
+                    </TabsList>
+                </Tabs>
             </div>
+            <SavoraSearch onChangeAction={setSearchValue} value={searchValue} className="w-[384px]"/>
         </div>
     )
 }

@@ -1,6 +1,5 @@
 "use client"
 
-import {type LucideIcon} from "lucide-react"
 import {usePathname} from "next/navigation"
 
 import {
@@ -10,25 +9,17 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/src/components/ui/sidebar"
-import {FC} from "react";
 import Link from "next/link";
+import {navigation} from "@/src/lib/navigation";
 
-interface Props {
-    items: {
-        title: string
-        url: string
-        icon?: LucideIcon
-    }[]
-}
-
-export const NavMain: FC<Props> = ({items}) => {
+export const NavMain = () => {
     const pathname = usePathname()
 
     return (
         <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-4">
                 <SidebarMenu className="gap-2">
-                    {items.map((item) => (
+                    {navigation.map((item) => (
                         <SidebarMenuItem key={item.title}>
                             <Link href={item.url}>
                                 <SidebarMenuButton

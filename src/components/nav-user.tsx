@@ -23,7 +23,7 @@ import {
 import {SessionProvider, signOut, useSession} from "next-auth/react";
 import UserAvatar from '@/src/components/user-avatar'
 import {Skeleton} from '@/src/components/ui/skeleton'
-import {Bell, CreditCard, EllipsisVertical, LogOut, Settings, UserRound} from "lucide-react";
+import {EllipsisVertical, LogOut, Settings, UserRound} from "lucide-react";
 import Link from "next/link";
 
 export function NavUser() {

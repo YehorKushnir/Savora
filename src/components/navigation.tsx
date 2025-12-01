@@ -9,36 +9,26 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle,
 } from "@/src/components/ui/navigation-menu"
+import {usePathname} from "next/navigation";
+import {navigation} from "@/src/lib/navigation";
+import {cn} from "@/src/lib/utils";
 
 export function Navigation() {
+    const pathname = usePathname()
+
     return (
         <NavigationMenu viewport={true}>
             <NavigationMenuList>
-                <NavigationMenuItem>
-                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                        <Link href="/dashboard">Dashboard</Link>
-                    </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                        <Link href="/wallets">Wallets</Link>
-                    </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                        <Link href="/categories">Categories</Link>
-                    </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                        <Link href="/transactions">Transactions</Link>
-                    </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                        <Link href="/statistics">Statistics</Link>
-                    </NavigationMenuLink>
-                </NavigationMenuItem>
+                {navigation.map(item => (
+                    <NavigationMenuItem key={item.url}>
+                        <NavigationMenuLink
+                            asChild
+                            className={cn(navigationMenuTriggerStyle(), pathname === item.url ? 'bg-secondary' : 'bg-background')}
+                        >
+                            <Link href={item.url}>{item.title}</Link>
+                        </NavigationMenuLink>
+                    </NavigationMenuItem>
+                ))}
             </NavigationMenuList>
         </NavigationMenu>
     )

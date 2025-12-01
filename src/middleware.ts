@@ -8,7 +8,7 @@ export default auth(async (req) => {
     const isPublic = pathname === "/" || pathname.startsWith("/login")
 
     if (!req.auth && !isPublic) {
-        const newUrl = new URL("/login", req.nextUrl.origin)
+        const newUrl = new URL("/", req.nextUrl.origin)
         return Response.redirect(newUrl)
     }
 

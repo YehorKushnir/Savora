@@ -16,14 +16,12 @@ export default function TransactionOptions() {
                 <Button onClick={() => setOpenModal(true)}>
                     Add transaction
                 </Button>
-                <SavoraSearch
-                    value={searchValue}
-                    onChangeAction={setSearchValue}
-                />
-            </div>
-            <div className="flex gap-4 items-center">
                 <TableOptions/>
             </div>
+            <SavoraSearch
+                value={searchValue}
+                onChangeAction={setSearchValue}
+            />
         </div>
     )
 }

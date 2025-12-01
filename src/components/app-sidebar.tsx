@@ -12,45 +12,8 @@ import {
     SidebarMenuItem,
 } from "@/src/components/ui/sidebar"
 import Image from "next/image";
-import {
-    ChartNoAxesColumn,
-    Gauge,
-    LayoutDashboard,
-    List,
-    Wallet
-} from "lucide-react";
 import Link from "next/link";
 import {ComponentProps} from 'react'
-
-const data = {
-    navMain: [
-        {
-            title: "Dashboard",
-            url: "/dashboard",
-            icon: Gauge
-        },
-        {
-            title: "Wallets",
-            url: "/wallets",
-            icon: Wallet
-        },
-        {
-            title: "Categories",
-            url: "/categories",
-            icon: LayoutDashboard
-        },
-        {
-            title: "Transactions",
-            url: "/transactions",
-            icon: List
-        },
-        {
-            title: "Statistics",
-            url: "/statistics",
-            icon: ChartNoAxesColumn
-        }
-    ]
-}
 
 export function AppSidebar({...props}: ComponentProps<typeof Sidebar>) {
     return (
@@ -71,7 +34,7 @@ export function AppSidebar({...props}: ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={data.navMain}/>
+                <NavMain/>
             </SidebarContent>
             <SidebarFooter>
                 <NavUser/>
