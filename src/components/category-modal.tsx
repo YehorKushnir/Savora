@@ -17,10 +17,11 @@ import {HelpCircle, icons, Loader2Icon, type LucideIcon} from 'lucide-react'
 import {useEffect} from 'react'
 import {DialogClose} from '@radix-ui/react-dialog'
 import {useCategories} from '@/src/lib/stores/categories-store'
-import {createCategory, updateCategory} from '@/src/app/(dashboard)/categories/actions'
+import {createCategory, updateCategory} from "@/src/app/[locale]/(dashboard)/categories/actions";
 import {Tabs, TabsList, TabsTrigger} from './ui/tabs'
 import {categoryDto} from '@/src/lib/dto/category-dto'
 import {IconName } from "../lib/types/icon-picker-types"
+import { useTranslations } from 'next-intl';
 
 export const categorySchema = z.object({
     name: z.string().min(2).max(20),
@@ -34,6 +35,7 @@ const CategoryModal = () => {
     const open = useCategories(state => state.openModal)
     const setOpen = useCategories(state => state.setOpenModal)
     const category = useCategories(state => state.category)
+    const t = useTranslations('Categories');
 
     const defaultValues: TCategoryForm = category ? {
         name: category.name,
@@ -75,7 +77,7 @@ const CategoryModal = () => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className={'max-w-[340px]'} aria-describedby={undefined}>
                 <DialogHeader>
-                    <DialogTitle>{category ? 'Update' : 'Add'} category</DialogTitle>
+                    <DialogTitle>{category ? t('modal.update_title') : t('modal.add_title')}</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form
@@ -93,7 +95,7 @@ const CategoryModal = () => {
                                     render={({field}) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input placeholder="Name" {...field} />
+                                                <Input placeholder={t('modal.name_placeholder')} {...field} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -110,8 +112,8 @@ const CategoryModal = () => {
                                                     onValueChange={(value) => field.onChange(value)}
                                                 >
                                                     <TabsList className={'w-full'}>
-                                                        <TabsTrigger value="income">Income</TabsTrigger>
-                                                        <TabsTrigger value="expense">Expense</TabsTrigger>
+                                                        <TabsTrigger value="income">{t('modal.tabs.income')}</TabsTrigger>
+                                                        <TabsTrigger value="expense">{t('modal.tabs.expense')}</TabsTrigger>
                                                     </TabsList>
                                                 </Tabs>
                                             </FormControl>
@@ -126,7 +128,7 @@ const CategoryModal = () => {
                             name="icon"
                             render={({field}) => (
                                 <FormItem className={'mb-4'}>
-                                    <FormLabel>Icon</FormLabel>
+                                    <FormLabel>{t('modal.icon_label')}</FormLabel>
                                     <FormControl>
                                         <div>
                                             <input type="hidden" name="icon" value={field.value}/>
@@ -139,7 +141,7 @@ const CategoryModal = () => {
                         />
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline">{t('modal.cancel')}</Button>
                             </DialogClose>
                             <Button
                                 type={'submit'}
@@ -149,9 +151,9 @@ const CategoryModal = () => {
                                     ? (
                                         <>
                                             <Loader2Icon className="mr-2 h-4 w-4 animate-spin"/>
-                                            Submitting...
+                                            {t('modal.submitting')}
                                         </>
-                                    ) : 'Submit'
+                                    ) : t('modal.submit')
                                 }
                             </Button>
                         </DialogFooter>

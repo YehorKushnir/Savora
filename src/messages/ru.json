@@ -1,0 +1,224 @@
+{
+  "HomePage": {
+    "nav": {
+      "login": "Войти"
+    },
+    "hero": {
+      "badge": "Savora v1.0 уже доступна",
+      "title_main": "Финансы под контролем.",
+      "title_sub": "Без лишних усилий.",
+      "description": "Современный инструмент для учета доходов и расходов. Понятная аналитика, мультивалютность и полный контроль над бюджетом.",
+      "start_btn": "Начать бесплатно",
+      "demo_btn": "Демо режим",
+      "img_alt_light": "Savora Дэшборд Светлая тема",
+      "img_alt_dark": "Savora Дэшборд Темная тема"
+    },
+    "features": {
+      "title": "Возможности Savora",
+      "subtitle": "Мы убрали все лишнее, оставив только инструменты, которые действительно помогают копить и следить за деньгами.",
+      "stats": {
+        "title": "Наглядная статистика",
+        "description": "Отслеживай динамику капитала на графиках. Анализируй расходы за 30 дней, 3 месяца или год в один клик.",
+        "img_alt_light": "Статистика Светлая",
+        "img_alt_dark": "Статистика Темная"
+      },
+      "wallets": {
+        "title": "Кошельки",
+        "description": "Создавай неограниченное количество счетов. Наличные, карты, вклады — все в одном месте."
+      },
+      "categories": {
+        "title": "Категории",
+        "description": "Гибкая настройка категорий доходов и расходов. Добавляй свои иконки и цвета."
+      },
+      "privacy": {
+        "title": "Приватность превыше всего",
+        "description": "Данные хранятся в безопасности. Никакой рекламы и передачи третьим лицам."
+      }
+    },
+    "cta": {
+      "title": "Готовы навести порядок?",
+      "btn": "Создать аккаунт"
+    },
+    "footer": {
+      "copyright": "© 2025 Savora. Все права защищены."
+    }
+  },
+  "Categories": {
+    "add_btn": "Добавить категорию",
+    "filters": {
+      "all": "Все",
+      "income": "Доходы",
+      "expense": "Расходы",
+      "table": "Таблица",
+      "card": "Карточки"
+    },
+    "table": {
+      "name": "Название",
+      "no_results": "Нет результатов."
+    },
+    "actions": {
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "modal": {
+      "add_title": "Добавить категорию",
+      "update_title": "Обновить категорию",
+      "name_placeholder": "Название",
+      "tabs": {
+        "income": "Доход",
+        "expense": "Расход"
+      },
+      "icon_label": "Иконка",
+      "cancel": "Отмена",
+      "submit": "Сохранить",
+      "submitting": "Сохранение..."
+    },
+    "delete_modal": {
+      "title": "Удалить категорию",
+      "confirm": "Вы уверены, что хотите удалить категорию \"{name}\"?",
+      "cancel": "Отмена",
+      "delete": "Удалить",
+      "deleting": "Удаление..."
+    }
+  },
+  "Auth": {
+    "welcome": "Добро пожаловать в Savora",
+    "apple": "Войти через Apple",
+    "google": "Войти через Google",
+    "agreement": "Нажимая продолжить, вы соглашаетесь с нашими <terms>Условиями использования</terms> и <privacy>Политикой конфиденциальности</privacy>."
+  },
+  "Nav": {
+    "account": "Аккаунт",
+    "settings": "Настройки",
+    "logout": "Выйти"
+  },
+  "Settings": {
+    "titles": {
+      "appearance": "Внешний вид",
+      "account": "Аккаунт",
+      "not_found": "Страница 404"
+    },
+    "appearance": {
+      "sidebar_label": "Боковое / Верхнее меню",
+      "sidebar_option": "Боковое",
+      "navbar_option": "Верхнее",
+      "theme_label": "Тема оформления",
+      "theme_light": "Светлая",
+      "theme_dark": "Темная",
+      "theme_system": "Системная"
+    }
+  },
+  "Common": {
+    "search_placeholder": "Поиск в Savora"
+  },
+  "Statistics": {
+    "cards": {
+      "income": "Доходы",
+      "expense": "Расходы"
+    },
+    "charts": {
+      "wallets": {
+        "title": "Баланс кошельков",
+        "no_data": "Кошельки не найдены",
+        "current_dist": "Текущее распределение",
+        "current": "Текущий"
+      },
+      "funds": {
+        "title": "Общие средства",
+        "balance": "Баланс",
+        "total_last": "Всего за последние {period}",
+        "last": "Последние {period}",
+        "no_data": "Нет данных за выбранный период."
+      }
+    },
+    "filters": {
+      "last_90_days": "Последние 3 месяца",
+      "last_30_days": "Последние 30 дней",
+      "last_7_days": "Последние 7 дней",
+      "custom": "Свой период",
+      "apply": "Применить",
+      "all_wallets": "Все кошельки активны",
+      "selected_wallets": "Выбрано: {count}"
+    }
+  },
+  "Transactions": {
+    "filters": {
+      "all": "Все",
+      "income": "Доходы",
+      "expense": "Расходы",
+      "transfer": "Переводы"
+    },
+    "table": {
+      "selected": "Выбрано {selected} из {total} строк.",
+      "rows_per_page": "Строк на странице:"
+    },
+    "delete_modal": {
+      "title": "Удалить транзакцию",
+      "confirm_named": "Вы уверены, что хотите удалить \"{description}\"?",
+      "confirm_generic": "Вы уверены, что хотите удалить эту транзакцию?",
+      "cancel": "Отмена",
+      "delete": "Удалить",
+      "deleting": "Удаление..."
+    },
+    "modal": {
+      "title_add": "Добавить транзакцию",
+      "title_update": "Обновить транзакцию",
+      "tabs": {
+        "income": "Доход",
+        "expense": "Расход",
+        "transfer": "Перевод"
+      },
+      "labels": {
+        "from": "Откуда",
+        "to": "Куда",
+        "wallet": "Кошелек",
+        "category": "Категория",
+        "amount": "Сумма",
+        "to_receive": "Получу",
+        "description": "Описание",
+        "tag": "Тег"
+      },
+      "placeholders": {
+        "wallet": "Кошелек",
+        "category": "Категория",
+        "amount": "Сумма",
+        "to_receive": "Получу",
+        "description": "Описание",
+        "tag": "Тег"
+      },
+      "no_categories": "Нет категорий для типа {type}",
+      "cancel": "Отмена",
+      "submit": "Сохранить",
+      "submitting": "Сохранение..."
+    },
+    "add_btn": "Добавить транзакцию"
+  },
+  "Wallets": {
+    "list": {
+      "edit": "Редактировать",
+      "delete": "Удалить"
+    },
+    "delete_modal": {
+      "title": "Удалить кошелек",
+      "confirm": "Вы уверены, что хотите удалить кошелек \"{name}\"?",
+      "cancel": "Отмена",
+      "delete": "Удалить",
+      "deleting": "Удаление..."
+    },
+    "modal": {
+      "title_add": "Добавить кошелек",
+      "title_update": "Обновить кошелек",
+      "type_asset": "Актив",
+      "type_liability": "Пассив",
+      "name_label": "Название",
+      "name_placeholder": "Название",
+      "currency_label": "Валюта",
+      "balance_label": "Баланс",
+      "balance_placeholder": "Баланс",
+      "icon_label": "Иконка",
+      "cancel": "Отмена",
+      "submit": "Сохранить",
+      "submitting": "Сохранение..."
+    }
+  }
+}

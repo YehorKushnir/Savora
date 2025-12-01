@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Input } from "@/src/components/ui/input"
+import { useTranslations } from 'next-intl';
 
 type WalletSearchProps = {
     value?: string
@@ -11,9 +12,11 @@ type WalletSearchProps = {
     className?: string
 }
 
-export function SavoraSearch({value = "", onChangeAction, placeholder = "Search Savora", delay = 300, className = ""}: WalletSearchProps) {
-
+export function SavoraSearch({value = "", onChangeAction, placeholder, delay = 300, className = ""}: WalletSearchProps) {
+    const t = useTranslations('Common');
     const [local, setLocal] = useState(value)
+
+    const finalPlaceholder = placeholder || t('search_placeholder');
 
     useEffect(() => {
         setLocal(value)
@@ -30,7 +33,7 @@ export function SavoraSearch({value = "", onChangeAction, placeholder = "Search 
         <Input
             value={local}
             onChange={(e) => setLocal(e.target.value)}
-            placeholder={placeholder}
+            placeholder={finalPlaceholder}
             className={`${className} max-w-sm`}
         />
     )

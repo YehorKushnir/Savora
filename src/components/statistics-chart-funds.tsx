@@ -1,32 +1,32 @@
 "use client"
 
 import {use, useMemo} from "react";
-
 import {Area, AreaChart, CartesianGrid, XAxis, YAxis} from "recharts"
-
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/src/components/ui/card"
 import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent,} from "@/src/components/ui/chart"
 import {useTimeRange} from "@/src/lib/stores/time-range-store";
 import { PropsTransactionInterface } from "../lib/types/props-transaction-interface"
+import { useTranslations } from 'next-intl';
 
 type ChartDataType = {
     date: string
     amount: number
 }
 
-const chartConfig = {
-    expense: {
-        label: "Balance",
-        color: "var(--primary)",
-    },
-    income: {
-        label: "Balance",
-        color: "var(--primary)",
-    },
-} satisfies ChartConfig
-
 export function StaticsChartFunds(props: PropsTransactionInterface) {
     const data = use(props.transactions)
+    const t = useTranslations('Statistics.charts.funds');
+
+    const chartConfig = useMemo(() => ({
+        expense: {
+            label: t('balance'),
+            color: "var(--primary)",
+        },
+        income: {
+            label: t('balance'),
+            color: "var(--primary)",
+        },
+    } satisfies ChartConfig), [t])
 
     const timeRange = useTimeRange(state => state.timeRange)
     const timePhrase = useTimeRange(state => state.timePhrase)
@@ -89,14 +89,16 @@ export function StaticsChartFunds(props: PropsTransactionInterface) {
     return (
         <Card className="@container/card pb-4">
             <CardHeader>
-                <CardTitle>Total Funds</CardTitle>
+                <CardTitle>{t('title')}</CardTitle>
                 <CardDescription className="flex gap-2 flex-col">
                      <span className="hidden @[540px]/card:block">
-                         Total for the last {timePhrase}
+                         {t('total_last', { period: timePhrase })}
                      </span>
-                    <span className="@[540px]/card:hidden">Last {timePhrase}</span>
+                    <span className="@[540px]/card:hidden">
+                        {t('last', { period: timePhrase })}
+                    </span>
                     {baseRecords.length === 0 && (
-                        <span>No data available for the selected range.</span>
+                        <span>{t('no_data')}</span>
                     )}
                 </CardDescription>
             </CardHeader>

@@ -13,10 +13,8 @@ import {
 } from "@tanstack/react-table"
 
 import { useTransactions } from "@/src/lib/stores/transactions-store"
-import TransactionOptions from "@/src/components/transaction-options"
 import { useTransactionGlobalFilter } from "@/src/hooks/use-wallet-global-filter"
 import { PropsTransactionInterface } from "@/src/lib/types/props-transaction-interface"
-
 import { DataTable } from "@/src/components/data-table/data-table"
 import {useTransactionColumns} from "@/src/components/data-table/use-transaction-columns";
 import {useWallets} from "@/src/lib/stores/wallets-store";

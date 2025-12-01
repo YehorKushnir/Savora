@@ -9,6 +9,7 @@ import {SelectCalendar} from "@/src/components/select-calendar";
 import {Button} from "@/src/components/ui/button";
 import {useSearchParams} from "next/navigation";
 import {updateTimeRangeParams} from "@/src/lib/helpers/update-active-wallet";
+import { useTranslations } from 'next-intl';
 
 export const StatisticsSelectTimeRange = () => {
     const isMobile = useIsMobile()
@@ -26,6 +27,8 @@ export const StatisticsSelectTimeRange = () => {
     const setToDate = useTimeRange((state) => state.setToDate);
     const setFromDate = useTimeRange((state) => state.setFromDate);
     const setRange = useTimeRange((state) => state.setRange);
+
+    const t = useTranslations('Statistics.filters');
 
     function dateConversion() {
         if (fromDate && toDate) {
@@ -72,54 +75,54 @@ export const StatisticsSelectTimeRange = () => {
                 variant="outline"
                 className="hidden *:data-[slot=toggle-group-item]:!px-4 @[765px]:flex"
             >
-                <ToggleGroupItem value="90">Last 3 months</ToggleGroupItem>
-                <ToggleGroupItem value="30">Last 30 days</ToggleGroupItem>
-                <ToggleGroupItem value="7">Last 7 days</ToggleGroupItem>
+                <ToggleGroupItem value="90">{t('last_90_days')}</ToggleGroupItem>
+                <ToggleGroupItem value="30">{t('last_30_days')}</ToggleGroupItem>
+                <ToggleGroupItem value="7">{t('last_7_days')}</ToggleGroupItem>
                 <ToggleGroupItem value="custom"
                                  disabled={(!fromDate || !toDate)}
                 >
-                    Custom
+                    {t('custom')}
                 </ToggleGroupItem>
             </ToggleGroup>
             <Select value={timeRange}
                     onValueChange={(value) => {
                         setRange({range: value})
                         updateTimeRangeParams(value, searchParams);
-            }}>
+                    }}>
                 <SelectTrigger
                     className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[765px]:hidden"
                     size="sm"
                     aria-label="Select a value"
                 >
-                    <SelectValue placeholder="Last 3 months" />
+                    <SelectValue placeholder={t('last_30_days')} />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
                     <SelectItem value="90" className="rounded-lg">
-                        Last 3 months
+                        {t('last_90_days')}
                     </SelectItem>
                     <SelectItem value="30" className="rounded-lg">
-                        Last 30 days
+                        {t('last_30_days')}
                     </SelectItem>
                     <SelectItem value="7" className="rounded-lg">
-                        Last 7 days
+                        {t('last_7_days')}
                     </SelectItem>
                     <SelectItem value="custom" className="rounded-lg">
-                        Custom
+                        {t('custom')}
                     </SelectItem>
                 </SelectContent>
             </Select>
             <SelectCalendar open={openFrom} setOpen={setFromOpen} setDate={setFromDate} date={fromDate}/>
             <SelectCalendar open={openTo} setOpen={setToOpen} setDate={setToDate} date={toDate}/>
             <Button variant="outline"
-                disabled={(!fromDate || !toDate)}
-                onClick={() => {
-                    setRange({fromDate,toDate})
-                    const diff = dateConversion()
-                    if(diff) {
-                        updateTimeRangeParams(diff.toString(), searchParams, fromDate, toDate)
-                    }
-                }}>
-                Apply
+                    disabled={(!fromDate || !toDate)}
+                    onClick={() => {
+                        setRange({fromDate,toDate})
+                        const diff = dateConversion()
+                        if(diff) {
+                            updateTimeRangeParams(diff.toString(), searchParams, fromDate, toDate)
+                        }
+                    }}>
+                {t('apply')}
             </Button>
         </div>
     )

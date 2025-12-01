@@ -1,23 +1,47 @@
 import NextAuth from "next-auth"
 import authConfig from '@/auth.config'
+import createMiddleware from 'next-intl/middleware';
 
 const {auth} = NextAuth(authConfig)
-export default auth(async (req) => {
-    const { pathname } = req.nextUrl
+const locales = ['en', 'ru', 'uk'];
+const defaultLocale = 'en';
+const publicPages = ['/', '/login'];
 
-    const isPublic = pathname === "/" || pathname.startsWith("/login")
+const intlMiddleware = createMiddleware({
+    locales,
+    defaultLocale,
+    localePrefix: 'always'
+});
 
-    if (!req.auth && !isPublic) {
-        const newUrl = new URL("/", req.nextUrl.origin)
-        return Response.redirect(newUrl)
+export default auth((req) => {
+    const { nextUrl } = req;
+    const isLoggedIn = !!req.auth;
+    const pathname = nextUrl.pathname;
+
+    const pathWithoutLocale = pathname.replace(
+        new RegExp(`^/(${locales.join('|')})`),
+        ''
+    ) || '/';
+
+    const isPublic = publicPages.includes(pathWithoutLocale);
+
+    if (!isLoggedIn && !isPublic) {
+        const locale = pathname.split('/')[1];
+        const targetLocale = locales.includes(locale) ? locale : defaultLocale;
+
+        return Response.redirect(new URL(`/${targetLocale}/login`, nextUrl.origin));
     }
 
-    if (req.auth && req.nextUrl.pathname === "/login") {
-        const newUrl = new URL("/dashboard", req.nextUrl.origin)
-        return Response.redirect(newUrl)
+    if (isLoggedIn && pathWithoutLocale === '/login') {
+        const locale = pathname.split('/')[1];
+        const targetLocale = locales.includes(locale) ? locale : defaultLocale;
+
+        return Response.redirect(new URL(`/${targetLocale}/dashboard`, nextUrl.origin));
     }
+
+    return intlMiddleware(req);
 })
 
 export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff2?|ttf|otf)).*)"],
+    matcher: '/((?!api|_next|_vercel|.*\\..*).*)'
 }

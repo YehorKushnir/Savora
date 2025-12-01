@@ -6,18 +6,19 @@ import {ToggleTheme} from "@/src/components/toggle-theme";
 import {
     Breadcrumb,
     BreadcrumbItem,
-    BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbSeparator
 } from "@/src/components/ui/breadcrumb";
-import Link from "next/link";
 import {Fragment} from "react";
+import {ToggleLanguage} from "@/src/components/toggle-language";
 
 export function SiteHeader() {
+    const locales = ['en', 'ru', 'uk'];
     const pathname = usePathname() || "/"
     const segments = pathname
         .split('/')
         .filter(Boolean)
+        .filter(segment => !locales.includes(segment))
         .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1))
 
     return (
@@ -43,6 +44,7 @@ export function SiteHeader() {
                     </BreadcrumbList>
                 </Breadcrumb>
                 <div className="ml-auto flex items-center gap-1">
+                    <ToggleLanguage/>
                     <ToggleTheme/>
                     <ToggleSidebar/>
                 </div>

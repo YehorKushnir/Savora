@@ -3,7 +3,7 @@
 import {useCategories} from "@/src/lib/stores/categories-store";
 import CategoryTable from "@/src/components/category-table";
 import {CategoryCard} from "@/src/components/category-card";
-import {ClientCategory} from "@/src/app/(dashboard)/categories/actions";
+import {ClientCategory} from "@/src/app/[locale]/(dashboard)/categories/actions";
 
 interface Props {
     categories: Promise<ClientCategory[]>

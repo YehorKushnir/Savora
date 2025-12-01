@@ -15,10 +15,10 @@ import {
     TableRow,
 } from "@/src/components/ui/table"
 import {Button} from "@/src/components/ui/button"
-import {use, useEffect, useState} from "react"
+import {use, useEffect, useState, useMemo} from "react"
 import LucideIcon, {IconName} from "@/src/components/lucide-icon"
 import {useCategories} from "@/src/lib/stores/categories-store"
-import {ClientCategory} from "@/src/app/(dashboard)/categories/actions";
+import {ClientCategory} from "@/src/app/[locale]/(dashboard)/categories/actions";
 import {MoreHorizontal} from "lucide-react";
 import {
     DropdownMenu,
@@ -26,61 +26,7 @@ import {
     DropdownMenuItem, DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/src/components/ui/dropdown-menu";
-
-export const columns: ColumnDef<ClientCategory>[] = [
-    {
-        accessorKey: "name",
-        header: "Name",
-        cell: ({row}) => (
-            <div className={`flex items-center gap-3 ${row.depth === 1 ? "pl-9" : ""}`}>
-                {"icon" in row.original && (
-                    <LucideIcon name={row.original.icon as IconName}/>
-                )}
-                {row.getValue("name")}
-            </div>
-        ),
-    },
-    {
-        id: "actions",
-        enableHiding: false,
-        size: 48,
-        cell: ({row}) => {
-            const setOpenModal = useCategories((state) => state.setOpenModal)
-            const setOpenDeleteModal = useCategories((state) => state.setOpenDeleteModal)
-            const categories = row.original
-
-            const category = {
-                id: categories.id,
-                name: categories.name,
-                icon: categories.icon,
-                type: categories.type as 'income' | 'expense'
-            }
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal/>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                            onClick={() => setOpenModal(true, category)}
-                        >
-                            Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            className="text-destructive"
-                            onClick={() => setOpenDeleteModal(true, category)}
-                        >
-                            Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )},
-    },
-]
+import { useTranslations } from 'next-intl';
 
 interface Props {
     categories: Promise<ClientCategory[]>
@@ -91,6 +37,63 @@ export default function CategoryTable(props: Props) {
     const [rows, setRows] = useState([...data])
     const type = useCategories((state) => state.type)
     const searchValue = useCategories((state) => state.searchValue)
+
+    const t = useTranslations('Categories');
+
+    const columns: ColumnDef<ClientCategory>[] = useMemo(() => [
+        {
+            accessorKey: "name",
+            header: t('table.name'),
+            cell: ({row}) => (
+                <div className={`flex items-center gap-3 ${row.depth === 1 ? "pl-9" : ""}`}>
+                    {"icon" in row.original && (
+                        <LucideIcon name={row.original.icon as IconName}/>
+                    )}
+                    {row.getValue("name")}
+                </div>
+            ),
+        },
+        {
+            id: "actions",
+            enableHiding: false,
+            size: 48,
+            cell: ({row}) => {
+                const setOpenModal = useCategories.getState().setOpenModal
+                const setOpenDeleteModal = useCategories.getState().setOpenDeleteModal
+                const categories = row.original
+
+                const category = {
+                    id: categories.id,
+                    name: categories.name,
+                    icon: categories.icon,
+                    type: categories.type as 'income' | 'expense'
+                }
+
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal/>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                                onClick={() => setOpenModal(true, category)}
+                            >
+                                {t('actions.edit')}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                className="text-destructive"
+                                onClick={() => setOpenDeleteModal(true, category)}
+                            >
+                                {t('actions.delete')}
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )},
+        },
+    ], [t])
 
     const table = useReactTable({
         data: rows,
@@ -109,7 +112,6 @@ export default function CategoryTable(props: Props) {
         }
 
         setRows(filteredData);
-        return
     }, [data, type, searchValue])
 
     return (
@@ -160,7 +162,7 @@ export default function CategoryTable(props: Props) {
                                 colSpan={columns.length}
                                 className="h-24 text-center"
                             >
-                                No results.
+                                {t('table.no_results')}
                             </TableCell>
                         </TableRow>
                     )}

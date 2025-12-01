@@ -16,14 +16,14 @@ import {Loader2Icon} from 'lucide-react'
 import {use, useEffect} from 'react'
 import {Tabs, TabsList, TabsTrigger} from './ui/tabs'
 import {useTransactions} from '@/src/lib/stores/transactions-store'
-import {ClientCategory} from '@/src/app/(dashboard)/categories/actions'
-import {Vault} from '@prisma/client'
+import {ClientCategory} from '@/src/app/[locale]/(dashboard)/categories/actions'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/src/components/ui/select'
 import LucideIcon, {IconName} from '@/src/components/lucide-icon'
-import {createTransaction, updateTransaction} from '@/src/app/(dashboard)/transactions/actions'
+import {createTransaction, updateTransaction} from '@/src/app/[locale]/(dashboard)/transactions/actions'
 import {ClientWallet} from "@/src/lib/types/client-wallet-type";
+import { useTranslations } from 'next-intl';
 
-
+// Schema remains untranslated for logic stability, usually handled via separate library or map
 export const transactionSchema = z.object({
     id: z.string().optional(),
     type: z.enum(["income", "expense", "transfer"]),
@@ -102,6 +102,7 @@ export default function TransactionModal(props: Props) {
     const open = useTransactions(state => state.openModal)
     const setOpen = useTransactions(state => state.setOpenModal)
     const transaction = useTransactions(state => state.transaction)
+    const t = useTranslations('Transactions.modal');
 
     const defaultValues: Partial<TTransaction> = transaction ? {
         id: transaction.id,
@@ -180,7 +181,7 @@ export default function TransactionModal(props: Props) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className={'max-w-[340px]'} aria-describedby={undefined}>
                 <DialogHeader>
-                    <DialogTitle>{transaction ? 'Update' : 'Add'} Transaction</DialogTitle>
+                    <DialogTitle>{transaction ? t('title_update') : t('title_add')}</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form
@@ -195,9 +196,9 @@ export default function TransactionModal(props: Props) {
                                     <FormControl>
                                         <Tabs {...field} onValueChange={(value) => field.onChange(value)}>
                                             <TabsList className={'w-full'}>
-                                                <TabsTrigger value="income">Income</TabsTrigger>
-                                                <TabsTrigger value="expense">Expense</TabsTrigger>
-                                                <TabsTrigger value="transfer">Transfer</TabsTrigger>
+                                                <TabsTrigger value="income">{t('tabs.income')}</TabsTrigger>
+                                                <TabsTrigger value="expense">{t('tabs.expense')}</TabsTrigger>
+                                                <TabsTrigger value="transfer">{t('tabs.transfer')}</TabsTrigger>
                                             </TabsList>
                                         </Tabs>
                                     </FormControl>
@@ -211,11 +212,11 @@ export default function TransactionModal(props: Props) {
                                     name="sourceWalletId"
                                     render={({field}) => (
                                         <FormItem className={'w-full flex items-center gap-2 mb-4'}>
-                                            <FormLabel className={'min-w-20'}>From</FormLabel>
+                                            <FormLabel className={'min-w-20'}>{t('labels.from')}</FormLabel>
                                             <FormControl>
                                                 <Select {...field} onValueChange={value => field.onChange(value)}>
                                                     <SelectTrigger className={'w-full'}>
-                                                        <SelectValue placeholder={'Wallet'}/>
+                                                        <SelectValue placeholder={t('placeholders.wallet')}/>
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         {wallets.map(item => (
@@ -238,11 +239,11 @@ export default function TransactionModal(props: Props) {
                                     name="targetWalletId"
                                     render={({field}) => (
                                         <FormItem className={'w-full flex items-center gap-2 mb-4'}>
-                                            <FormLabel className={'min-w-20'}>To</FormLabel>
+                                            <FormLabel className={'min-w-20'}>{t('labels.to')}</FormLabel>
                                             <FormControl>
                                                 <Select {...field} onValueChange={value => field.onChange(value)}>
                                                     <SelectTrigger className={'w-full'}>
-                                                        <SelectValue placeholder={'Wallet'}/>
+                                                        <SelectValue placeholder={t('placeholders.wallet')}/>
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         {wallets.map(item => (
@@ -268,11 +269,11 @@ export default function TransactionModal(props: Props) {
                                     name="sourceWalletId"
                                     render={({field}) => (
                                         <FormItem className={'w-full flex items-center gap-2 mb-4'}>
-                                            <FormLabel className={'min-w-20'}>Wallet</FormLabel>
+                                            <FormLabel className={'min-w-20'}>{t('labels.wallet')}</FormLabel>
                                             <FormControl>
                                                 <Select {...field} onValueChange={value => field.onChange(value)}>
                                                     <SelectTrigger className={'w-full'}>
-                                                        <SelectValue placeholder={'Wallet'}/>
+                                                        <SelectValue placeholder={t('placeholders.wallet')}/>
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         {wallets.map(item => (
@@ -295,7 +296,7 @@ export default function TransactionModal(props: Props) {
                                     name="categoryId"
                                     render={({field}) => (
                                         <FormItem className={'w-full flex items-center gap-2 mb-4'}>
-                                            <FormLabel className={'min-w-20'}>Category</FormLabel>
+                                            <FormLabel className={'min-w-20'}>{t('labels.category')}</FormLabel>
                                             <FormControl>
                                                 <Select
                                                     {...field}
@@ -303,7 +304,7 @@ export default function TransactionModal(props: Props) {
                                                     value={field.value}
                                                 >
                                                     <SelectTrigger className={'w-full'}>
-                                                        <SelectValue placeholder={'Category'}/>
+                                                        <SelectValue placeholder={t('placeholders.category')}/>
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         {filteredCategories.length > 0 ? (
@@ -317,7 +318,7 @@ export default function TransactionModal(props: Props) {
                                                             ))
                                                         ) : (
                                                             <div className="p-2 text-sm text-muted-foreground text-center">
-                                                                No categories found for {currentType}
+                                                                {t('no_categories', { type: currentType })}
                                                             </div>
                                                         )}
                                                     </SelectContent>
@@ -333,11 +334,11 @@ export default function TransactionModal(props: Props) {
                             name="amount"
                             render={({field}) => (
                                 <FormItem className={'w-full flex items-center gap-2 mb-4'}>
-                                    <FormLabel className={'min-w-20'}>Amount</FormLabel>
+                                    <FormLabel className={'min-w-20'}>{t('labels.amount')}</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            placeholder="Amount"
+                                            placeholder={t('placeholders.amount')}
                                             type={'number'}
                                             name={'amount'}
                                         />
@@ -351,11 +352,11 @@ export default function TransactionModal(props: Props) {
                                 name="toReceive"
                                 render={({field}) => (
                                     <FormItem className={'w-full flex items-center gap-2 mb-4'}>
-                                        <FormLabel className={'min-w-20'}>To receive</FormLabel>
+                                        <FormLabel className={'min-w-20'}>{t('labels.to_receive')}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 {...field}
-                                                placeholder="To receive"
+                                                placeholder={t('placeholders.to_receive')}
                                                 type={'number'}
                                                 name={'toReceive'}
                                             />
@@ -369,9 +370,9 @@ export default function TransactionModal(props: Props) {
                             name="description"
                             render={({field}) => (
                                 <FormItem className={'flex items-center gap-2 mb-4'}>
-                                    <FormLabel className={'min-w-20'}>Description</FormLabel>
+                                    <FormLabel className={'min-w-20'}>{t('labels.description')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Description" {...field} name={'description'}/>
+                                        <Input placeholder={t('placeholders.description')} {...field} name={'description'}/>
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -381,16 +382,16 @@ export default function TransactionModal(props: Props) {
                             name="tagName"
                             render={({field}) => (
                                 <FormItem className={'flex items-center gap-2 mb-4'}>
-                                    <FormLabel className={'min-w-20'}>Tag</FormLabel>
+                                    <FormLabel className={'min-w-20'}>{t('labels.tag')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Tag" {...field} name={'description'}/>
+                                        <Input placeholder={t('placeholders.tag')} {...field} name={'description'}/>
                                     </FormControl>
                                 </FormItem>
                             )}
                         />
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline">{t('cancel')}</Button>
                             </DialogClose>
                             <Button
                                 type={'submit'}
@@ -399,10 +400,10 @@ export default function TransactionModal(props: Props) {
                                 {form.formState.isSubmitting
                                     ? (
                                         <>
-                                            <Loader2Icon className="animate-spin"/>
-                                            Submitting...
+                                            <Loader2Icon className="animate-spin mr-2"/>
+                                            {t('submitting')}
                                         </>
-                                    ) : 'Submit'
+                                    ) : t('submit')
                                 }
                             </Button>
                         </DialogFooter>

@@ -5,7 +5,8 @@ import { useCategories } from "@/src/lib/stores/categories-store";
 import { Card, CardHeader, CardTitle } from "@/src/components/ui/card";
 import LucideIcon, { IconName } from "@/src/components/lucide-icon";
 import { ContextMenu, ContextMenuContent, ContextMenuTrigger, ContextMenuItem } from '@/src/components/ui/context-menu'
-import { ClientCategory } from "@/src/app/(dashboard)/categories/actions";
+import { ClientCategory } from "@/src/app/[locale]/(dashboard)/categories/actions";
+import { useTranslations } from 'next-intl';
 
 import {
     DndContext,
@@ -42,7 +43,7 @@ const SortableItem = ({ item, children }: { item: ClientCategory, children: Reac
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
-        opacity: isDragging ? 0.5 : 1, // Делаем полупрозрачным при перетаскивании
+        opacity: isDragging ? 0.5 : 1,
         position: 'relative' as const,
         zIndex: isDragging ? 999 : 'auto',
     };
@@ -61,6 +62,8 @@ export const CategoryCard = (props: Props) => {
     const setOpenModal = useCategories((state) => state.setOpenModal)
     const setOpenDeleteModal = useCategories((state) => state.setOpenDeleteModal)
     const searchValue = useCategories((state) => state.searchValue)
+
+    const t = useTranslations('Categories');
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -105,8 +108,6 @@ export const CategoryCard = (props: Props) => {
 
                 return arrayMove(items, oldIndex, newIndex);
             });
-
-            // TODO: Здесь можно вызвать Server Action для сохранения нового порядка в БД
         }
     };
 
@@ -136,12 +137,12 @@ export const CategoryCard = (props: Props) => {
                                 </ContextMenuTrigger>
                                 <ContextMenuContent>
                                     <ContextMenuItem onClick={() => setOpenModal(true, typeConversion(item))}>
-                                        Edit category
+                                        {t('actions.edit')}
                                     </ContextMenuItem>
                                     <ContextMenuItem
                                         onClick={() => setOpenDeleteModal(true, typeConversion(item))}
                                     >
-                                        Delete
+                                        {t('actions.delete')}
                                     </ContextMenuItem>
                                 </ContextMenuContent>
                             </ContextMenu>

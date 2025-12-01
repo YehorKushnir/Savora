@@ -15,12 +15,11 @@ import {
 } from "@/src/components/ui/dropdown-menu"
 import LucideIcon, { IconName } from "@/src/components/lucide-icon"
 
-// Utils & Stores
 import { format } from "date-fns"
 import { cn } from "@/src/lib/utils"
 import { TransactionWithRelations } from "@/src/lib/types/transactions"
 import { useTransactions } from "@/src/lib/stores/transactions-store"
-import { formatCurrency } from "@/src/lib/helpers/format-currency" // Импортируем наш новый хелпер
+import { formatCurrency } from "@/src/lib/helpers/format-currency"
 
 import { DraggableHeaderButton } from "@/src/components/data-table/draggable-components"
 
@@ -176,7 +175,7 @@ export const useTransactionColumns = () => {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
-                const isOpeningBalance = row.original.type === 'initial'
+                const isOpeningBalance = row.original.type === 'initial' || row.original.type === 'adjustment'
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

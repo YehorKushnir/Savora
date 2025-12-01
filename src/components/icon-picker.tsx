@@ -10,15 +10,15 @@ import { IconPickerProps, IconName } from "../lib/types/icon-picker-types"
 export default function IconPicker({value, onIconChange}: IconPickerProps) {
 
     const RAW_BANKING_ICONS: string[] = [
-        'Wallet', 'CreditCard', 'Banknote', 'Landmark', 'PiggyBank', 'Coins', 'DollarSign', 'Euro', 'Bitcoin', 'Safe', 'Vault',
+        'Wallet', 'CreditCard', 'Banknote', 'Landmark', 'PiggyBank', 'Coins', 'DollarSign', 'Euro', 'Bitcoin', 'Vault',
         'Briefcase', 'TrendingUp', 'Award', 'Gem',
-        'Home', 'Armchair', 'Bed', 'Hammer', 'Wrench', 'Box',
+            'Armchair', 'Bed', 'Hammer', 'Wrench', 'Box',
         'ShoppingCart', 'ShoppingBag', 'Utensils', 'Coffee', 'Beer', 'Pizza', 'Apple', 'Carrot',
-        'Car', 'Bus', 'Train', 'Plane', 'Ship', 'Fuel', 'Bike', 'MapPin',
+        'Car', 'Bus', 'Plane', 'Ship', 'Fuel', 'Bike', 'MapPin',
         'Smartphone', 'Wifi', 'Zap', 'Droplet', 'Flame', 'Tv',
         'Heart', 'Activity', 'Stethoscope', 'Pill', 'Scissors', 'Smile',
         'GraduationCap', 'Book', 'Baby', 'Gamepad2', 'ToyBrick',
-        'Tag', 'Tags', 'Gift', 'Music', 'Camera', 'Dog', 'Cat', 'Flower2', 'AlertCircle', 'HelpCircle'
+        'Tag', 'Tags', 'Gift', 'Music', 'Camera', 'Dog', 'Cat', 'Flower2',
     ];
 
     const BANKING_ICONS: IconName[] = useMemo(() => {

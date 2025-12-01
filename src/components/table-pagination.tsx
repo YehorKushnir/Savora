@@ -1,16 +1,23 @@
 import {Table as ReactTableInstance} from "@tanstack/react-table"
 import {Button} from "@/src/components/ui/button";
 import {FC} from "react";
+import { useTranslations } from 'next-intl';
 
 interface Props {
-  table: ReactTableInstance<any>
+    table: ReactTableInstance<any>
 }
 
 export const TablePagination: FC<Props> = ({ table }) => {
+    const t = useTranslations('Transactions.table');
+
     return (
         <div className="flex items-center justify-end space-x-2 py-4">
             <div className="text-muted-foreground flex-1 text-sm">
-                {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
+                {/* Передача параметров для интерполяции строки */}
+                {t('selected', {
+                    selected: table.getFilteredSelectedRowModel().rows.length,
+                    total: table.getFilteredRowModel().rows.length
+                })}
             </div>
             <div className="space-x-4 flex-row flex items-center">
                 <div className="space-x-2">
@@ -51,7 +58,7 @@ export const TablePagination: FC<Props> = ({ table }) => {
                     {table.getState().pagination.pageIndex + 1}/{table.getPageCount()}
                 </span>
                 <label className="text-sm">
-                    Rows per page:{' '}
+                    {t('rows_per_page')}{' '}
                     <select
                         className="ml-2 border rounded px-2 py-1 bg-background"
                         value={table.getState().pagination.pageSize}

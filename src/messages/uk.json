@@ -1,0 +1,224 @@
+{
+  "HomePage": {
+    "nav": {
+      "login": "Увійти"
+    },
+    "hero": {
+      "badge": "Savora v1.0 вже доступна",
+      "title_main": "Фінанси під контролем.",
+      "title_sub": "Без зайвих зусиль.",
+      "description": "Сучасний інструмент для обліку доходів і витрат. Зрозуміла аналітика, мультивалютність та повний контроль над бюджетом.",
+      "start_btn": "Почати безкоштовно",
+      "demo_btn": "Демо режим",
+      "img_alt_light": "Savora Дашборд Світла тема",
+      "img_alt_dark": "Savora Дашборд Темна тема"
+    },
+    "features": {
+      "title": "Можливості Savora",
+      "subtitle": "Ми прибрали все зайве, залишивши тільки інструменти, які дійсно допомагають накопичувати та стежити за грошима.",
+      "stats": {
+        "title": "Наочна статистика",
+        "description": "Відстежуй динаміку капіталу на графіках. Аналізуй витрати за 30 днів, 3 місяці або рік в один клік.",
+        "img_alt_light": "Статистика Світла",
+        "img_alt_dark": "Статистика Темна"
+      },
+      "wallets": {
+        "title": "Гаманці",
+        "description": "Створюй необмежену кількість рахунків. Готівка, картки, вклади — все в одному місці."
+      },
+      "categories": {
+        "title": "Категорії",
+        "description": "Гнучке налаштування категорій доходів і витрат. Додавай свої іконки та кольори."
+      },
+      "privacy": {
+        "title": "Приватність понад усе",
+        "description": "Дані зберігаються в безпеці. Жодної реклами та передачі третім особам."
+      }
+    },
+    "cta": {
+      "title": "Готові навести лад?",
+      "btn": "Створити акаунт"
+    },
+    "footer": {
+      "copyright": "© 2025 Savora. Всі права захищені."
+    }
+  },
+  "Categories": {
+    "add_btn": "Додати категорію",
+    "filters": {
+      "all": "Всі",
+      "income": "Доходи",
+      "expense": "Витрати",
+      "table": "Таблиця",
+      "card": "Картки"
+    },
+    "table": {
+      "name": "Назва",
+      "no_results": "Немає результатів."
+    },
+    "actions": {
+      "edit": "Редагувати",
+      "delete": "Видалити"
+    },
+    "modal": {
+      "add_title": "Додати категорію",
+      "update_title": "Оновити категорію",
+      "name_placeholder": "Назва",
+      "tabs": {
+        "income": "Дохід",
+        "expense": "Витрата"
+      },
+      "icon_label": "Іконка",
+      "cancel": "Скасувати",
+      "submit": "Зберегти",
+      "submitting": "Збереження..."
+    },
+    "delete_modal": {
+      "title": "Видалити категорію",
+      "confirm": "Ви впевнені, що хочете видалити категорію \"{name}\"?",
+      "cancel": "Скасувати",
+      "delete": "Видалити",
+      "deleting": "Видалення..."
+    }
+  },
+  "Auth": {
+    "welcome": "Ласкаво просимо до Savora",
+    "apple": "Увійти через Apple",
+    "google": "Увійти через Google",
+    "agreement": "Натискаючи продовжити, ви погоджуєтесь з нашими <terms>Умовами використання</terms> та <privacy>Політикою конфіденційності</privacy>."
+  },
+  "Nav": {
+    "account": "Акаунт",
+    "settings": "Налаштування",
+    "logout": "Вийти"
+  },
+  "Settings": {
+    "titles": {
+      "appearance": "Зовнішній вигляд",
+      "account": "Акаунт",
+      "not_found": "Сторінка 404"
+    },
+    "appearance": {
+      "sidebar_label": "Бокове / Верхнє меню",
+      "sidebar_option": "Бокове",
+      "navbar_option": "Верхнє",
+      "theme_label": "Тема оформлення",
+      "theme_light": "Світла",
+      "theme_dark": "Темна",
+      "theme_system": "Системна"
+    }
+  },
+  "Common": {
+    "search_placeholder": "Пошук в Savora"
+  },
+  "Statistics": {
+    "cards": {
+      "income": "Надходження",
+      "expense": "Витрати"
+    },
+    "charts": {
+      "wallets": {
+        "title": "Баланс гаманців",
+        "no_data": "Гаманці не знайдені",
+        "current_dist": "Поточний розподіл",
+        "current": "Поточний"
+      },
+      "funds": {
+        "title": "Загальні кошти",
+        "balance": "Баланс",
+        "total_last": "Всього за останні {period}",
+        "last": "Останні {period}",
+        "no_data": "Немає даних за вибраний період."
+      }
+    },
+    "filters": {
+      "last_90_days": "Останні 3 місяці",
+      "last_30_days": "Останні 30 днів",
+      "last_7_days": "Останні 7 днів",
+      "custom": "Свій період",
+      "apply": "Застосувати",
+      "all_wallets": "Всі гаманці активні",
+      "selected_wallets": "Вибрано: {count}"
+    }
+  },
+  "Transactions": {
+    "filters": {
+      "all": "Всі",
+      "income": "Доходи",
+      "expense": "Витрати",
+      "transfer": "Перекази"
+    },
+    "table": {
+      "selected": "Вибрано {selected} з {total} рядків.",
+      "rows_per_page": "Рядків на сторінці:"
+    },
+    "delete_modal": {
+      "title": "Видалити транзакцію",
+      "confirm_named": "Ви впевнені, що хочете видалити \"{description}\"?",
+      "confirm_generic": "Ви впевнені, що хочете видалити цю транзакцію?",
+      "cancel": "Скасувати",
+      "delete": "Видалити",
+      "deleting": "Видалення..."
+    },
+    "modal": {
+      "title_add": "Додати транзакцію",
+      "title_update": "Оновити транзакцію",
+      "tabs": {
+        "income": "Дохід",
+        "expense": "Витрата",
+        "transfer": "Переказ"
+      },
+      "labels": {
+        "from": "Звідки",
+        "to": "Куди",
+        "wallet": "Гаманець",
+        "category": "Категорія",
+        "amount": "Сума",
+        "to_receive": "Отримаю",
+        "description": "Опис",
+        "tag": "Тег"
+      },
+      "placeholders": {
+        "wallet": "Гаманець",
+        "category": "Категорія",
+        "amount": "Сума",
+        "to_receive": "Отримаю",
+        "description": "Опис",
+        "tag": "Тег"
+      },
+      "no_categories": "Немає категорій для типу {type}",
+      "cancel": "Скасувати",
+      "submit": "Зберегти",
+      "submitting": "Збереження..."
+    },
+    "add_btn": "Додати транзакцію"
+  },
+  "Wallets": {
+    "list": {
+      "edit": "Редагувати",
+      "delete": "Видалити"
+    },
+    "delete_modal": {
+      "title": "Видалити гаманець",
+      "confirm": "Ви впевнені, що хочете видалити гаманець \"{name}\"?",
+      "cancel": "Скасувати",
+      "delete": "Видалити",
+      "deleting": "Видалення..."
+    },
+    "modal": {
+      "title_add": "Додати гаманець",
+      "title_update": "Оновити гаманець",
+      "type_asset": "Актив",
+      "type_liability": "Пасив",
+      "name_label": "Назва",
+      "name_placeholder": "Назва",
+      "currency_label": "Валюта",
+      "balance_label": "Баланс",
+      "balance_placeholder": "Баланс",
+      "icon_label": "Іконка",
+      "cancel": "Скасувати",
+      "submit": "Зберегти",
+      "submitting": "Збереження..."
+    }
+  }
+}

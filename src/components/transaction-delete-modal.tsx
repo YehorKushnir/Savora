@@ -13,12 +13,14 @@ import {Form} from '@/src/components/ui/form'
 import {useForm} from 'react-hook-form'
 import {Loader2Icon} from 'lucide-react'
 import {useTransactions} from '@/src/lib/stores/transactions-store'
-import {deleteTransaction} from '@/src/app/(dashboard)/transactions/actions'
+import {deleteTransaction} from '@/src/app/[locale]/(dashboard)/transactions/actions'
+import { useTranslations } from 'next-intl';
 
 const TransactionDeleteModal = () => {
     const open = useTransactions(state => state.openDeleteModal)
     const setOpen = useTransactions(state => state.setOpenDeleteModal)
     const transaction = useTransactions(state => state.transaction)
+    const t = useTranslations('Transactions.delete_modal');
 
     const form = useForm()
 
@@ -37,21 +39,21 @@ const TransactionDeleteModal = () => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className={'max-w-[340px]'} aria-describedby={undefined}>
                 <DialogHeader>
-                    <DialogTitle>Delete transaction</DialogTitle>
+                    <DialogTitle>{t('title')}</DialogTitle>
                 </DialogHeader>
 
                 <div className="py-4">
-                    Are you sure you want to delete
                     {transaction?.description
-                        ? <span className="font-semibold"> "{transaction.description}"</span>
-                        : " this transaction"}?
+                        ? t('confirm_named', { description: transaction.description })
+                        : t('confirm_generic')
+                    }
                 </div>
 
                 <DialogFooter>
                     <Form {...form}>
                         <form onSubmit={onSubmit} className={'flex gap-2 w-full justify-end'}>
                             <DialogClose asChild>
-                                <Button variant="outline" type="button">Cancel</Button>
+                                <Button variant="outline" type="button">{t('cancel')}</Button>
                             </DialogClose>
                             <Button
                                 type="submit"
@@ -62,9 +64,9 @@ const TransactionDeleteModal = () => {
                                     ? (
                                         <>
                                             <Loader2Icon className="mr-2 h-4 w-4 animate-spin"/>
-                                            Deleting...
+                                            {t('deleting')}
                                         </>
-                                    ) : 'Delete'
+                                    ) : t('delete')
                                 }
                             </Button>
                         </form>

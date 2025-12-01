@@ -25,10 +25,12 @@ import UserAvatar from '@/src/components/user-avatar'
 import {Skeleton} from '@/src/components/ui/skeleton'
 import {EllipsisVertical, LogOut, Settings, UserRound} from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from 'next-intl';
 
 export function NavUser() {
     const {isMobile} = useSidebar()
     const session = useSession()
+    const t = useTranslations('Nav'); // Подключаем переводы
 
     if (session.status === 'loading') return (
         <div className="p-2 h-12 w-full flex items-center gap-2">
@@ -87,19 +89,19 @@ export function NavUser() {
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
                                 <UserRound />
-                                Account
+                                {t('account')}
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Link href="/settings" className="flex gap-2">
                                     <Settings/>
-                                    Settings
+                                    {t('settings')}
                                 </Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator/>
                         <DropdownMenuItem onClick={() => signOut()}>
                             <LogOut />
-                            Log out
+                            {t('logout')}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

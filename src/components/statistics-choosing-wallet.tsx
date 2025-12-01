@@ -13,6 +13,7 @@ import {use, useEffect, useState} from "react";
 import {Wallet} from "@/src/lib/types/wallets";
 import queryString from 'query-string';
 import {ClientWallet} from "@/src/lib/types/client-wallet-type";
+import { useTranslations } from 'next-intl';
 
 interface Props {
     wallets: Promise<ClientWallet[]>
@@ -21,6 +22,7 @@ interface Props {
 export function StatisticsChoosingWallet({wallets}: Props) {
     const walletsData = use(wallets)
     const searchParams = useSearchParams()
+    const t = useTranslations('Statistics.filters');
 
     const initialDisabled = (() => {
         const parsed = queryString.parse(window.location.search);
@@ -73,8 +75,8 @@ export function StatisticsChoosingWallet({wallets}: Props) {
             <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="justify-between">
                     {activeWallets.length === walletsData.length
-                        ? "All wallets active"
-                        : `${activeWallets.length} selected`}
+                        ? t('all_wallets')
+                        : t('selected_wallets', { count: activeWallets.length })}
                     <ChevronDownIcon />
                 </Button>
             </DropdownMenuTrigger>

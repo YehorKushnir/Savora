@@ -3,6 +3,7 @@ import UserLogo from '@/src/components/user-logo'
 import {Navigation} from '@/src/components/navigation'
 import {ToggleTheme} from "@/src/components/toggle-theme";
 import {ToggleSidebar} from "@/src/components/toggle-sidebar";
+import {ToggleLanguage} from "@/src/components/toggle-language";
 
 const Header = () => {
     return (
@@ -10,6 +11,7 @@ const Header = () => {
             <Image width={32} height={32} src={'/light.svg'} alt={'logo'}/>
             <Navigation/>
             <div className="flex gap-2 items-center">
+                <ToggleLanguage/>
                 <ToggleTheme/>
                 <ToggleSidebar/>
                 <UserLogo/>

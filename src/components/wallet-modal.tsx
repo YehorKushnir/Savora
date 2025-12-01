@@ -18,7 +18,7 @@ import {useForm} from 'react-hook-form'
 import IconPicker from '@/src/components/icon-picker'
 import { IconName } from "../lib/types/icon-picker-types"
 import {ChevronsUpDown, icons, Loader2Icon, type LucideIcon, Check, HelpCircle} from 'lucide-react'
-import {createWallet, updateWallet} from '@/src/app/(dashboard)/wallets/actions'
+import {createWallet, updateWallet} from '@/src/app/[locale]/(dashboard)/wallets/actions'
 import {FC, use, useEffect} from 'react'
 import {ICurrencies} from '@/src/lib/types/currencies'
 import {Popover, PopoverContent, PopoverTrigger} from './ui/popover'
@@ -28,6 +28,7 @@ import {DialogClose} from '@radix-ui/react-dialog'
 import {walletCreateDto} from '@/src/lib/dto/wallet-create-dto'
 import {walletUpdateDto} from '@/src/lib/dto/wallet-update-dto'
 import {ClientWallet} from "@/src/lib/types/client-wallet-type";
+import { useTranslations } from 'next-intl';
 
 const formSchema = z.object({
     name: z.string().min(2).max(20),
@@ -46,6 +47,7 @@ interface Props {
 const WalletModal: FC<Props> = ({currencies}) => {
     const open = useWallets(state => state.openModal)
     const setOpen = useWallets(state => state.setOpenModal)
+    const t = useTranslations('Wallets.modal');
 
     const wallets = useWallets(state => state.wallet) as ClientWallet | undefined
 
@@ -85,7 +87,7 @@ const WalletModal: FC<Props> = ({currencies}) => {
                 : await createWallet(walletCreateDto(values))
 
             setOpen(false)
-            form.reset() // Очистка после успешной отправки
+            form.reset()
         } catch (error) {
             console.error(error)
         }
@@ -94,11 +96,11 @@ const WalletModal: FC<Props> = ({currencies}) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className={'w-full'}>Add wallet</Button>
+                <Button className={'w-full'}>{t('title_add')}</Button>
             </DialogTrigger>
             <DialogContent className={'max-w-[340px]'} aria-describedby={undefined}>
                 <DialogHeader>
-                    <DialogTitle>{wallets ? 'Update' : 'Add'} wallet</DialogTitle>
+                    <DialogTitle>{wallets ? t('title_update') : t('title_add')}</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form
@@ -116,7 +118,7 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                     render={({field}) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input placeholder="Name" {...field} name={'name'}/>
+                                                <Input placeholder={t('name_placeholder')} {...field} name={'name'}/>
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -130,11 +132,11 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                             <FormControl>
                                                 <Select {...field} onValueChange={value => field.onChange(value)} name={'type'}>
                                                     <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Type"/>
+                                                        <SelectValue placeholder={t('type_placeholder')}/>
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="asset">Debit</SelectItem>
-                                                        <SelectItem value="liability">Credit</SelectItem>
+                                                        <SelectItem value="asset">{t('type_asset')}</SelectItem>
+                                                        <SelectItem value="liability">{t('type_liability')}</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </FormControl>
@@ -149,7 +151,7 @@ const WalletModal: FC<Props> = ({currencies}) => {
                             name="icon"
                             render={({field}) => (
                                 <FormItem className={'mb-4'}>
-                                    <FormLabel>Icon</FormLabel>
+                                    <FormLabel>{t('icon_label')}</FormLabel>
                                     <FormControl>
                                         <div>
                                             <input type="hidden" name="icon" value={field.value}/>
@@ -165,7 +167,7 @@ const WalletModal: FC<Props> = ({currencies}) => {
                             name="currency"
                             render={({field}) => (
                                 <FormItem className="mb-4">
-                                    <FormLabel>Currency</FormLabel>
+                                    <FormLabel>{t('currency_label')}</FormLabel>
                                     <FormControl>
                                         <Popover modal={true}>
                                             <PopoverTrigger asChild>
@@ -182,18 +184,18 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                                                 <div>{allCurrencies[field.value]}</div>
                                                             </div>
                                                         )
-                                                        : "Select currency"}
+                                                        : t('select_currency')}
                                                     <ChevronsUpDown className="opacity-50"/>
                                                 </Button>
                                             </PopoverTrigger>
                                             <PopoverContent className="sm:w-[462px] w-[290px] p-0">
                                                 <Command>
                                                     <CommandInput
-                                                        placeholder="Search currency..."
+                                                        placeholder={t('search_currency')}
                                                         className="h-9"
                                                     />
                                                     <CommandList>
-                                                        <CommandEmpty>No currency found.</CommandEmpty>
+                                                        <CommandEmpty>{t('no_currency')}</CommandEmpty>
                                                         <CommandGroup>
                                                             {Object.entries(allCurrencies).map(([code, name]) => (
                                                                 <CommandItem
@@ -230,9 +232,9 @@ const WalletModal: FC<Props> = ({currencies}) => {
                             name="balance"
                             render={({field}) => (
                                 <FormItem className={'mb-4'}>
-                                    <FormLabel>Initial balance</FormLabel>
+                                    <FormLabel>{t('balance_label')}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Balance" {...field} type={'number'} name={'balance'}/>
+                                        <Input placeholder={t('balance_placeholder')} {...field} type={'number'} name={'balance'}/>
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
@@ -240,7 +242,7 @@ const WalletModal: FC<Props> = ({currencies}) => {
                         />
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline">{t('cancel')}</Button>
                             </DialogClose>
                             <Button
                                 type={'submit'}
@@ -249,10 +251,10 @@ const WalletModal: FC<Props> = ({currencies}) => {
                                 {form.formState.isSubmitting
                                     ? (
                                         <>
-                                            <Loader2Icon className="animate-spin"/>
-                                            Submitting...
+                                            <Loader2Icon className="animate-spin mr-2"/>
+                                            {t('submitting')}
                                         </>
-                                    ) : 'Submit'
+                                    ) : t('submit')
                                 }
                             </Button>
                         </DialogFooter>

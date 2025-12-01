@@ -13,6 +13,7 @@ import {
 import {Bar, BarChart, CartesianGrid, XAxis, YAxis} from "recharts";
 import {ClientWallet} from "@/src/lib/types/client-wallet-type";
 import {useTimeRange} from "@/src/lib/stores/time-range-store";
+import { useTranslations } from 'next-intl';
 
 export type ChartRow = { date: string; [key: string]: number | string };
 
@@ -23,8 +24,8 @@ interface Props {
 export function StaticsChartWallets(props: Props) {
     const data = use(props.wallets)
     const timePhrase = useTimeRange(state => state.timePhrase)
+    const t = useTranslations('Statistics.charts.wallets');
 
-    // Подготавливаем данные для графика
     const { chartData, chartConfig, walletKeys, maxKey } = useMemo(() => {
         if (!data || data.length === 0) {
             return { chartData: [], chartConfig: {}, walletKeys: [], maxKey: '' }
@@ -32,27 +33,24 @@ export function StaticsChartWallets(props: Props) {
 
         const assets = data.filter(w => w.type === 'asset')
 
-        // Создаем одну запись "Current", где ключи - это имена кошельков
-        const row: ChartRow = { date: "Current" }
+        const row: ChartRow = { date: t('current') }
         const config: ChartConfig = {}
         const keys: string[] = []
         let maxVal = 0
         let maxK = ""
 
         assets.forEach((w, index) => {
-            const key = w.name // Используем имя как ключ
+            const key = w.name
             const bal = Number(w.balance)
 
             row[key] = bal
             keys.push(key)
 
-            // Генерируем конфиг цветов
             config[key] = {
                 label: w.name,
                 color: `var(--chart-${(index % 5) + 1})`
             }
 
-            // Ищем максимальное значение для оси Y
             if (bal > maxVal) {
                 maxVal = bal
                 maxK = key
@@ -65,14 +63,14 @@ export function StaticsChartWallets(props: Props) {
             walletKeys: keys,
             maxKey: maxK
         }
-    }, [data])
+    }, [data, t])
 
     if (!data || data.length === 0) {
         return (
             <Card>
                 <CardHeader>
-                    <CardTitle>Wallet Balances</CardTitle>
-                    <CardDescription>No wallets found</CardDescription>
+                    <CardTitle>{t('title')}</CardTitle>
+                    <CardDescription>{t('no_data')}</CardDescription>
                 </CardHeader>
             </Card>
         )
@@ -81,12 +79,12 @@ export function StaticsChartWallets(props: Props) {
     return (
         <Card className="@container/card pb-4">
             <CardHeader>
-                <CardTitle>Wallet Balances</CardTitle>
+                <CardTitle>{t('title')}</CardTitle>
                 <CardDescription>
                 <span className="hidden @[540px]/card:block">
-                    Current distribution
+                    {t('current_dist')}
                 </span>
-                    <span className="@[540px]/card:hidden">Current</span>
+                    <span className="@[540px]/card:hidden">{t('current')}</span>
                 </CardDescription>
                 <CardAction className="flex gap-4">
                 </CardAction>
