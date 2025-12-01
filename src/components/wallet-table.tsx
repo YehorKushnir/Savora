@@ -14,16 +14,15 @@ import {
     ColumnOrderState
 } from "@tanstack/react-table"
 
-import { useTypeOptions } from "@/src/lib/stores/type-options-store"
-import { useWallets } from "@/src/lib/stores/wallets-store"
-import { PropsTransactionInterface } from '@/src/lib/types/props-transaction-interface'
-import { WalletOptions } from "@/src/components/wallet-options"
-import { useTransactionGlobalFilter } from "@/src/hooks/use-wallet-global-filter"
+import {useTypeOptions} from "@/src/lib/stores/type-options-store"
+import {useWallets} from "@/src/lib/stores/wallets-store"
+import {PropsTransactionInterface} from '@/src/lib/types/props-transaction-interface'
+import {useTransactionGlobalFilter} from "@/src/hooks/use-wallet-global-filter"
 
-import { DataTable } from "@/src/components/data-table/data-table"
-import { useTransactionColumns } from "@/src/components/data-table/use-transaction-columns"
+import {DataTable} from "@/src/components/data-table/data-table"
+import {useTransactionColumns} from "@/src/components/data-table/use-transaction-columns"
 
-import { useWalletSelection } from "@/src/lib/stores/wallet-selection-store"
+import {useWalletSelection} from "@/src/lib/stores/wallet-selection-store"
 
 export function WalletTable(props: PropsTransactionInterface) {
     const data = use(props.transactions)
@@ -124,7 +123,6 @@ export function WalletTable(props: PropsTransactionInterface) {
             columnOrder={columnOrder}
             setColumnOrder={handleColumnOrderChange as (order: string[]) => void}
         >
-            <WalletOptions table={table} />
         </DataTable>
     )
 }

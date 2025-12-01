@@ -10,6 +10,7 @@ import {getTransactions} from '@/src/app/(dashboard)/transactions/actions'
 import TransactionModal from "@/src/components/transaction-modal";
 import {getCategories} from "@/src/app/(dashboard)/categories/actions";
 import TransactionDeleteModal from "@/src/components/transaction-delete-modal";
+import {WalletOptions} from "@/src/components/wallet-options";
 
 export default async function Wallets() {
     const currencies = getCurrencies()
@@ -28,7 +29,8 @@ export default async function Wallets() {
                     <WalletList wallets={wallets}/>
                 </Suspense>
             </div>
-            <div className={'w-full flex flex-col items-center'}>
+            <div className={'w-full flex flex-col items-center gap-4'}>
+                <WalletOptions/>
                 <Suspense fallback={<Skeleton className={'w-full h-[500px]'}/>}>
                     <WalletTable transactions={transactions}/>
                 </Suspense>
