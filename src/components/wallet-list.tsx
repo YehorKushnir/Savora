@@ -6,7 +6,6 @@ import LucideIcon, {IconName} from '@/src/components/lucide-icon'
 import {ContextMenu, ContextMenuContent, ContextMenuTrigger} from '@/src/components/ui/context-menu'
 import {getCurrencySymbol} from '@/src/lib/get-currency-symol'
 import WalletListActions from '@/src/components/wallet-list-actions'
-// Убрали useSearchParams и useRouter
 import {useWalletSelection} from "@/src/lib/stores/wallet-selection-store"
 import {useWallets} from "@/src/lib/stores/wallets-store"
 import {

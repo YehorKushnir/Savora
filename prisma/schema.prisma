@@ -103,7 +103,7 @@ enum TransactionType {
   income
   transfer
   adjustment
-  openingBalance
+  initial
 }
 
 enum CategoryType {

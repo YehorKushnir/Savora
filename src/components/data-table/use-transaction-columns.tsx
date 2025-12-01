@@ -4,7 +4,6 @@ import { useMemo } from "react"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowRightLeft, MoreHorizontal } from "lucide-react"
 
-// UI Components
 import { Button } from "@/src/components/ui/button"
 import { Badge } from "@/src/components/ui/badge"
 import {
@@ -73,10 +72,10 @@ export const useTransactionColumns = () => {
                     <div className="flex items-center gap-2">
                         <div className="p-1.5 bg-secondary rounded-md">
                             {t.type === 'transfer' && <ArrowRightLeft className="w-4 h-4" />}
-                            {t.type === 'openingBalance' && <LucideIcon name="Landmark" className="w-4 h-4" />}
+                            {t.type === 'initial' && <LucideIcon name="Landmark" className="w-4 h-4" />}
                             {t.type === 'adjustment' && <LucideIcon name="Scale" className="w-4 h-4" />}
                         </div>
-                        <span className="capitalize">{t.type === 'openingBalance' ? 'Opening Balance' : t.type}</span>
+                        <span className="capitalize">{t.type === 'initial' ? 'initial' : t.type}</span>
                     </div>
                 )
             },
@@ -177,7 +176,7 @@ export const useTransactionColumns = () => {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
-                const isOpeningBalance = row.original.type === 'openingBalance'
+                const isOpeningBalance = row.original.type === 'initial'
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

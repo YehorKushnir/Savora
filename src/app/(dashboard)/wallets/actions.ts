@@ -54,7 +54,7 @@ export async function createWallet(payload: WalletCreateType) {
             await tx.transaction.create({
                 data: {
                     userId,
-                    type: 'openingBalance',
+                    type: 'initial',
                     executedAt: new Date(),
                     currency: payload.currency,
                     entries: {

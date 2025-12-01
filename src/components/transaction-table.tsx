@@ -103,7 +103,6 @@ export default function TransactionTable(props: PropsTransactionInterface) {
             columnOrder={columnOrder}
             setColumnOrder={handleColumnOrderChange as (order: string[]) => void}
         >
-            <TransactionOptions table={table} />
         </DataTable>
     )
 }

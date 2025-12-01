@@ -1,5 +1,5 @@
 export interface TransactionCreateUpdateType {
-    type: 'expense' | 'income' | 'transfer' | 'adjustment' | 'openingBalance'
+    type: 'expense' | 'income' | 'transfer' | 'adjustment' | 'initial'
     amount: string
     sourceVaultId: string
     targetVaultId: string

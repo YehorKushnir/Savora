@@ -17,13 +17,9 @@ const CategoryOptions = () => {
     return (
         <div className={'w-full flex justify-between'}>
             <div className="flex gap-4">
-                <Tabs value={type} onValueChange={setType}>
-                    <TabsList>
-                        <TabsTrigger value="all">All</TabsTrigger>
-                        <TabsTrigger value="income">Incomes</TabsTrigger>
-                        <TabsTrigger value="expense">Expenses</TabsTrigger>
-                    </TabsList>
-                </Tabs>
+                <Button onClick={() => setOpenModal(true)}>
+                    Add category
+                </Button>
                 <SavoraSearch onChangeAction={setSearchValue} value={searchValue} className="w-[384px]"/>
             </div>
             <div className="flex gap-4">
@@ -33,9 +29,13 @@ const CategoryOptions = () => {
                         <TabsTrigger value="card">Card</TabsTrigger>
                     </TabsList>
                 </Tabs>
-                <Button onClick={() => setOpenModal(true)}>
-                    Add category
-                </Button>
+                <Tabs value={type} onValueChange={setType}>
+                    <TabsList>
+                        <TabsTrigger value="all">All</TabsTrigger>
+                        <TabsTrigger value="income">Incomes</TabsTrigger>
+                        <TabsTrigger value="expense">Expenses</TabsTrigger>
+                    </TabsList>
+                </Tabs>
             </div>
         </div>
     )

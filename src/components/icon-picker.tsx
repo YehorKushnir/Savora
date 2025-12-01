@@ -7,14 +7,29 @@ import {useEffect, useMemo, useRef, useState} from 'react'
 import {useIsMobile} from '@/src/lib/hooks/use-is-mobile'
 import { IconPickerProps, IconName } from "../lib/types/icon-picker-types"
 
-export default function IconPicker(
-    {
-        value,
-        onIconChange,
-    }: IconPickerProps) {
+export default function IconPicker({value, onIconChange}: IconPickerProps) {
 
-    const allNames = useMemo(() => Object.keys(icons) as IconName[], [])
-    const [internal, setInternal] = useState<IconName>(value ?? "AlarmClock")
+    const RAW_BANKING_ICONS: string[] = [
+        'Wallet', 'CreditCard', 'Banknote', 'Landmark', 'PiggyBank', 'Coins', 'DollarSign', 'Euro', 'Bitcoin', 'Safe', 'Vault',
+        'Briefcase', 'TrendingUp', 'Award', 'Gem',
+        'Home', 'Armchair', 'Bed', 'Hammer', 'Wrench', 'Box',
+        'ShoppingCart', 'ShoppingBag', 'Utensils', 'Coffee', 'Beer', 'Pizza', 'Apple', 'Carrot',
+        'Car', 'Bus', 'Train', 'Plane', 'Ship', 'Fuel', 'Bike', 'MapPin',
+        'Smartphone', 'Wifi', 'Zap', 'Droplet', 'Flame', 'Tv',
+        'Heart', 'Activity', 'Stethoscope', 'Pill', 'Scissors', 'Smile',
+        'GraduationCap', 'Book', 'Baby', 'Gamepad2', 'ToyBrick',
+        'Tag', 'Tags', 'Gift', 'Music', 'Camera', 'Dog', 'Cat', 'Flower2', 'AlertCircle', 'HelpCircle'
+    ];
+
+    const BANKING_ICONS: IconName[] = useMemo(() => {
+        return RAW_BANKING_ICONS.filter(name => {
+            const exists = name in icons;
+            if (!exists) console.warn(`IconPicker: Иконка "${name}" не найдена в lucide-react и была скрыта.`);
+            return exists;
+        }) as IconName[];
+    }, []);
+
+    const [internal, setInternal] = useState<IconName>(value ?? "CreditCard")
 
     useEffect(() => {
         if (value && value !== internal) setInternal(value)
@@ -32,7 +47,7 @@ export default function IconPicker(
     const tile = 48
     const g = useIsMobile() ? 12 : 11
 
-    const rowCount = Math.ceil(allNames.length / cols)
+    const rowCount = Math.ceil(BANKING_ICONS.length / cols)
 
     const rowVirtualizer = useVirtualizer({
         count: rowCount,
@@ -57,8 +72,8 @@ export default function IconPicker(
                     >
                         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
                             const rowStart = virtualRow.index * cols
-                            const rowEnd = Math.min(rowStart + cols, allNames.length)
-                            const items = allNames.slice(rowStart, rowEnd)
+                            const rowEnd = Math.min(rowStart + cols, BANKING_ICONS.length)
+                            const items = BANKING_ICONS.slice(rowStart, rowEnd)
                             return (
                                 <div
                                     key={virtualRow.key}
@@ -73,6 +88,7 @@ export default function IconPicker(
                                     >
                                         {items.map((name) => {
                                             const Icon = icons[name] as LucideIcon
+                                            if (!Icon) return null;
                                             const active = name === selected
                                             return (
                                                 <div

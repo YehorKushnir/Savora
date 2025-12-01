@@ -45,7 +45,6 @@ export function DataTable<TData>({ table, columnOrder, setColumnOrder, children 
         useSensor(KeyboardSensor, {})
     )
 
-    // Стили для фиксированной колонки Actions
     const stickyStyles = {
         position: 'sticky' as const,
         right: 0,
