@@ -8,6 +8,7 @@ import {SiteHeader} from "@/src/components/site-header";
 import {SessionProvider} from 'next-auth/react'
 import {useSidebarStore} from '@/src/lib/stores/navbare-store'
 
+
 export default function RootLayout({children,}: Readonly<{ children: ReactNode }>
 ) {
     const {isOpen, type, setOpen, hydrated} = useSidebarStore()

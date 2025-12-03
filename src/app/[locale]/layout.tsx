@@ -24,10 +24,12 @@ export const metadata: Metadata = {
     }
 };
 
-export default async function RootLayout({children, params}: {
+interface Props {
     children: ReactNode;
-    params: {locale: string};
-}) {
+    params: Promise<{ locale: string }>;
+}
+
+export default async function RootLayout({children, params}: Props) {
     const {locale} = await params;
     const messages = await getMessages();
 
