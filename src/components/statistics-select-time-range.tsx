@@ -6,7 +6,6 @@ import {useTimeRange} from "@/src/lib/stores/time-range-store";
 import {useEffect} from "react";
 import {useIsMobile} from "@/src/hooks/use-mobile";
 import {SelectCalendar} from "@/src/components/select-calendar";
-import {Button} from "@/src/components/ui/button";
 import {useSearchParams} from "next/navigation";
 import {updateTimeRangeParams} from "@/src/lib/helpers/update-active-wallet";
 import { useTranslations } from 'next-intl';
@@ -30,11 +29,17 @@ export const StatisticsSelectTimeRange = () => {
 
     const t = useTranslations('Statistics.filters');
 
-    function dateConversion() {
-        if (fromDate && toDate) {
+    function applyDateChanges(newFrom: Date | undefined, newTo: Date | undefined) {
+        if (newFrom && newTo) {
+            setRange({fromDate: newFrom, toDate: newTo});
+
             const now = new Date();
-            const validToDate = toDate > now ? now : toDate;
-            return  Math.ceil((validToDate.getTime() - fromDate.getTime()) / (1000 * 60 * 60 * 24));
+            const validToDate = newTo > now ? now : newTo;
+            const diff = Math.ceil((validToDate.getTime() - newFrom.getTime()) / (1000 * 60 * 60 * 24));
+
+            if (diff) {
+                updateTimeRangeParams(diff.toString(), searchParams, newFrom, newTo);
+            }
         }
     }
 
@@ -111,19 +116,30 @@ export const StatisticsSelectTimeRange = () => {
                     </SelectItem>
                 </SelectContent>
             </Select>
-            <SelectCalendar open={openFrom} setOpen={setFromOpen} setDate={setFromDate} date={fromDate}/>
-            <SelectCalendar open={openTo} setOpen={setToOpen} setDate={setToDate} date={toDate}/>
-            <Button variant="outline"
-                    disabled={(!fromDate || !toDate)}
-                    onClick={() => {
-                        setRange({fromDate,toDate})
-                        const diff = dateConversion()
-                        if(diff) {
-                            updateTimeRangeParams(diff.toString(), searchParams, fromDate, toDate)
-                        }
-                    }}>
-                {t('apply')}
-            </Button>
+
+            <SelectCalendar
+                open={openFrom}
+                setOpen={setFromOpen}
+                date={fromDate}
+                setDate={(date) => {
+                    if ( date && toDate && date.getTime() <= toDate.getTime()) {
+                        setFromDate(date);
+                        applyDateChanges(date, toDate);
+                  }
+                }}
+            />
+
+            <SelectCalendar
+                open={openTo}
+                setOpen={setToOpen}
+                date={toDate}
+                setDate={(date) => {
+                    if ( date && toDate && date.getTime() <= toDate.getTime()) {
+                        setToDate(date);
+                        applyDateChanges(fromDate, date);
+                    }
+                }}
+            />
         </div>
     )
 }

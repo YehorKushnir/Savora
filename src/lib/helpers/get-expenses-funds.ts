@@ -4,7 +4,6 @@ export function getExpenseFunds(transactions: TransactionWithRelations[]): [stri
     const expenseSum = transactions
         .filter(tx => tx.type === 'expense')
         .reduce((sum, tx) => {
-            // Берем сумму из первой записи (entries[0])
             const amount = tx.entries[0]?.amount ? Number(tx.entries[0].amount) : 0
             return sum + Math.abs(amount)
         }, 0);

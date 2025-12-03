@@ -3,7 +3,7 @@
 import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 import { useTransition } from 'react';
-import { updateUserLocale } from '@/src/app/[locale]/(dashboard)/actions';
+import {updateUserLocale} from "@/src/app/[locale]/(selection)/actions";
 import { Globe } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -26,7 +26,7 @@ export function ToggleLanguage() {
         const newPath = `/${newLocale}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
 
         startTransition(async () => {
-            // await updateUserLocale(newLocale);
+            await updateUserLocale(newLocale);
             router.replace(newPath);
         });
     };

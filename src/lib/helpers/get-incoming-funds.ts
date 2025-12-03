@@ -4,7 +4,6 @@ export function getIncomeFunds(transactions: TransactionWithRelations[]): [strin
     const incomeSum = transactions
         .filter(tx => tx.type === 'income')
         .reduce((sum, tx) => {
-            // Берем сумму из первой записи (entries[0]), используем модуль числа
             const amount = tx.entries[0]?.amount ? Number(tx.entries[0].amount) : 0
             return sum + Math.abs(amount)
         }, 0);

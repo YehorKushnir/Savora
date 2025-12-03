@@ -104,7 +104,6 @@ export function DataTable<TData>({ table, columnOrder, setColumnOrder, children 
                                             strategy={horizontalListSortingStrategy}
                                         >
                                             {row.getVisibleCells().map(cell => {
-                                                // Рендер Sticky Actions Cell
                                                 if (cell.column.id === "actions") {
                                                     return (
                                                         <TableCell

@@ -1,20 +1,13 @@
 import {create} from 'zustand'
 import {ClientWallet} from "@/src/lib/types/client-wallet-type";
 
-export interface Wallet {
-    id: string
-    name: string
-    balance: string
-    icon: string
-    type: 'asset' | 'liability'
-    currency: string
-}
-
 interface State {
     openModal: boolean
     openDeleteModal: boolean
     wallet?: ClientWallet
     storeWallets: ClientWallet[]
+    activeWallets: string[]
+    setActiveWallets: (wallets: string[]) => void
     setOpenModal: (value: boolean, initState?: ClientWallet) => void
     setOpenDeleteModal: (value: boolean, initState?: ClientWallet) => void
     columnOrder: string[]
@@ -29,6 +22,8 @@ export const useWallets = create<State>((set) => ({
     wallet: undefined,
     storeWallets: [],
     columnOrder: [],
+    activeWallets: [],
+    setActiveWallets: (wallets) => set({activeWallets: wallets}),
     setColumnOrder: (columnOrder) => set({columnOrder}),
     setOpenModal: (value, initState) => set({openModal: value, wallet: initState}),
     setOpenDeleteModal: (value, initState) => set({openDeleteModal: value, wallet: initState}),

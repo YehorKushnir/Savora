@@ -7,6 +7,8 @@ import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent,} from "@
 import {useTimeRange} from "@/src/lib/stores/time-range-store";
 import { PropsTransactionInterface } from "../lib/types/props-transaction-interface"
 import { useTranslations } from 'next-intl';
+import {useWallets} from "@/src/lib/stores/wallets-store";
+import { filterTransactionsByWallets } from "../lib/helpers/filter-by-wallets";
 
 type ChartDataType = {
     date: string
@@ -32,9 +34,12 @@ export function StaticsChartFunds(props: PropsTransactionInterface) {
     const timePhrase = useTimeRange(state => state.timePhrase)
     const fromDate = useTimeRange(state => state.fromDate)
     const toDate = useTimeRange(state => state.toDate)
+    const activeWallets = useWallets(state => state.activeWallets)
 
     const baseRecords = useMemo(() => {
-        const sortedAll = [...data].sort((a, b) =>
+        const walletFilteredData = filterTransactionsByWallets(data, activeWallets);
+
+        const sortedAll = [...walletFilteredData].sort((a, b) =>
             new Date(a.executedAt).getTime() - new Date(b.executedAt).getTime()
         )
 
@@ -46,7 +51,10 @@ export function StaticsChartFunds(props: PropsTransactionInterface) {
                 balances[entry.vaultId] = Number(entry.balanceAfter)
             }
 
-            const total = Object.values(balances).reduce((sum, val) => sum + val, 0)
+            const total = activeWallets.reduce((sum, walletId) => {
+                return sum + (balances[walletId] || 0);
+            }, 0);
+
             const dateStr = new Date(tx.executedAt).toISOString().split('T')[0]
 
             const lastPoint = history[history.length - 1]
@@ -84,7 +92,7 @@ export function StaticsChartFunds(props: PropsTransactionInterface) {
             return d >= start && d <= end
         })
 
-    }, [data, timeRange, fromDate, toDate])
+    }, [data, timeRange, fromDate, toDate, activeWallets])
 
     return (
         <Card className="@container/card pb-4">

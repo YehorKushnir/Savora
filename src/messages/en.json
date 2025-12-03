@@ -220,5 +220,14 @@
       "submit": "Submit",
       "submitting": "Submitting..."
     }
+  },
+  "Selection": {
+    "setup_currency_title": "Welcome! Let's set up",
+    "setup_currency_desc": "Please choose your main currency to continue. You can create wallets with different currencies later.",
+    "select_currency_label": "Main Currency",
+    "select_currency_placeholder": "Select currency",
+    "search_currency_placeholder": "Search currency...",
+    "no_currency_found": "No currency found.",
+    "continue": "Continue"
   }
 }

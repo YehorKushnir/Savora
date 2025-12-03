@@ -220,5 +220,14 @@
       "submit": "Зберегти",
       "submitting": "Збереження..."
     }
+  },
+  "Selection": {
+    "setup_currency_title": "Ласкаво просимо!",
+    "setup_currency_desc": "Будь ласка, оберіть основну валюту для продовження. Пізніше ви зможете створювати гаманці в інших валютах.",
+    "select_currency_label": "Основна валюта",
+    "select_currency_placeholder": "Оберіть валюту",
+    "search_currency_placeholder": "Пошук валюти...",
+    "no_currency_found": "Валюту не знайдено.",
+    "continue": "Продовжити"
   }
 }

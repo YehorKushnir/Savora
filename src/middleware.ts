@@ -15,6 +15,11 @@ const intlMiddleware = createMiddleware({
 
 export default auth((req) => {
     const { nextUrl } = req;
+
+    if (req.method === 'POST') {
+        return intlMiddleware(req);
+    }
+
     const isLoggedIn = !!req.auth;
     const pathname = nextUrl.pathname;
 
@@ -25,18 +30,40 @@ export default auth((req) => {
 
     const isPublic = publicPages.includes(pathWithoutLocale);
 
-    if (!isLoggedIn && !isPublic) {
-        const locale = pathname.split('/')[1];
-        const targetLocale = locales.includes(locale) ? locale : defaultLocale;
+    const urlLocale = pathname.split('/')[1];
+    const cookieLocale = req.cookies.get('NEXT_LOCALE')?.value;
+    let targetLocale = defaultLocale;
 
+    if (locales.includes(urlLocale)) {
+        targetLocale = urlLocale;
+    } else if (cookieLocale && locales.includes(cookieLocale)) {
+        targetLocale = cookieLocale;
+    }
+
+    if (!isLoggedIn && !isPublic) {
         return Response.redirect(new URL(`/${targetLocale}/login`, nextUrl.origin));
     }
 
-    if (isLoggedIn && pathWithoutLocale === '/login') {
-        const locale = pathname.split('/')[1];
-        const targetLocale = locales.includes(locale) ? locale : defaultLocale;
+    if (isLoggedIn) {
+        const userCurrency = req.auth?.user?.currency;
+        const hasCurrencyCookie = req.cookies.has('currency_setup');
 
-        return Response.redirect(new URL(`/${targetLocale}/dashboard`, nextUrl.origin));
+        const isCurrencyPage = pathWithoutLocale === '/currency';
+        const isLoginPage = pathWithoutLocale === '/login';
+
+        const isCurrencySet = !!userCurrency || hasCurrencyCookie;
+
+        if (!isCurrencySet) {
+            if (!isCurrencyPage) {
+                return Response.redirect(new URL(`/${targetLocale}/currency`, nextUrl.origin));
+            }
+        }
+
+        else {
+            if (isLoginPage || isCurrencyPage) {
+                return Response.redirect(new URL(`/${targetLocale}/dashboard`, nextUrl.origin));
+            }
+        }
     }
 
     return intlMiddleware(req);

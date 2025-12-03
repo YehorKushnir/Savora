@@ -30,7 +30,7 @@ import { useTranslations } from 'next-intl';
 export function NavUser() {
     const {isMobile} = useSidebar()
     const session = useSession()
-    const t = useTranslations('Nav'); // Подключаем переводы
+    const t = useTranslations('Nav');
 
     if (session.status === 'loading') return (
         <div className="p-2 h-12 w-full flex items-center gap-2">

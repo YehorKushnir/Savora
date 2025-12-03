@@ -13,17 +13,22 @@ import {useTimeRange} from "@/src/lib/stores/time-range-store";
 import {filterTransactionsByDate} from "@/src/lib/helpers/filter-by-date";
 import { PropsTransactionInterface } from "../lib/types/props-transaction-interface";
 import { useTranslations } from 'next-intl';
+import { useWallets } from "@/src/lib/stores/wallets-store";
+import { filterTransactionsByWallets } from "../lib/helpers/filter-by-wallets";
+
 
 export function StatisticCards(props: PropsTransactionInterface) {
     const data = use(props.transactions)
     const timeRange = useTimeRange(state => state.timeRange)
     const customRange = useTimeRange(state => state.customRange)
-    const filteredData = filterTransactionsByDate(data, customRange ?  customRange : timeRange)
-    const [incomeFunds] = getIncomeFunds(filteredData);
-    const [expenseFunds] = getExpenseFunds(filteredData);
+    const activeWallets = useWallets((state) => state.activeWallets)
+    const walletFilteredData = filterTransactionsByWallets(data, activeWallets);
+    const dateFilteredData = filterTransactionsByDate(walletFilteredData, customRange ? customRange : timeRange)
+
+    const [incomeFunds] = getIncomeFunds(dateFilteredData);
+    const [expenseFunds] = getExpenseFunds(dateFilteredData);
     const currency = '€'
 
-    // Подключаем переводы
     const t = useTranslations('Statistics.cards');
 
     return (
@@ -33,7 +38,7 @@ export function StatisticCards(props: PropsTransactionInterface) {
                     <CardDescription>{t('income')}</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl flex gap-1 items-center">
                         <span>{currency}</span>
-                        <span>{incomeFunds}</span>
+                        <span>{activeWallets.length !== 0 ? incomeFunds : 0}</span>
                     </CardTitle>
                 </CardHeader>
             </Card>
@@ -42,7 +47,7 @@ export function StatisticCards(props: PropsTransactionInterface) {
                     <CardDescription>{t('expense')}</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl flex gap-1 items-center">
                         <span>{currency}</span>
-                        <span>{expenseFunds}</span>
+                        <span>{activeWallets.length !== 0 ? expenseFunds : 0}</span>
                     </CardTitle>
                 </CardHeader>
             </Card>

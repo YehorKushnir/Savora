@@ -26,9 +26,7 @@ import {useWalletSelection} from "@/src/lib/stores/wallet-selection-store"
 
 export function WalletTable(props: PropsTransactionInterface) {
     const data = use(props.transactions)
-
-    console.log(data)
-
+    
     const activeWalletId = useWalletSelection(state => state.activeWalletId)
 
     const walletFilterType = useTypeOptions(state => state.type)

@@ -12,8 +12,8 @@ import {
 } from "@/src/components/ui/chart";
 import {Bar, BarChart, CartesianGrid, XAxis, YAxis} from "recharts";
 import {ClientWallet} from "@/src/lib/types/client-wallet-type";
-import {useTimeRange} from "@/src/lib/stores/time-range-store";
 import { useTranslations } from 'next-intl';
+import { useWallets } from "@/src/lib/stores/wallets-store";
 
 export type ChartRow = { date: string; [key: string]: number | string };
 
@@ -23,15 +23,20 @@ interface Props {
 
 export function StaticsChartWallets(props: Props) {
     const data = use(props.wallets)
-    const timePhrase = useTimeRange(state => state.timePhrase)
     const t = useTranslations('Statistics.charts.wallets');
+
+    const activeWallets = useWallets((state) => state.activeWallets);
 
     const { chartData, chartConfig, walletKeys, maxKey } = useMemo(() => {
         if (!data || data.length === 0) {
             return { chartData: [], chartConfig: {}, walletKeys: [], maxKey: '' }
         }
 
-        const assets = data.filter(w => w.type === 'asset')
+        const assets = data.filter(w => w.type === 'asset' && activeWallets.includes(w.id))
+
+        if (assets.length === 0) {
+            return { chartData: [], chartConfig: {}, walletKeys: [], maxKey: '' }
+        }
 
         const row: ChartRow = { date: t('current') }
         const config: ChartConfig = {}
@@ -63,9 +68,9 @@ export function StaticsChartWallets(props: Props) {
             walletKeys: keys,
             maxKey: maxK
         }
-    }, [data, t])
+    }, [data, t, activeWallets])
 
-    if (!data || data.length === 0) {
+    if (!data || data.length === 0 || walletKeys.length === 0) {
         return (
             <Card>
                 <CardHeader>
