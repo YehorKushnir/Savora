@@ -1,21 +1,13 @@
 import { auth } from "@/auth";
 import {getCurrencies} from "@/src/app/[locale]/(dashboard)/actions";
 import {CurrencyForm} from "@/src/components/currency-form";
-import { RestoreAccess } from "@/src/components/restore-access";
 import { redirect } from "next/navigation";
-import { checkUserHasCurrency } from "../actions";
 
 export default async function CurrencyPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const session = await auth();
 
     if (!session?.user?.id) return redirect(`/${locale}/login`);
-
-    const hasCurrency = await checkUserHasCurrency();
-
-    if (hasCurrency) {
-        return <RestoreAccess locale={locale} />;
-    }
 
     const currencies = await getCurrencies();
 

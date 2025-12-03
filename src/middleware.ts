@@ -46,20 +46,17 @@ export default auth((req) => {
 
     if (isLoggedIn) {
         const userCurrency = req.auth?.user?.currency;
-        const hasCurrencyCookie = req.cookies.has('currency_setup');
 
         const isCurrencyPage = pathWithoutLocale === '/currency';
         const isLoginPage = pathWithoutLocale === '/login';
 
-        const isCurrencySet = !!userCurrency || hasCurrencyCookie;
+        const isCurrencySet = !!userCurrency
 
         if (!isCurrencySet) {
             if (!isCurrencyPage) {
                 return Response.redirect(new URL(`/${targetLocale}/currency`, nextUrl.origin));
             }
-        }
-
-        else {
+        } else {
             if (isLoginPage || isCurrencyPage) {
                 return Response.redirect(new URL(`/${targetLocale}/dashboard`, nextUrl.origin));
             }

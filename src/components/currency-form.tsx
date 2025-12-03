@@ -1,5 +1,10 @@
 'use client'
 
+import {useLocale, useTranslations} from 'next-intl'
+import { useState } from 'react'
+import {useSession} from "next-auth/react";
+
+
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -10,11 +15,8 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { ChevronsUpDown, Check, Loader2Icon } from 'lucide-react'
 import { cn } from '@/src/lib/utils'
 import { ICurrencies } from '@/src/lib/types/currencies'
-import {useLocale, useTranslations} from 'next-intl'
-import { useState } from 'react'
-
-import Image from "next/image";
 import {updateUserCurrency} from "@/src/app/[locale]/(selection)/actions";
+import Image from "next/image";
 
 const formSchema = z.object({
     currency: z.string().min(3, { message: "Please select a currency" })
@@ -29,6 +31,7 @@ interface Props {
 export function CurrencyForm({ currencies }: Props) {
     const t = useTranslations('Selection');
     const [open, setOpen] = useState(false);
+    const { update} = useSession();
     const locale = useLocale();
 
     const form = useForm<FormValues>({
@@ -41,9 +44,13 @@ export function CurrencyForm({ currencies }: Props) {
     const onSubmit = async (values: FormValues) => {
         try {
             await updateUserCurrency(values.currency);
-            window.location.assign(`/${locale}/dashboard`);
+
+            await update({ currency: values.currency });
+
+            window.location.href = `/${locale}/dashboard`;
+
         } catch (error) {
-            console.error("Failed to update currency", error);
+            console.error(error);
         }
     }
 
