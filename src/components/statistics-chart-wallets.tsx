@@ -114,6 +114,7 @@ export function StaticsChartWallets(props: Props) {
                             axisLine={false}
                             tickMargin={8}
                             minTickGap={16}
+                            width={75}
                             tickFormatter={(value) => `${value} €`}
                         />
                         <ChartTooltip

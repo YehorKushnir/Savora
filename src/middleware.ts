@@ -45,6 +45,13 @@ export default auth((req) => {
     }
 
     if (isLoggedIn) {
+
+        console.log({
+            pathname,
+            pathWithoutLocale,
+            isCurrencyPage: pathWithoutLocale === '/currency'
+        });
+
         const userCurrency = req.auth?.user?.currency;
 
         const isCurrencyPage = pathWithoutLocale === '/currency';

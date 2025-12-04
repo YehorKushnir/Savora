@@ -163,6 +163,7 @@ export function StaticsChartFunds(props: PropsTransactionInterface) {
                                 tickLine={false}
                                 axisLine={false}
                                 tickMargin={8}
+                                width={75}
                                 minTickGap={32}
                                 tickFormatter={(value) => `${value} €`}
                             />
