@@ -132,7 +132,34 @@ export async function deleteWallet(id: string) {
 
     if (!vault) throw new Error('Wallet not found')
 
-    if (vault.entries.length > 0) throw new Error('Wallet cannot be deleted')
-    await prisma.vault.delete({where: {id}})
+    if (vault.entries.length > 0)  {
+        const transactionIds = vault.entries.map(entry => entry.transactionId).filter((id): id is string => Boolean(id))
+
+        if (transactionIds.length === 0) {
+            await prisma.vault.delete({ where: { id } })
+            revalidatePath('wallets')
+            return
+        }
+
+        const forbiddenCount = await prisma.transaction.count({
+            where: {
+                id: { in: transactionIds },
+                type: { notIn: ['initial', 'adjustment'] }
+            }
+        })
+
+        if (forbiddenCount > 0) {
+            throw new Error('Wallet cannot be deleted')
+        }
+    }
+    await prisma.$transaction(async (transaction) => {
+        await transaction.entry.deleteMany({
+            where: { vaultId: id }
+        })
+
+        await transaction.vault.delete({
+            where: { id }
+        })
+    })
     revalidatePath('wallets')
 }
