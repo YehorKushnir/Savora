@@ -18,19 +18,20 @@ import { PropsTransactionInterface } from "@/src/lib/types/props-transaction-int
 import { DataTable } from "@/src/components/data-table/data-table"
 import {useTransactionColumns} from "@/src/components/data-table/use-transaction-columns";
 import {useWallets} from "@/src/lib/stores/wallets-store";
+import {useTypeOptions} from "@/src/lib/stores/type-options-store";
 
 export default function TransactionTable(props: PropsTransactionInterface) {
-    const filterType = useTransactions(state => state.type)
+    const type = useTypeOptions((state) => state.type)
     const searchValue = useTransactions(state => state.searchValue)
     const data = use(props.transactions)
     const tableData = useMemo(() => {
         let filtered = data
-        if (filterType !== "all") {
-             filtered = filtered.filter(item => item.type === filterType)
+        if (type !== "all") {
+             filtered = filtered.filter(item => item.type === type)
         }
 
         return filtered
-    }, [data, filterType])
+    }, [data, type])
     const globalFilterFn = useTransactionGlobalFilter()
 
     const [sorting, setSorting] = useState<SortingState>([])
