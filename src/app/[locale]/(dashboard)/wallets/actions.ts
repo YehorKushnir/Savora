@@ -133,7 +133,6 @@ export async function deleteWallet(id: string) {
     if (!vault) throw new Error('Wallet not found')
 
     if (vault.entries.length > 0) throw new Error('Wallet cannot be deleted')
-
     await prisma.vault.delete({where: {id}})
     revalidatePath('wallets')
 }
