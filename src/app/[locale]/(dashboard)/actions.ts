@@ -1,11 +1,11 @@
-'use server'
+import { ICurrencies } from '@/src/lib/types/currencies';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-import axios from 'axios'
-import {ICurrencies} from '@/src/lib/types/currencies'
+export async function getCurrencies(): Promise<ICurrencies> {
+    const jsonPath = path.join(process.cwd(), 'public', 'currencies.json');
+    const fileContents = await fs.readFile(jsonPath, 'utf8');
+    const data = JSON.parse(fileContents);
 
-export async function getCurrencies() {
-    const res = await axios.get<{
-        currencies: ICurrencies
-    }>(`http://localhost:3000/currencies.json`)
-    return res.data.currencies
+    return data.currencies;
 }

@@ -6,6 +6,10 @@ const withNextIntl = createNextIntlPlugin(
 );
 
 /** @type {import('next').NextConfig} */
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+    experimental: {
+        reactCompiler: true,
+    },
+};
 
 export default withNextIntl(nextConfig);

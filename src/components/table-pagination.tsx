@@ -13,7 +13,6 @@ export const TablePagination: FC<Props> = ({ table }) => {
     return (
         <div className="flex items-center justify-end space-x-2 py-4">
             <div className="text-muted-foreground flex-1 text-sm">
-                {/* Передача параметров для интерполяции строки */}
                 {t('selected', {
                     selected: table.getFilteredSelectedRowModel().rows.length,
                     total: table.getFilteredRowModel().rows.length
